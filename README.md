@@ -167,5 +167,19 @@ gets **promoted** into this repo. Full history is in `docs/EXPERIMENT_LOG.md` an
 - `champion_pipeline.py` (original mean-pooled pipeline) produced 0.8011 in July 2026; that exact
   score is **not** reproducible under the current environment due to numpy/torch drift. The
   current-env numbers above (0.8002 P4, 0.7838 5-fold) are canonical.
-- Kaggle competition machinery is intentionally excluded — the Kaggle test set is a different
-  distribution (HPA) and the scores there are not comparable to the P4 holdout.
+
+## References
+
+1. Northcutt, C. G., Jiang, L., & Chuang, I. L. (2021). Confident Learning: Estimating
+   Uncertainty in Dataset Labels. *Journal of Artificial Intelligence Research*, 70, 1373–1411.
+   https://doi.org/10.1613/jair.1.12125
+   The confident-learning method used throughout this work, implemented by the `cleanlab`
+   package (v2.9.0, pinned in `requirements.txt`).
+2. Elnaggar, A., et al. (2022). ProtTrans: Toward Understanding the Language of Life Through
+   Self-Supervised Learning. *IEEE Transactions on Pattern Analysis and Machine Intelligence*,
+   44(10), 7112–7127. https://doi.org/10.1109/TPAMI.2021.3095381
+   Source of the frozen ProtT5-XL backbone used for sequence embeddings.
+3. Ødum, M. T., et al. (2024). DeepLoc 2.1: multi-label membrane protein type prediction using
+   protein language models. *Nucleic Acids Research*, 52(W1), W215–W220.
+   https://doi.org/10.1093/nar/gkae237
+   The published benchmark we compare against on the same held-out partition.
