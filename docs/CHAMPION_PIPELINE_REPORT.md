@@ -94,7 +94,7 @@ Late experiments (no gains over 0.8011):
 
 ### 1.2 SPACE Network Embeddings (PPI graph)
 
-- **Source:** SPACE (Structural Protein-protein Association patiEnt) — graph autoencoder embeddings from STRING v12.0 PPI network
+- **Source:** SPACE (STRING Proteins as Complementary Embeddings) — graph autoencoder embeddings from STRING v12.0 PPI network
 - **Dimension:** 512-d per protein
 - **Coverage:** ~87% of df_adi proteins have non-zero SPACE embeddings (14,538/16,741)
 - **Missing-handling:** Zero-padding rather than imputation — the MLP learns to rely solely on ProtT5 for proteins without PPI network coverage
