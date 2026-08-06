@@ -1,0 +1,29 @@
+{
+  "pipeline": "ESM2 L32 + SPACE + aux \u2192 iterative cleanlab \u2192 MLP",
+  "baseline_macro_f1": 0.7688,
+  "champion_macro_f1": 0.7666,
+  "gain": -0.0023,
+  "feat_dim": 1794,
+  "n_train_initial": 13465,
+  "n_after_r1": 13453,
+  "n_after_r2": 13452,
+  "n_test": 3276,
+  "per_class_f1_champion": [
+    0.8094,
+    0.7474,
+    0.8197,
+    0.8865,
+    0.719,
+    0.7407,
+    0.6213
+  ],
+  "compartments": [
+    "membrane",
+    "cytoplasm",
+    "nucleus",
+    "extracellular",
+    "cell_surface",
+    "mitochondrion",
+    "endom"
+  ]
+}

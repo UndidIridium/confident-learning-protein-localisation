@@ -1,0 +1,150 @@
+{
+  "embedding": "attention-pooled ProtT5 L22",
+  "per_fold": [
+    {
+      "holdout": 0,
+      "n_train": 13126,
+      "n_test": 3615,
+      "n_after_r1": 8939,
+      "n_after_r2": 8045,
+      "baseline_f1": 0.7479,
+      "champion_f1": 0.7561,
+      "gain": 0.0082,
+      "baseline_per_class": [
+        0.8129,
+        0.7658,
+        0.7635,
+        0.8551,
+        0.7144,
+        0.6957,
+        0.6281
+      ],
+      "champion_per_class": [
+        0.806,
+        0.7644,
+        0.7658,
+        0.8651,
+        0.7141,
+        0.7238,
+        0.6533
+      ]
+    },
+    {
+      "holdout": 1,
+      "n_train": 13611,
+      "n_test": 3130,
+      "n_after_r1": 9208,
+      "n_after_r2": 8336,
+      "baseline_f1": 0.7676,
+      "champion_f1": 0.7774,
+      "gain": 0.0098,
+      "baseline_per_class": [
+        0.807,
+        0.7758,
+        0.8105,
+        0.811,
+        0.741,
+        0.7632,
+        0.6648
+      ],
+      "champion_per_class": [
+        0.8107,
+        0.7752,
+        0.808,
+        0.8316,
+        0.7306,
+        0.7859,
+        0.6995
+      ]
+    },
+    {
+      "holdout": 2,
+      "n_train": 13270,
+      "n_test": 3471,
+      "n_after_r1": 8880,
+      "n_after_r2": 7937,
+      "baseline_f1": 0.7769,
+      "champion_f1": 0.7926,
+      "gain": 0.0157,
+      "baseline_per_class": [
+        0.8174,
+        0.7735,
+        0.813,
+        0.9287,
+        0.7361,
+        0.719,
+        0.6506
+      ],
+      "champion_per_class": [
+        0.8169,
+        0.7772,
+        0.8182,
+        0.9278,
+        0.755,
+        0.7924,
+        0.6609
+      ]
+    },
+    {
+      "holdout": 3,
+      "n_train": 13492,
+      "n_test": 3249,
+      "n_after_r1": 9089,
+      "n_after_r2": 8207,
+      "baseline_f1": 0.7688,
+      "champion_f1": 0.7933,
+      "gain": 0.0246,
+      "baseline_per_class": [
+        0.8176,
+        0.7742,
+        0.7912,
+        0.8918,
+        0.7533,
+        0.7061,
+        0.6471
+      ],
+      "champion_per_class": [
+        0.8276,
+        0.7901,
+        0.8072,
+        0.9169,
+        0.7588,
+        0.7595,
+        0.6933
+      ]
+    },
+    {
+      "holdout": 4,
+      "n_train": 13465,
+      "n_test": 3276,
+      "n_after_r1": 9028,
+      "n_after_r2": 8151,
+      "baseline_f1": 0.7815,
+      "champion_f1": 0.7994,
+      "gain": 0.0179,
+      "baseline_per_class": [
+        0.828,
+        0.7612,
+        0.8244,
+        0.8786,
+        0.7414,
+        0.7956,
+        0.6413
+      ],
+      "champion_per_class": [
+        0.8356,
+        0.7687,
+        0.8243,
+        0.896,
+        0.761,
+        0.8247,
+        0.6854
+      ]
+    }
+  ],
+  "baseline_mean": 0.7685,
+  "baseline_std": 0.0115,
+  "champion_mean": 0.7838,
+  "champion_std": 0.0156,
+  "overall_gain": 0.0152
+}

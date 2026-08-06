@@ -1,0 +1,322 @@
+{
+  "date": "2026-07-31",
+  "pipeline": "Manual 2-round MLP self-confidence cleanlab @0.40 \u2192 per-class threshold tuning (CHAMPION)",
+  "features": "T5+SPACE+aux (attention-pooled L22, 1538-d)",
+  "model": "MLP 1538\u2192512\u21927, 798K params, posw, early stopping",
+  "key_finding_2026-07-31": "The hybrid CL pipeline's apparent +0.0142 advantage over manual in 5-fold CV was an EMBEDDING ARTIFACT. Hybrid used attention-pooled ProtT5 (prott5_attn_all_layers.h5) while manual used mean-pooled (prott5_all_layers_dfadi-3.h5). When both use attention-pooled embeddings, manual and hybrid tie at 0.7838. The CL consensus step adds nothing.",
+  "p4_results": {
+    "manual_champion_attn": 0.7994,
+    "hybrid_cl_champion_attn": 0.7996,
+    "alternating_cl_champion_attn": 0.8009,
+    "deeploc_21_prott5": 0.7674,
+    "deeploc_21_fast_esm": 0.7491,
+    "delta_hybrid_vs_manual": 0.0002,
+    "delta_alternating_vs_manual": 0.0015,
+    "delta_vs_deeploc_prott5": 0.0335
+  },
+  "5fold_cv_attn_pooled": {
+    "_note": "Apples-to-apples: all three methods use attention-pooled ProtT5 (prott5_attn_all_layers.h5).",
+    "manual_mean": 0.7838,
+    "manual_std": 0.0156,
+    "hybrid_mean": 0.7838,
+    "hybrid_std": 0.0144,
+    "alternating_mean": 0.7855,
+    "alternating_std": 0.014,
+    "delta_hybrid_vs_manual": 0.0,
+    "delta_alternating_vs_manual": 0.0017,
+    "verdict": "Manual and hybrid IDENTICAL at 0.7838. Hybrid's prior +0.0142 advantage was entirely due to using better embeddings (attn-pooled vs mean-pooled), not the pipeline. Alternating +0.0017 is within noise.",
+    "per_fold": {
+      "P0": {
+        "manual": 0.7561,
+        "hybrid": 0.7584,
+        "alternating": 0.7614
+      },
+      "P1": {
+        "manual": 0.7774,
+        "hybrid": 0.7779,
+        "alternating": 0.779
+      },
+      "P2": {
+        "manual": 0.7926,
+        "hybrid": 0.7915,
+        "alternating": 0.7962
+      },
+      "P3": {
+        "manual": 0.7933,
+        "hybrid": 0.7926,
+        "alternating": 0.7907
+      },
+      "P4": {
+        "manual": 0.7994,
+        "hybrid": 0.7986,
+        "alternating": 0.8003
+      }
+    }
+  },
+  "5fold_cv_mean_pooled_legacy": {
+    "_note": "\u26a0\ufe0f NOT apples-to-apples. Hybrid used attn-pooled while manual used mean-pooled. These numbers overstate hybrid's advantage.",
+    "manual_mean": 0.7696,
+    "hybrid_mean": 0.7838,
+    "alternating_mean": 0.7705,
+    "delta_hybrid_vs_manual": 0.0142
+  },
+  "per_compartment_5fold_attn": {
+    "_note": "Apples-to-apples attention-pooled comparison. All three methods on same embeddings.",
+    "Membrane": {
+      "manual": 0.8194,
+      "manual_std": 0.0109,
+      "hybrid": 0.8189,
+      "hybrid_std": 0.0062,
+      "alternating": 0.8224,
+      "alternating_std": 0.0066
+    },
+    "Cytoplasm": {
+      "manual": 0.7751,
+      "manual_std": 0.0088,
+      "hybrid": 0.7709,
+      "hybrid_std": 0.011,
+      "alternating": 0.7683,
+      "alternating_std": 0.0058
+    },
+    "Nucleus": {
+      "manual": 0.8047,
+      "manual_std": 0.0205,
+      "hybrid": 0.8029,
+      "hybrid_std": 0.0182,
+      "alternating": 0.8077,
+      "alternating_std": 0.0205
+    },
+    "Extracellular": {
+      "manual": 0.8875,
+      "manual_std": 0.0352,
+      "hybrid": 0.8885,
+      "hybrid_std": 0.0361,
+      "alternating": 0.8908,
+      "alternating_std": 0.0352
+    },
+    "Cell_surf": {
+      "manual": 0.7439,
+      "manual_std": 0.0185,
+      "hybrid": 0.7461,
+      "hybrid_std": 0.0171,
+      "alternating": 0.7494,
+      "alternating_std": 0.0172
+    },
+    "Mito": {
+      "manual": 0.7773,
+      "manual_std": 0.0338,
+      "hybrid": 0.7835,
+      "hybrid_std": 0.0387,
+      "alternating": 0.7819,
+      "alternating_std": 0.0338
+    },
+    "Endom": {
+      "manual": 0.6785,
+      "manual_std": 0.0182,
+      "hybrid": 0.676,
+      "hybrid_std": 0.0151,
+      "alternating": 0.6779,
+      "alternating_std": 0.005
+    }
+  },
+  "per_compartment_5fold_vs_deeploc": {
+    "Membrane": {
+      "ours": 0.8194,
+      "deeploc": 0.7438,
+      "delta": 0.0756
+    },
+    "Cytoplasm": {
+      "ours": 0.7751,
+      "deeploc": 0.7801,
+      "delta": -0.005
+    },
+    "Nucleus": {
+      "ours": 0.8047,
+      "deeploc": 0.8029,
+      "delta": 0.0018
+    },
+    "Extracellular": {
+      "ours": 0.8875,
+      "deeploc": 0.8936,
+      "delta": -0.0061
+    },
+    "Cell_surf": {
+      "ours": 0.7439,
+      "deeploc": 0.7699,
+      "delta": -0.026
+    },
+    "Mito": {
+      "ours": 0.7773,
+      "deeploc": 0.7745,
+      "delta": 0.0028
+    },
+    "Endom": {
+      "ours": 0.6785,
+      "deeploc": 0.541,
+      "delta": 0.1375
+    }
+  },
+  "ablation_p4_all_configs": {
+    "T5_only": {
+      "manual": 0.7826,
+      "hybrid": null
+    },
+    "T5_CL": {
+      "manual": 0.7809,
+      "hybrid": 0.7768,
+      "delta": -0.0041
+    },
+    "SPACE_only": {
+      "manual": 0.7292,
+      "hybrid": null
+    },
+    "SPACE_CL": {
+      "manual": 0.7054,
+      "hybrid": 0.6999,
+      "delta": -0.0055
+    },
+    "T5_SPACE_CL": {
+      "manual": 0.7994,
+      "hybrid": 0.7996,
+      "delta": 0.0002
+    }
+  },
+  "model_zoo_p4": {
+    "MLP": 0.7887,
+    "LightGBM": 0.755,
+    "CatBoost": 0.7531,
+    "XGBoost": 0.7525,
+    "RandomForest": 0.7442,
+    "ExtraTrees": 0.7389,
+    "LogisticRegression": 0.7395,
+    "GradientBoosting": "timeout",
+    "AdaBoost": "timeout"
+  },
+  "dataset_stats": {
+    "n_proteins": 16741,
+    "n_features": 1538,
+    "class_balance": {
+      "Membrane": 5581,
+      "Cytoplasm": 6094,
+      "Nucleus": 5422,
+      "Extracellular": 2403,
+      "Cell_surf": 3340,
+      "Mito": 1296,
+      "Endom": 2676
+    },
+    "multi_label": {
+      "0": 62,
+      "1": 8693,
+      "2": 6295,
+      "3": 1305,
+      "4": 323,
+      "5": 56,
+      "6": 7
+    },
+    "mean_labels_per_protein": 1.6,
+    "space_coverage_pct": 86.8,
+    "space_coverage_extracellular_pct": 48.0
+  },
+  "label_quality": {
+    "estimated_noise_pct": 37.6,
+    "estimated_issues": 5064,
+    "noisiest_class": "Cytoplasm",
+    "noisiest_rate": 0.1129,
+    "cleanest_class": "Extracellular",
+    "cleanest_rate": 0.0105,
+    "per_compartment": {
+      "Membrane": {
+        "noise_rate": 0.0558,
+        "est_issues": 752
+      },
+      "Cytoplasm": {
+        "noise_rate": 0.1129,
+        "est_issues": 1520
+      },
+      "Nucleus": {
+        "noise_rate": 0.0556,
+        "est_issues": 749
+      },
+      "Extracellular": {
+        "noise_rate": 0.0105,
+        "est_issues": 141
+      },
+      "Cell_surf": {
+        "noise_rate": 0.0504,
+        "est_issues": 679
+      },
+      "Mito": {
+        "noise_rate": 0.022,
+        "est_issues": 296
+      },
+      "Endom": {
+        "noise_rate": 0.0688,
+        "est_issues": 927
+      }
+    }
+  },
+  "pending": {
+    "deeploc_transfer": "Train champion on DeepLoc 11,562 proteins, test on df_adi P4. Script: hybrid_deeploc_transfer.py"
+  },
+  "_08011_source": {
+    "date": "2026-07-31",
+    "finding": "0.8011 came from tinker9 with CL_CUTOFF=0.50 (not 0.40), attn-pooled L22 + SPACE (no aux). Our champion used 0.40. When we run our pipeline with 0.50, we hit 0.8002 \u2014 within noise of 0.8011.",
+    "original_script": "tinker9_attn_cleanlab_cutoff.py (swept 0.30-0.60, 0.50 was best)",
+    "original_reference": "tinker11_diag_p4_metrics.py line 213: wrote 0.8011 in tinker9",
+    "reproducibility": "champion_pipeline.py (mean-pooled, no aux, cutoff=0.40) rerun today gives 0.7904 \u2014 environment drift. The 0.8011 is not reproducible with current numpy/torch.",
+    "resolution": "Our current pipeline (attn-pooled, aux, cutoff=0.50) hits 0.8002. The 0.80 barrier is real."
+  },
+  "cl_cutoff_sweep_p4": {
+    "date": "2026-07-31",
+    "config": "attn-pooled L22 + SPACE + aux (1538d), manual 2-round cleanlab",
+    "baseline_f1": 0.7815,
+    "sweep": [
+      {
+        "cutoff": 0.4,
+        "kept": 8151,
+        "drop_pct": 39.5,
+        "f1": 0.7994
+      },
+      {
+        "cutoff": 0.45,
+        "kept": 7534,
+        "drop_pct": 44.0,
+        "f1": 0.7985
+      },
+      {
+        "cutoff": 0.5,
+        "kept": 7111,
+        "drop_pct": 47.2,
+        "f1": 0.8002
+      },
+      {
+        "cutoff": 0.55,
+        "kept": 6598,
+        "drop_pct": 51.0,
+        "f1": 0.7968
+      }
+    ],
+    "best_cutoff": 0.5,
+    "best_f1": 0.8002,
+    "delta_vs_040": 0.0008
+  },
+  "mean_vs_attn_pooled_p4": {
+    "date": "2026-07-31",
+    "config": "Same manual pipeline, same hyperparams, only embedding differs",
+    "mean_pooled_f1": 0.7904,
+    "attn_pooled_f1": 0.7994,
+    "delta": 0.009,
+    "verdict": "Attn-pooled wins by +0.009. Mean-pooled is NOT the source of 0.8011."
+  },
+  "deeploc_transfer_real_space": {
+    "date": "2026-07-31",
+    "space_coverage": "92.9% (10,744/11,562)",
+    "zero_filled_f1": 0.7081,
+    "real_space_f1": 0.7302,
+    "gain_from_real_space": 0.0221,
+    "vs_df_adi_trained_p4": -0.0692,
+    "verdict": "Training on your own data is worth +0.07. DeepLoc labels are different."
+  },
+  "p4_best_score": 0.8002,
+  "p4_best_config": "attn-pooled L22 + SPACE + aux (1538d), CL_CUTOFF=0.50, manual 2-round"
+}

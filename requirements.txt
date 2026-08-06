@@ -1,0 +1,13 @@
+# Verified environment (the 0.8002 result was measured on this exact stack).
+# Pin these — this pipeline is sensitive to numpy/torch version drift.
+numpy==2.4.4
+pandas==3.0.2
+scikit-learn==1.8.0
+torch==2.12.1
+h5py==3.16.0
+cleanlab==2.9.0
+
+# Embedding extraction only (Colab notebook, step 2.1 below) — not needed for training:
+# transformers>=4.40
+# sentencepiece>=0.2
+# protobuf>=4

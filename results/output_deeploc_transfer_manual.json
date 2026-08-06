@@ -1,0 +1,38 @@
+{
+  "train_data": "DeepLoc new (11,562 SwissProt)",
+  "test_data": "df_adi P4 (3,276)",
+  "pipeline": "Manual 2-round MLP self-confidence @0.40 \u2192 tuned thresholds",
+  "embeddings": "Attention-pooled ProtT5 L22 (both sides)",
+  "features": "1538-d (T5 1024 + SPACE zero-filled 512 + aux 2)",
+  "baseline_f1": 0.7253,
+  "manual_f1_05": 0.7379,
+  "manual_f1_tuned": 0.7302,
+  "gain_vs_baseline": 0.0049,
+  "delta_vs_df_adi_trained_p4": -0.0692,
+  "delta_vs_df_adi_5fold_mean": -0.0536,
+  "per_class_tuned": [
+    0.7688,
+    0.7062,
+    0.802,
+    0.7897,
+    0.6442,
+    0.8554,
+    0.5455
+  ],
+  "thresholds": [
+    0.7,
+    0.72,
+    0.56,
+    0.66,
+    0.68,
+    0.58,
+    0.6
+  ],
+  "protein_counts": {
+    "start": 11562,
+    "after_r1": 8289,
+    "after_r2": 7586
+  },
+  "retention_pct": 65.6,
+  "wall_s": 30.6
+}
