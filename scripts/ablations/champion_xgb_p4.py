@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """champion_xgb_p4.py
 
-XGBoost champion on partition 4 — replaces our MLP(a) with XGBoost.
+XGBoost champion on partition 4 - replaces our MLP(a) with XGBoost.
 Trains 7 binary XGBoost classifiers (1 per compartment) with:
   - scale_pos_weight for class imbalance
   - Early stopping via held-out validation
@@ -132,7 +132,7 @@ def gen_oof_xgb(X, Y, n_folds=4, seed=42):
 
 
 def cleanlab_step(Y, oof, cutoff):
-    """Same 2-round cleanlab as champion_5fold_cv.py — self-confidence scoring."""
+    """Same 2-round cleanlab as champion_5fold_cv.py - self-confidence scoring."""
     labs = [list(np.where(Y[i] == 1)[0]) for i in range(len(Y))]
     scores = get_label_quality_scores(
         labels=labs, pred_probs=oof.astype(np.float64),
@@ -146,7 +146,7 @@ def cleanlab_step(Y, oof, cutoff):
 
 def main():
     print("=" * 70)
-    print("  XGBOOST CHAMPION — PARTITION 4 (vs MLP champion 0.8011)")
+    print("  XGBOOST CHAMPION - PARTITION 4 (vs MLP champion 0.8011)")
     print("  7 binary XGBoost classifiers + 2-round cleanlab")
     print("=" * 70)
     
@@ -211,7 +211,7 @@ def main():
     
     # === REPORT ===
     print("\n" + "=" * 65)
-    print("  XGBoost Champion — P4 Results")
+    print("  XGBoost Champion - P4 Results")
     print("=" * 65)
     print(f"  {'Metric':>20}  {'Score':>8}")
     print(f"  {'-'*20}  {'-'*8}")
@@ -233,7 +233,7 @@ def main():
     for j, c in enumerate(COMPARTMENTS):
         mlp_v = mlp_ref.get(c, 0.0)
         delta = final_pc[j] - mlp_v
-        marker = " 🏆" if final_pc[j] > mlp_v + 0.005 else (" 📉" if mlp_v > final_pc[j] + 0.005 else "")
+        marker = " " if final_pc[j] > mlp_v + 0.005 else (" " if mlp_v > final_pc[j] + 0.005 else "")
         print(f"  {c:>15s}  {final_pc[j]:>8.4f}  {mlp_v:>8.4f}  {delta:>+8.4f}{marker}")
     
     print(f"\n  {'Overall':>15s}  {final_f1:>8.4f}  {0.8011:>8.4f}  {final_f1 - 0.8011:>+8.4f}")
@@ -244,9 +244,9 @@ def main():
     print("=" * 65)
     print(f"  {'Model':>30s}  {'F1-macro':>9s}")
     print(f"  {'-'*30}  {'-'*9}")
-    print(f"  {'🏆  XGBoost champion (this run)':>30s}  {final_f1:>9.4f}")
+    print(f"  {'  XGBoost champion (this run)':>30s}  {final_f1:>9.4f}")
     print(f"  {'    Baseline XGBoost (no cleanlab)':>30s}  {base_f1:>9.4f}")
-    print(f"  {'🏆  MLP champion (ProtT5)':>30s}  {0.8011:>9.4f}")
+    print(f"  {'  MLP champion (ProtT5)':>30s}  {0.8011:>9.4f}")
     print(f"  {'    DeepLoc Accurate (ProtT5-XL)':>30s}  {0.7674:>9.4f}")
     print(f"  {'    DeepLoc Fast (ESM-1b)':>30s}  {0.7491:>9.4f}")
     

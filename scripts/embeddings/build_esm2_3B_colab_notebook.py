@@ -7,7 +7,7 @@ Builder for a self-contained ESM2-3B per-layer extraction notebook.
 Generates: esm2_3B_extract_colab.ipynb
 
 Key features:
-  - No Google Drive dependency — everything in Colab session
+  - No Google Drive dependency - everything in Colab session
   - Tokenizer diagnostic gate (MUST pass before extraction)
   - Memmap checkpointing for crash recovery
   - Row-uniqueness sanity check after extraction
@@ -45,7 +45,7 @@ def code(src):
 # CELLS
 # ============================================================================
 
-md(f"""# ESM2-3B — per-layer df_adi embedding extraction
+md(f"""# ESM2-3B - per-layer df_adi embedding extraction
 
 Extracts mean-pooled **2560-d** embeddings from all **36 encoder layers** of `facebook/esm2_t36_3B_UR50D` for every protein in df_adi.csv.
 
@@ -53,16 +53,16 @@ Extracts mean-pooled **2560-d** embeddings from all **36 encoder layers** of `fa
 
 **Protocol:**
 1. Upload df_adi.csv (Cell 2)
-2. Load model + tokenizer (Cell 4) — ~30s download, model is ~5.7 GB
-3. **Tokenizer diagnostic gate** (Cell 5) — verifies different sequences get different token IDs
-4. Extract all 36 layers via `output_hidden_states=True` (Cell 6) — ~60 min on T4, ~20 min on A100
-5. Write compressed HDF5 (Cell 7) — ~1.5 GB
+2. Load model + tokenizer (Cell 4) - ~30s download, model is ~5.7 GB
+3. **Tokenizer diagnostic gate** (Cell 5) - verifies different sequences get different token IDs
+4. Extract all 36 layers via `output_hidden_states=True` (Cell 6) - ~60 min on T4, ~20 min on A100
+5. Write compressed HDF5 (Cell 7) - ~1.5 GB
 6. Download HDF5 to local machine (Cell 8)
 7. Cleanup memmap (Cell 9)
 
 **Expected outputs:**
-- `/content/esm2_3B_all_layers.h5` — 36 datasets `df_adi_layer_00` .. `df_adi_layer_35`, each (16741, 2560) float32, gzip compressed
-- `/content/memmap/esm2_3B_memmap.npy` — ~3 GB temporary memmap (delete after download)
+- `/content/esm2_3B_all_layers.h5` - 36 datasets `df_adi_layer_00` .. `df_adi_layer_35`, each (16741, 2560) float32, gzip compressed
+- `/content/memmap/esm2_3B_memmap.npy` - ~3 GB temporary memmap (delete after download)
 
 **VRAM requirements:** T4 (15 GB) with batch_size=4 is comfortable. A100 (40 GB) can push to batch_size=16.
 """)
@@ -78,7 +78,7 @@ if torch.cuda.is_available():
     print(f'GPU: {torch.cuda.get_device_name(0)}')
     print(f'VRAM: {torch.cuda.get_device_properties(0).total_memory / 1e9:.1f} GB')
 else:
-    print('WARNING: no GPU — extraction will be extremely slow (~hours).')
+    print('WARNING: no GPU - extraction will be extremely slow (~hours).')
 
 subprocess.run([sys.executable, '-m', 'pip', 'install', '-q',
     'transformers>=4.40', 'h5py>=3.10', 'scikit-learn>=1.4',
@@ -87,7 +87,7 @@ print('Deps installed.')
 """)
 
 code("""# ── 1. Setup session paths ──────────────────────────────────────────
-# Everything lives in /content/ — no Drive needed.
+# Everything lives in /content/ - no Drive needed.
 # Checkpoints and memmap for crash recovery.
 
 CHECKPOINT_DIR = Path('/content/esm2_3B_checkpoints')
@@ -105,7 +105,7 @@ print(f'  Status:       {STATUS_PATH}')
 """)
 
 code("""# ── 2. Upload df_adi.csv ───────────────────────────────────────────────
-# Run this cell MANUALLY (not via "Run All") — files.upload() needs your click.
+# Run this cell MANUALLY (not via "Run All") - files.upload() needs your click.
 from google.colab import files
 import shutil
 
@@ -172,18 +172,18 @@ model.eval()
 print(f'Loaded. Number of layers: {len(model.encoder.layer) if hasattr(model, \"encoder\") else \"from config\"}')
 """)
 
-md("""## Cell 5: Tokenizer Diagnostic Gate ⛔
+md("""## Cell 5: Tokenizer Diagnostic Gate 
 
 **This cell MUST pass before extraction proceeds.** It verifies the tokenizer produces different token sequences for different proteins. If it fails, the extracted embeddings will be degenerate (all rows identical, useless).
 
 The diagnostic tests:
 1. Eight test sequences of varying lengths
-2. Each is tokenized normally (ESM2 has its own BPE tokenizer — no space-formatting needed)
+2. Each is tokenized normally (ESM2 has its own BPE tokenizer - no space-formatting needed)
 3. Checks that unique sequences produce unique token IDs
 4. Checks that sequences tokenize to reasonable lengths (not just 1-3 tokens)
 """)
 
-code("""# ── 5. TOKENIZER DIAGNOSTIC GATE ⛔ ──────────────────────────────────
+code("""# ── 5. TOKENIZER DIAGNOSTIC GATE  ──────────────────────────────────
 
 # Build test sequences: 8 samples covering short, medium, long
 test_seqs = [
@@ -198,7 +198,7 @@ test_seqs = [
 ]
 
 print('=' * 60)
-print('STEP 1: Tokenize (ESM2 uses BPE — NO space-formatting needed)')
+print('STEP 1: Tokenize (ESM2 uses BPE - NO space-formatting needed)')
 print('=' * 60)
 encoded = tokenizer(test_seqs, return_tensors='pt', padding='longest',
                     truncation=True, max_length=MAX_SEQ_LEN,
@@ -240,23 +240,23 @@ min_tokens, max_tokens = min(all_tokens), max(all_tokens)
 # GATE: must have at least 2 unique sequences AND reasonable token count
 errors = []
 if len(unique_sets) < 2:
-    errors.append(f'Only {len(unique_sets)} unique token sequences — need at least 2.')
+    errors.append(f'Only {len(unique_sets)} unique token sequences - need at least 2.')
 if min_tokens < 3:
     errors.append(f'Min tokens = {min_tokens}, expected >= 3 for real protein sequences.')
-    errors.append('  Check decoded output above — expect protein-like tokens, not single tokens.')
+    errors.append('  Check decoded output above - expect protein-like tokens, not single tokens.')
 
 if errors:
-    print('❌ DIAGNOSTIC FAILED:')
+    print(' DIAGNOSTIC FAILED:')
     for e in errors:
         print(f'  {e}')
     print()
     print('TROUBLESHOOTING:')
-    print('  1. Check the decoded output — are proteins being tokenized as single tokens?')
+    print('  1. Check the decoded output - are proteins being tokenized as single tokens?')
     print('  2. Try a different ESM2 model variant')
     print('  3. Check transformers version: !pip show transformers')
-    raise RuntimeError('Tokenizer diagnostic failed — embeddings will be degenerate. Fix before continuing.')
+    raise RuntimeError('Tokenizer diagnostic failed - embeddings will be degenerate. Fix before continuing.')
 else:
-    print(f'✅ PASS: {len(unique_sets)} unique sequences, '
+    print(f' PASS: {len(unique_sets)} unique sequences, '
           f'{min_tokens}-{max_tokens} tokens per sequence.')
     print('   Extraction can proceed.')
 """)
@@ -340,7 +340,7 @@ try:
         batch_seqs = list(seqs[i0:i1])
         batch_ids = list(range(i0, i1))
 
-        # ESM2 uses BPE tokenizer — NO space-formatting needed (unlike ProtT5).
+        # ESM2 uses BPE tokenizer - NO space-formatting needed (unlike ProtT5).
         # Just pass raw sequences.
         encoded = tokenizer(batch_seqs, return_tensors='pt', padding='longest',
                             truncation=True, max_length=CONFIG['max_seq_len'],
@@ -406,9 +406,9 @@ for chk_layer in check_layers:
           f'unique_first200rows={unique_200}  {status}')
 
 if all_ok:
-    print('\\n✅ ALL LAYERS HAVE DIVERSE ROWS — extraction is valid.')
+    print('\\n ALL LAYERS HAVE DIVERSE ROWS - extraction is valid.')
 else:
-    print('\\n⚠️  Some layers have low spread. This may still be OK if middle layers are fine.')
+    print('\\nWARNING:  Some layers have low spread. This may still be OK if middle layers are fine.')
     print('   Continue to Cell 7 to write HDF5, then verify locally.')
 """)
 
@@ -455,7 +455,7 @@ with h5py.File(str(H5_PATH), 'r') as h5:
             all_valid = False
         print(f'  {k}: {arr.shape}  nnz={nnz}/{arr.size} ({pct:.1f}%)  '
               f'NaN={nan_c}  spread={spread:.2f}  {"OK" if valid else "BROKEN"}')
-    print(f'\\n{"✅ All layers valid" if all_valid else "❌ Some layers have issues"}')
+    print(f'\\n{" All layers valid" if all_valid else " Some layers have issues"}')
     total_gb = sum(h5[k][:].nbytes for k in keys) / 1e9
     print(f'Total raw data: {total_gb:.1f} GB (float32)')
 """)

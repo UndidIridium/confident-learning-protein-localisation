@@ -179,7 +179,7 @@ def run_fold(holdout):
 def main():
     t0 = time.time()
     print("=" * 70)
-    print(f"  MANUAL CHAMPION — 5-FOLD CV — ATTENTION-POOLED")
+    print(f"  MANUAL CHAMPION - 5-FOLD CV - ATTENTION-POOLED")
     print(f"  Pipeline: 2-round MLP self-confidence → final MLP")
     print(f"  Embeddings: attn-pooled ProtT5 L22 + SPACE + aux (1538-d)")
     print("=" * 70)
@@ -191,7 +191,7 @@ def main():
 
     # Summary
     print("\n" + "=" * 65)
-    print("  5-FOLD CV SUMMARY — MANUAL (ATTN-POOLED)")
+    print("  5-FOLD CV SUMMARY - MANUAL (ATTN-POOLED)")
     print("=" * 65)
     print(f"  {'Holdout':>8}  {'Baseline':>9}  {'Champion':>9}  {'Gain':>8}  n_train → n_R2")
     print(f"  {'-'*8}  {'-'*9}  {'-'*9}  {'-'*8}  {'-'*18}")

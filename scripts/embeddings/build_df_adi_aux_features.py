@@ -12,7 +12,7 @@ Output:
 Why this exists:
   champion_5fold_cv.py currently feeds (attn-pool L22 1024-d + SPACE 512-d) into a
   1-layer MLP. Adding these 2 columns produces a 1538-d input matrix that gives
-  the MLP direct access to sequence-level signal-peptide / TMD signal — the same
+  the MLP direct access to sequence-level signal-peptide / TMD signal - the same
   auxiliary info DeepLoc 2.1 captures with its dedicated sorting-signal branch.
 
 Row-order invariant:
@@ -108,7 +108,7 @@ def main():
           f"min={aux[:, 1].min():.0f}")
 
     np.save(OUT_NPY, aux)
-    print(f"\n  ✅ Saved: {OUT_NPY}  ({OUT_NPY.stat().st_size / 1024:.1f} KB)")
+    print(f"\n   Saved: {OUT_NPY}  ({OUT_NPY.stat().st_size / 1024:.1f} KB)")
     print(f"  Wall time: {time.time() - t0:.2f}s")
     print()
     print("  Next step: patch /Volumes/BOMBOCLAT/project_JL/champion_5fold_cv.py")

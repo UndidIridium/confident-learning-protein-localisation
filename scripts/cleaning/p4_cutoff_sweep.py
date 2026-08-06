@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""p4_cutoff_sweep.py — Sweep CL_CUTOFF ∈ {0.40, 0.45, 0.50, 0.55} on P4.
+"""p4_cutoff_sweep.py - Sweep CL_CUTOFF ∈ {0.40, 0.45, 0.50, 0.55} on P4.
 
 Attn-pooled ProtT5 L22 + SPACE + aux (1538d). R1 OOF computed once and reused.
 """
@@ -134,7 +134,7 @@ def run_cutoff(cutoff, X_tr, Y_tr, X_te, Y_te, oof_r1):
 def main():
     t0 = time.time()
     print("=" * 65)
-    print("  P4 CL_CUTOFF SWEEP — {0.40, 0.45, 0.50, 0.55}")
+    print("  P4 CL_CUTOFF SWEEP - {0.40, 0.45, 0.50, 0.55}")
     print("  Attn-pooled ProtT5 L22 + SPACE + aux (1538d)")
     print("=" * 65)
 

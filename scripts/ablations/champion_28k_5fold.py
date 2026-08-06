@@ -161,7 +161,7 @@ def load_combined():
 
 
 print("=" * 65)
-print("  COMBINED 28k — 5-FOLD CV (PCA 100d)")
+print("  COMBINED 28k - 5-FOLD CV (PCA 100d)")
 print("=" * 65)
 
 t0 = time.time()
@@ -241,7 +241,7 @@ for j, c in enumerate(COMPARTMENTS):
     }
 
 print(f"\n{'='*55}")
-print(f"  COMBINED 28k — 5-FOLD CV RESULT")
+print(f"  COMBINED 28k - 5-FOLD CV RESULT")
 print(f"{'='*55}")
 print(f"  {'':15s}  {'Mean':>8s}  {'Std':>8s}")
 print(f"  {'─'*15}  {'─'*8}  {'─'*8}")

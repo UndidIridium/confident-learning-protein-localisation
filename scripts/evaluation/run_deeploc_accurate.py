@@ -22,7 +22,7 @@ if __name__ == "__main__":
     parser.add_argument("--plot", action="store_true", default=False)
     args = parser.parse_args()
 
-    print(f"DeepLoc 2.1 — Accurate (ProtT5-XL)")
+    print(f"DeepLoc 2.1 - Accurate (ProtT5-XL)")
     print(f"  FASTA:  {args.fasta}")
     print(f"  Output: {args.output}")
     print(f"  Model:  {args.model}")

@@ -28,14 +28,14 @@ OUT.parent.mkdir(parents=True, exist_ok=True)
 
 # ─── Colours (colour-blind-friendly palette) ──────────────────────────────────
 COL_BG       = "#f7f9fb"
-COL_DEEPLOC  = "#dbe9f4"     # light blue  — DeepLoc panels
-COL_OURS     = "#fbe5cf"     # light orange — Ours panels
+COL_DEEPLOC  = "#dbe9f4"     # light blue  - DeepLoc panels
+COL_OURS     = "#fbe5cf"     # light orange - Ours panels
 COL_TEXT     = "#1f2937"
-COL_ARROW_US = "#d97706"     # orange — arrows from "Ours" components
-COL_ARROW_DL = "#1d4ed8"     # blue   — arrows from "DeepLoc" components
-COL_WIN      = "#0e7490"     # teal   — compartments where ours wins (deuteranopia-safe)
-COL_LOSE     = "#b91c1c"     # red    — compartments where DeepLoc wins (kept for contrast against teal)
-COL_NEUTRAL  = "#6b7280"     # gray   — neutral / tie
+COL_ARROW_US = "#d97706"     # orange - arrows from "Ours" components
+COL_ARROW_DL = "#1d4ed8"     # blue   - arrows from "DeepLoc" components
+COL_WIN      = "#0e7490"     # teal   - compartments where ours wins (deuteranopia-safe)
+COL_LOSE     = "#b91c1c"     # red    - compartments where DeepLoc wins (kept for contrast against teal)
+COL_NEUTRAL  = "#6b7280"     # gray   - neutral / tie
 
 
 # ─── Layout helpers ───────────────────────────────────────────────────────────
@@ -114,7 +114,7 @@ ax.text(15.0, 9.10, "Flat MLP head  |  ~3.1M params  |  ProtT5-XL frozen + SPACE
 
 
 # ════════════════════════════════════════════════════════════════════════════
-#  LEFT COLUMN — DeepLoc 2.1
+#  LEFT COLUMN - DeepLoc 2.1
 # ════════════════════════════════════════════════════════════════════════════
 
 # Stage 1: Localization branch
@@ -147,7 +147,7 @@ panel(ax, 5.4, 5.0, 4.0, 1.4,
       "Per-position learned weights\nfrozen after training",
       color=COL_DEEPLOC, fontsize=10)
 
-# (No sequential inter-stage arrows — DeepLoc stages are PARALLEL heads off shared
+# (No sequential inter-stage arrows - DeepLoc stages are PARALLEL heads off shared
 # backbone, not a serial pipeline. The vertical feeder arrow on the left edge shows
 # backbone → all stages.)
 
@@ -161,7 +161,7 @@ arrow(ax, 2.6, 3.2, 2.6, 7.0, color=COL_ARROW_DL, lw=1.2,
 
 
 # ════════════════════════════════════════════════════════════════════════════
-#  RIGHT COLUMN — Ours
+#  RIGHT COLUMN - Ours
 # ════════════════════════════════════════════════════════════════════════════
 
 # Cleanlab
@@ -191,7 +191,7 @@ panel(ax, 10.6, 4.6, 8.8, 1.0,
 # 6-class output
 panel(ax, 10.6, 3.2, 8.8, 1.0,
       "6-way sigmoid  →  per-class threshold tuning",
-      "thresholds tuned on OOF F1 grid (linspace 0.10–0.90, step 0.05)",
+      "thresholds tuned on OOF F1 grid (linspace 0.10-0.90, step 0.05)",
       color=COL_OURS, fontsize=10)
 
 # Vertical arrows in Ours column
@@ -202,7 +202,7 @@ arrow(ax, 15.0, 7.4, 15.0, 7.2, color=COL_ARROW_US, lw=1.4)  # cleanlab feeds ba
 
 
 # ════════════════════════════════════════════════════════════════════════════
-#  BOTTOM ROW — Compartment labels with arrows pointing to where each is decided
+#  BOTTOM ROW - Compartment labels with arrows pointing to where each is decided
 # ════════════════════════════════════════════════════════════════════════════
 
 compartments = [
@@ -237,7 +237,7 @@ arrow(ax, 4.6, 4.5, 12.05, 1.95, color=COL_ARROW_DL, lw=1.2, curve=-0.10,
 arrow(ax, 4.6, 6.1, 12.05, 0.60, color=COL_ARROW_DL, lw=1.2, curve=-0.30,
       label="signal peptide/TMD aux →")
 
-# Arrows from Ours components to where we win — DISTINCT LABELS for each
+# Arrows from Ours components to where we win - DISTINCT LABELS for each
 arrow(ax, 17.1, 6.6, 12.05, 2.25, color=COL_ARROW_US, lw=1.2, curve=0.10,
       label="endom  ←  SPACE features")
 arrow(ax, 17.1, 6.6, 12.05, 1.55, color=COL_ARROW_US, lw=1.2, curve=0.18,

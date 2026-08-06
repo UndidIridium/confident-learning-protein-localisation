@@ -142,7 +142,7 @@ def fig1_f1_bars(per_ours, per_dl):
                 color=OURS_COLOR if d > 0 else DL_COLOR)
     ax.set_xticks(x); ax.set_xticklabels(COMPARTMENTS, rotation=15, ha="right")
     ax.set_ylabel("F1 score"); ax.set_ylim(0, 1.05)
-    ax.set_title("Per-compartment F1 — partition 4 holdout (3,276 proteins)")
+    ax.set_title("Per-compartment F1 - partition 4 holdout (3,276 proteins)")
     ax.legend(loc="lower right", frameon=True)
     fig.tight_layout()
     fig.savefig(OUT_DIR / "fig1_f1_per_compartment.png", dpi=300)
@@ -153,19 +153,19 @@ def fig2_pr_bars(per_ours, per_dl):
     x = np.arange(len(COMPARTMENTS))
     w = 0.20
     fig, ax = plt.subplots(figsize=(11, 5.5))
-    # ours — precision + recall
+    # ours - precision + recall
     ax.bar(x - 1.5*w, per_ours["precision"], w, color=OURS_COLOR, alpha=0.85,
-           label="Ours — precision")
+           label="Ours - precision")
     ax.bar(x - 0.5*w, per_ours["recall"],    w, color=OURS_COLOR, alpha=0.55,
-           label="Ours — recall")
-    # DeepLoc — precision + recall
+           label="Ours - recall")
+    # DeepLoc - precision + recall
     ax.bar(x + 0.5*w, per_dl["precision"],   w, color=DL_COLOR,   alpha=0.85,
-           label="DeepLoc — precision")
+           label="DeepLoc - precision")
     ax.bar(x + 1.5*w, per_dl["recall"],      w, color=DL_COLOR,   alpha=0.55,
-           label="DeepLoc — recall")
+           label="DeepLoc - recall")
     ax.set_xticks(x); ax.set_xticklabels(COMPARTMENTS, rotation=15, ha="right")
     ax.set_ylabel("Score"); ax.set_ylim(0, 1.05)
-    ax.set_title("Per-compartment Precision & Recall — partition 4 holdout (3,276 proteins)")
+    ax.set_title("Per-compartment Precision & Recall - partition 4 holdout (3,276 proteins)")
     ax.axhline(0.5, color=NEUTRAL, lw=0.6, ls="--")
     ax.legend(loc="lower right", ncol=2, frameon=True)
     fig.tight_layout()
@@ -174,7 +174,7 @@ def fig2_pr_bars(per_ours, per_dl):
 
 
 def fig3_score_distributions(probs_ours, probs_dl_rows, Y_true):
-    """6 separate panels (skip Membrane — derived mapping makes comparison apples-to-oranges).
+    """6 separate panels (skip Membrane - derived mapping makes comparison apples-to-oranges).
     Each panel: histogram of predicted probability on positives vs negatives
     for both methods.
     """
@@ -201,19 +201,19 @@ def fig3_score_distributions(probs_ours, probs_dl_rows, Y_true):
     for j, comp in enumerate(panels):
         ax = axes[j]
         yt = Y_true[:, j+1]
-        # DeepLoc — positives
+        # DeepLoc - positives
         ax.hist(dl_probs_matrix[yt==1, j+1], bins=bins,
-                color=DL_COLOR, alpha=0.55, label="DeepLoc — true positive",
+                color=DL_COLOR, alpha=0.55, label="DeepLoc - true positive",
                 density=True, edgecolor="white", linewidth=0.4)
         ax.hist(dl_probs_matrix[yt==0, j+1], bins=bins,
-                color=DL_COLOR, alpha=0.20, label="DeepLoc — true negative",
+                color=DL_COLOR, alpha=0.20, label="DeepLoc - true negative",
                 density=True, edgecolor="white", linewidth=0.4, hatch="//")
-        # Ours — positives
+        # Ours - positives
         ax.hist(probs_ours[yt==1, j+1], bins=bins,
-                color=OURS_COLOR, alpha=0.55, label="Ours — true positive",
+                color=OURS_COLOR, alpha=0.55, label="Ours - true positive",
                 density=True, edgecolor="white", linewidth=0.4)
         ax.hist(probs_ours[yt==0, j+1], bins=bins,
-                color=OURS_COLOR, alpha=0.20, label="Ours — true negative",
+                color=OURS_COLOR, alpha=0.20, label="Ours - true negative",
                 density=True, edgecolor="white", linewidth=0.4, hatch="\\\\")
         ax.axvline(THRESHOLD, color=NEUTRAL, lw=0.8, ls="--")
         ax.set_title(comp, fontsize=11)
@@ -224,7 +224,7 @@ def fig3_score_distributions(probs_ours, probs_dl_rows, Y_true):
     fig.legend(handles, labels, loc="lower center", ncol=4,
                bbox_to_anchor=(0.5, -0.02), frameon=True)
     fig.suptitle(
-        "Score distributions of true positives vs negatives — "
+        "Score distributions of true positives vs negatives - "
         "DeepLoc 2.1 Accurate ‖ ours\n"
         "(Membrane omitted: derived mapping makes raw probability "
         "distributions non-comparable)",
@@ -297,8 +297,8 @@ def write_outputs(per_ours, per_dl, ov_ours, ov_dl):
     ]
     for j, c in enumerate(COMPARTMENTS):
         d_f1 = per_ours["f1"][j] - per_dl["f1"][j]
-        winner = "⭐ OURS" if d_f1 > 0 else ("DeepLoc" if d_f1 < 0 else "—")
-        star = " ⭐ (Δ>0.05)" if abs(d_f1) > 0.05 else ""
+        winner = " OURS" if d_f1 > 0 else ("DeepLoc" if d_f1 < 0 else "-")
+        star = "  (Δ>0.05)" if abs(d_f1) > 0.05 else ""
         md_lines.append(
             f"| {c} | {MAPPING[c]} | {per_dl['f1'][j]:.4f} | "
             f"{per_dl['precision'][j]:.4f} | {per_dl['recall'][j]:.4f} | "
@@ -324,7 +324,7 @@ def write_outputs(per_ours, per_dl, ov_ours, ov_dl):
           "| Metric | DeepLoc 2.1 (Accurate) | Ours (Champion) | Δ (Ours − DL) |",
           "|---|---:|---:|---:|"]
     metric_pairs = [
-        ("F1 (macro) — headline",   ov_dl["f1_macro"],         ov_ours["f1_macro"]),
+        ("F1 (macro) - headline",   ov_dl["f1_macro"],         ov_ours["f1_macro"]),
         ("F1 (micro)",              ov_dl["f1_micro"],         ov_ours["f1_micro"]),
         ("Accuracy (micro)",        ov_dl["accuracy"],         ov_ours["accuracy"]),
         ("Precision (macro)",       ov_dl["precision_macro"],  ov_ours["precision_macro"]),
@@ -359,11 +359,11 @@ def write_outputs(per_ours, per_dl, ov_ours, ov_dl):
 
 def main():
     print("=" * 72)
-    print("  COMPARISON — DeepLoc 2.1 (Accurate / ProtT5-XL) vs Our Champion")
-    print("  df_adi partition 4 — apples-to-apples (same GT, same threshold t=0.5)")
+    print("  COMPARISON - DeepLoc 2.1 (Accurate / ProtT5-XL) vs Our Champion")
+    print("  df_adi partition 4 - apples-to-apples (same GT, same threshold t=0.5)")
     print("=" * 72)
 
-    # 1. Ground truth — load from df_adi partition-4
+    # 1. Ground truth - load from df_adi partition-4
     src = pd.read_csv(SRC_CSV)
     p4 = src[src["partition"] == 4].reset_index(drop=True)
     Y_true = p4[LABELS_7].values.astype(int)
@@ -375,7 +375,7 @@ def main():
     assert probs_ours.shape == (n, 7), \
         f"OURS probs shape {probs_ours.shape} != ({n}, 7)"
     assert (Y_ours_lbl == Y_true).all(), \
-        "OURS labels don't match df_adi ground truth — check partition filter"
+        "OURS labels don't match df_adi ground truth - check partition filter"
     print(f"Our champion P4 probs:    shape {probs_ours.shape} (from {OUR_PROBS.name})")
 
     # 3. DeepLoc preds

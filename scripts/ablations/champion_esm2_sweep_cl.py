@@ -135,7 +135,7 @@ print(f"\nBaseline...")
 baseline_model, baseline_f1 = train_mlp(X_tr, Y_tr, X_te, Y_te, FEAT_DIM)
 print(f"  Baseline F1: {baseline_f1:.4f}")
 
-# 8. OOF (expensive — done once)
+# 8. OOF (expensive - done once)
 print(f"\nGenerating OOF predictions (5-fold, expensive)...")
 oof_r1 = gen_oof(X_tr, Y_tr, 5, FEAT_DIM)
 print(f"  OOF done.")
@@ -159,7 +159,7 @@ for cut in CUTOFFS:
     conf_r2 = np.where(Y_r1.astype(int) == 1, oof_r2, 1 - oof_r2).mean(axis=1)
     keep_r2 = conf_r2 >= cut
 
-    # Final model — train once, unpack both F1 and model
+    # Final model - train once, unpack both F1 and model
     X_r2, Y_r2 = X_r1[keep_r2], Y_r1[keep_r2]
     final_model, champ_f1 = train_mlp(X_r2, Y_r2, X_te, Y_te, FEAT_DIM)
     final_model.eval()

@@ -42,7 +42,7 @@ CL_CUTOFF = 0.40; MIN_FLAGS = 3
 THR_GRID = np.arange(0.02, 0.96, 0.02)
 
 
-# ═══════════════ Sklearn MLP (per-compartment binary — for CleanLearning) ═══════════════
+# ═══════════════ Sklearn MLP (per-compartment binary - for CleanLearning) ═══════════════
 
 class SklearnMLP(BaseEstimator, ClassifierMixin):
     def __init__(self, indim=1026, hidden=512, dropout=0.5, lr=1e-4, max_ep=50, patience=5, bs=256):
@@ -204,7 +204,7 @@ def eval_at_thresholds(probs, Y, thresholds):
 def main():
     t0 = time.time()
     print("=" * 80, flush=True)
-    print("  ALTERNATING CL PIPELINE — P4 — T5+SPACE+CL", flush=True)
+    print("  ALTERNATING CL PIPELINE - P4 - T5+SPACE+CL", flush=True)
     print("  CL consensus → MLP self-confidence → CL consensus → final MLP", flush=True)
     print("=" * 80, flush=True)
 

@@ -168,7 +168,7 @@ def load_combined():
     parts = df_combined['partition'].values  # -1 for new proteins
     accs_combined = df_combined['acc'].values
     
-    # ── 2. Load ProtT5 attn features (L22 only — champion config) ──
+    # ── 2. Load ProtT5 attn features (L22 only - champion config) ──
     with h5py.File(NEW_H5, 'r') as h:
         prot5_new = h[f'attn_layer_22'][:].astype(np.float32)
     print(f"  New attn (L22):       {prot5_new.shape}")
@@ -234,7 +234,7 @@ def load_combined():
 def main():
     t0 = time.time()
     print("=" * 72)
-    print("  COMBINED 28k CHAMPION — FULL DIM (no PCA)")
+    print("  COMBINED 28k CHAMPION - FULL DIM (no PCA)")
     print("  df_adi (16,741) + DeepLoc new (11,562) = 28,303 total")
     print("  ProtT5 attn L22 (1024d) + SPACE (512d) + aux (2d) = 1538d")
     print("  MLP: 1538 → 512 → 7 (champion config)")
@@ -282,7 +282,7 @@ def main():
     
     # Report
     print(f"\n  {'='*55}")
-    print(f"  COMBINED 28K CHAMPION — RESULT (Partition {HOLDOUT})")
+    print(f"  COMBINED 28K CHAMPION - RESULT (Partition {HOLDOUT})")
     print(f"  {'='*55}")
     print(f"  {'Metric':>25s}  {'Score':>8s}")
     print(f"  {'-'*25}  {'-'*8}")
@@ -304,7 +304,7 @@ def main():
     for j, c in enumerate(COMPARTMENTS):
         mlp_v = mlp_ref.get(c, 0.0)
         delta = final_pc[j] - mlp_v
-        marker = " 🏆" if final_pc[j] > mlp_v + 0.005 else (" 📉" if mlp_v > final_pc[j] + 0.005 else "")
+        marker = " " if final_pc[j] > mlp_v + 0.005 else (" " if mlp_v > final_pc[j] + 0.005 else "")
         print(f"  {c:>15s}  {final_pc[j]:>8.4f}  {mlp_v:>8.4f}  {delta:>+8.4f}{marker}")
 
     champ_p4 = 0.7994
@@ -316,9 +316,9 @@ def main():
     print("=" * 65)
     print(f"  {'Model':>35s}  {'F1-macro':>9s}")
     print(f"  {'-'*35}  {'-'*9}")
-    print(f"  {'🏆  28k champion (this run)':>35s}  {final_f1:>9.4f}")
+    print(f"  {'  28k champion (this run)':>35s}  {final_f1:>9.4f}")
     print(f"  {'    28k baseline (no cleanlab)':>35s}  {base_f1:>9.4f}")
-    print(f"  {'🏆  df_adi MLP champion (16k)':>35s}  {0.7994:>9.4f}")
+    print(f"  {'  df_adi MLP champion (16k)':>35s}  {0.7994:>9.4f}")
     print(f"  {'    df_adi baseline (13k train)':>35s}  {0.7815:>9.4f}  (≈)")
     print(f"  {'    DeepLoc Accurate (ProtT5-XL)':>35s}  {0.7674:>9.4f}")
     print(f"  {'    DeepLoc Fast (ESM-1b)':>35s}  {0.7491:>9.4f}")

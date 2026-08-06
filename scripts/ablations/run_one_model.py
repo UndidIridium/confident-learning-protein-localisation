@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""run_one_model.py <ModelName> — fast classifier on cleaned data.
+"""run_one_model.py <ModelName> - fast classifier on cleaned data.
 
-No OOF — trains on all cleaned data, tunes thresholds via 80/20 split on training set.
+No OOF - trains on all cleaned data, tunes thresholds via 80/20 split on training set.
 7 independent binary classifiers, single-threaded, fast estimators.
 """
 

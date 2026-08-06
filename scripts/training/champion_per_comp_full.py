@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""champion_per_comp_full.py — Per-compartment binary MLPs on FULL 4610d.
+"""champion_per_comp_full.py - Per-compartment binary MLPs on FULL 4610d.
 
 Tests whether separate feature representations help weak compartments
 (Mito, Endom, Cell_surf) on the full-dimensional features.
@@ -278,7 +278,7 @@ def run_fold(X_tr, Y_tr, X_te, Y_te, holdout):
 def main():
     t0 = time.time()
     print("=" * 72)
-    print("  PER-COMPARTMENT CHAMPION — FULL 4610d")
+    print("  PER-COMPARTMENT CHAMPION - FULL 4610d")
     print("  7 × BinaryMLP(4610→128→1) vs 1 × SharedMLP(4610→512→7)")
     print("  Cleanlab 2-pass on reconstructed multi-label OOF")
     print("=" * 72)

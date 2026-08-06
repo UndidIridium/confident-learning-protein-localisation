@@ -50,13 +50,13 @@ from sklearn.tree import DecisionTreeClassifier
 import xgboost as xgb
 import lightgbm as lgb
 
-# CatBoost — optional
+# CatBoost - optional
 try:
     import catboost as cb
     HAS_CATBOOST = True
 except ImportError:
     HAS_CATBOOST = False
-    print("⚠️  CatBoost not installed — skipping. Install: pip install catboost")
+    print("WARNING:  CatBoost not installed - skipping. Install: pip install catboost")
 
 import torch, torch.nn as nn, torch.optim as optim
 from cleanlab.multilabel_classification.rank import get_label_quality_scores
@@ -765,7 +765,7 @@ def run_model(name, X_tr_clean, Y_tr_clean, X_te, Y_te):
 def main():
     t0 = time.time()
     print("=" * 70, flush=True)
-    print("  MODEL ZOO — Classifier Comparison on df_adi P4", flush=True)
+    print("  MODEL ZOO - Classifier Comparison on df_adi P4", flush=True)
     print("  ALL models: same features (T5+SPACE+aux=1538d), same data", flush=True)
     print("=" * 70, flush=True)
 
@@ -812,7 +812,7 @@ def main():
     keep_r2 = cleanlab_step(Y_r1, oof_r2, CL_CUTOFF)
     X_r2, Y_r2 = X_r1[keep_r2], Y_r1[keep_r2]
     n_r2 = len(Y_r2)
-    print(f"    R2: {n_r2} kept ({100 * n_r2 / n_r1:.1f}%) — "
+    print(f"    R2: {n_r2} kept ({100 * n_r2 / n_r1:.1f}%) - "
           f"total retention {100 * n_r2 / n_tr:.1f}%", flush=True)
 
     # Store OOF from R2 for MLP threshold baseline
@@ -839,14 +839,14 @@ def main():
             r = run_model(name, X_r2, Y_r2, X_te, Y_te)
             results.append(r)
         except Exception as e:
-            print(f"    ❌ {name} FAILED: {e}", flush=True)
+            print(f"     {name} FAILED: {e}", flush=True)
             import traceback
             traceback.print_exc()
             results.append({"name": name, "error": str(e)})
 
     # ── Print summary table ──
     print("\n" + "=" * 75, flush=True)
-    print("  MODEL ZOO — FINAL RESULTS (df_adi P4)", flush=True)
+    print("  MODEL ZOO - FINAL RESULTS (df_adi P4)", flush=True)
     print("=" * 75, flush=True)
     header = f"  {'Model':>22s}  {'F1@0.5':>7s}  {'F1@tuned':>8s}  {'Gain':>7s}  {'OOF@tuned':>9s}  {'Time':>6s}"
     print(header, flush=True)
@@ -855,7 +855,7 @@ def main():
     mlp_tuned = None
     for r in results:
         if "error" in r:
-            print(f"  {r['name']:>22s}  ❌ FAILED: {r['error'][:40]}", flush=True)
+            print(f"  {r['name']:>22s}   FAILED: {r['error'][:40]}", flush=True)
         else:
             gain = r["f1_tuned"] - r["f1_05"]
             print(f"  {r['name']:>22s}  {r['f1_05']:>7.4f}  {r['f1_tuned']:>8.4f}  "

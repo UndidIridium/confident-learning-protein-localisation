@@ -59,7 +59,7 @@ MAPPING = {
 OUR_LABEL_COLS = ['membrane','cytoplasm','nucleus','extracellular',
                   'cell_surface','mitochondrion','endom']
 
-# DeepLoc 2.1 column names — accept whatever spelling DTU's CSV uses (dot, underscore, space, hyphen).
+# DeepLoc 2.1 column names - accept whatever spelling DTU's CSV uses (dot, underscore, space, hyphen).
 # Map_dl_to_ours uses the alias resolver below to handle all of them.
 DL_SUB = ['Nucleus','Cytoplasm','Extracellular','Cell.membrane','Mitochondrion',
           'Endoplasmic.reticulum','Lysosome/Vacuole','Golgi.apparatus',
@@ -228,11 +228,11 @@ def main():
     src = pd.read_csv(SRC_CSV)
     gt = src[src['partition'] == args.partition].reset_index(drop=True)
     Y_true = gt[OUR_LABEL_COLS].values.astype(int)
-    print(f'Ground truth: {Y_true.shape} (proteins × 7 compartments) — partition {args.partition} ({len(gt)} rows)')
+    print(f'Ground truth: {Y_true.shape} (proteins × 7 compartments) - partition {args.partition} ({len(gt)} rows)')
 
     # --- Load DeepLoc predictions or mock them ---
     if args.mock or args.dl_csv is None:
-        print('No DeepLoc CSV provided — generating MOCK uniform random probs for smoke-test.')
+        print('No DeepLoc CSV provided - generating MOCK uniform random probs for smoke-test.')
         rng = np.random.RandomState(42)
         rows = []
         for i in range(len(gt)):
@@ -272,7 +272,7 @@ def main():
     print(f'F1_macro    : {ov["f1_macro"]:.4f}     ← primary headline metric')
     print(f'Hamming loss: {ov["hamming_loss"]:.4f}')
     if args.mock:
-        print('\n⚠️  These numbers are from MOCK random probs. They are structurally correct (verify pipeline) but not a real comparison.')
+        print('\nWARNING:  These numbers are from MOCK random probs. They are structurally correct (verify pipeline) but not a real comparison.')
 
     # --- Build head-to-head table ---
     # Map: metric label -> (ours_value, overall_key_for_dl)
@@ -305,7 +305,7 @@ def main():
               '(better for accuracy/F1/recall/precision).')
     md.append('\n\nNote: A positive Δ means our pipeline is higher (better for accuracy/F1/recall/precision, lower for Hamming loss).')
     md.append('The Ours column reflects tinker11 (single seed, single fold, c=0.50 attn+SPACE+clean).')
-    md.append('The DeepLoc 2.1 column reflects this script running on DTU\'s model output (or mock random data — see input).')
+    md.append('The DeepLoc 2.1 column reflects this script running on DTU\'s model output (or mock random data - see input).')
     md.append('')
     md.append('### Per-compartment breakdown with mapping type')
     md.append('| Compartment | Mapping | Ours (F1) | DeepLoc (F1) | Δ | Winner |')
@@ -321,8 +321,8 @@ def main():
         dl_f1 = per['f1'][j]
         our_f1 = ours_perclass[c]
         d = our_f1 - dl_f1
-        star = ' ⭐' if abs(d) > 0.05 else ''
-        md.append(f'| {c} | {MAPPING[c]} | {our_f1:.4f} | {dl_f1:.4f} | {d:+.4f} | {"Us ⭐" if d > 0 else "DL"}{star} |')
+        star = ' ' if abs(d) > 0.05 else ''
+        md.append(f'| {c} | {MAPPING[c]} | {our_f1:.4f} | {dl_f1:.4f} | {d:+.4f} | {"Us " if d > 0 else "DL"}{star} |')
     md.append('')
     md.append('**Mapping legend:**')
     md.append('- **direct**: 1-to-1 from a single DeepLoc probability column')

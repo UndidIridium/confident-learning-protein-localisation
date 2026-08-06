@@ -59,7 +59,7 @@ with open(ALIASES, "rt") as f:
             if uniprot in acc_to_idxs and uniprot not in acc_to_string:
                 acc_to_string[uniprot] = parts[0]  # STRING_ID
         if n_lines % 50_000_000 == 0:
-            print(f"  {n_lines/1e6:.0f}M lines — {len(acc_to_string):,} matched...", flush=True)
+            print(f"  {n_lines/1e6:.0f}M lines - {len(acc_to_string):,} matched...", flush=True)
 
 elapsed = time.time() - t1
 print(f"Scanned {n_lines:,} lines ({n_uni_lines:,} UniProt_AC) in {elapsed:.0f}s")

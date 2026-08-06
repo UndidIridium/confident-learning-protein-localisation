@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""champion_per_comp.py — Per-compartment binary MLPs on PCA 100d.
+"""champion_per_comp.py - Per-compartment binary MLPs on PCA 100d.
 
 Instead of one shared 100→256→7 multi-label MLP, trains 7 separate
-100→32→1 binary classifiers — one per compartment.
+100→32→1 binary classifiers - one per compartment.
 
 Each compartment gets its own feature transformation, pos_weight,
 and early stopping. This avoids the shared-representation bottleneck:
@@ -46,7 +46,7 @@ LABEL_COLS = ["membrane","cytoplasm","nucleus","extracellular",
 M = len(LABEL_COLS)
 COMPARTMENTS = ["Membrane","Cytoplasm","Nucleus","Extracell","Cell_surf","Mito","Endom"]
 
-# Per-comp MLP (smaller — no shared hidden)
+# Per-comp MLP (smaller - no shared hidden)
 HIDDEN_PER = 32   # per-compartment hidden dim
 DROPOUT = 0.3     # slightly lower dropout for smaller net
 LR = 1e-3         # higher lr for faster per-comp convergence
@@ -153,7 +153,7 @@ def train_shared(Xtr, Ytr, Xte, Yte):
 def gen_oof_per_comp(X, Y):
     """Generate per-compartment OOF using 4-fold CV for each binary classifier.
     
-    Returns: oof of shape (n, M) — reconstructed from 7 per-comp OOF vectors.
+    Returns: oof of shape (n, M) - reconstructed from 7 per-comp OOF vectors.
     """
     n = len(X); oof = np.zeros((n, M), dtype=np.float32)
     rng = np.random.RandomState(42); idx = np.arange(n); rng.shuffle(idx)
@@ -263,7 +263,7 @@ def run_fold(X_tr, Y_tr, X_te, Y_te, holdout):
 def main():
     t0 = time.time()
     print("=" * 72)
-    print("  PER-COMPARTMENT CHAMPION — PCA 100d")
+    print("  PER-COMPARTMENT CHAMPION - PCA 100d")
     print("  7 separate binary MLPs (100→32→1) vs 1 shared (100→256→7)")
     print("=" * 72)
     

@@ -164,7 +164,7 @@ def train_sae(X_all, device="cpu"):
             loss = F.mse_loss(recon, batch)
             
             # Optional: auxiliary decoder weight norm (helps prevent dead neurons)
-            # (not needed with TopK — it naturally prevents dead neurons vs L1)
+            # (not needed with TopK - it naturally prevents dead neurons vs L1)
             
             opt.zero_grad()
             loss.backward()
@@ -230,7 +230,7 @@ def extract_codes(sae, X, device="cpu"):
         for s in range(0, n, SAE_BATCH):
             batch = torch.from_numpy(X[s:s + SAE_BATCH].astype(np.float32)).to(device)
             batch_codes, _ = sae.encode(batch)
-            # TopK activation — only k positions are non-zero
+            # TopK activation - only k positions are non-zero
             codes[s:s + SAE_BATCH] = batch_codes.cpu().numpy()
     
     return codes
@@ -319,7 +319,7 @@ def cleanlab_step(Y, oof, cutoff, label=""):
 
 def main():
     print("=" * 70)
-    print("  SPARSE AUTOENCODER CHAMPION — PARTITION 4")
+    print("  SPARSE AUTOENCODER CHAMPION - PARTITION 4")
     print(f"  ProtT5 L22 → TopK SAE ({SAE_LATENT}d, k={SAE_TOPK}) → MLP + cleanlab")
     print("=" * 70)
     
@@ -417,7 +417,7 @@ def main():
     # REPORT
     # ===================================================================
     print("\n" + "=" * 65)
-    print("  SAE CHAMPION — PARTITION 4 RESULTS")
+    print("  SAE CHAMPION - PARTITION 4 RESULTS")
     print("=" * 65)
     print(f"  {'Metric':>25s}  {'Score':>8s}")
     print(f"  {'-'*25}  {'-'*8}")
@@ -439,7 +439,7 @@ def main():
     for j, c in enumerate(COMPARTMENTS):
         mlp_v = mlp_ref.get(c, 0.0)
         delta = final_pc[j] - mlp_v
-        marker = " 🏆" if final_pc[j] > mlp_v + 0.005 else (" 📉" if mlp_v > final_pc[j] + 0.005 else "")
+        marker = " " if final_pc[j] > mlp_v + 0.005 else (" " if mlp_v > final_pc[j] + 0.005 else "")
         print(f"  {c:>15s}  {final_pc[j]:>8.4f}  {mlp_v:>8.4f}  {delta:>+8.4f}{marker}")
     
     print(f"\n  {'Overall':>15s}  {final_f1:>8.4f}  {0.8011:>8.4f}  {final_f1 - 0.8011:>+8.4f}")
@@ -450,9 +450,9 @@ def main():
     print("=" * 65)
     print(f"  {'Model':>35s}  {'F1-macro':>9s}")
     print(f"  {'-'*35}  {'-'*9}")
-    print(f"  {'🏆  SAE champion (this run)':>35s}  {final_f1:>9.4f}")
+    print(f"  {'  SAE champion (this run)':>35s}  {final_f1:>9.4f}")
     print(f"  {'    SAE baseline (no cleanlab)':>35s}  {base_f1:>9.4f}")
-    print(f"  {'🏆  Raw ProtT5 MLP champion':>35s}  {0.8011:>9.4f}")
+    print(f"  {'  Raw ProtT5 MLP champion':>35s}  {0.8011:>9.4f}")
     print(f"  {'    DeepLoc Accurate (ProtT5-XL)':>35s}  {0.7674:>9.4f}")
     print(f"  {'    DeepLoc Fast (ESM-1b)':>35s}  {0.7491:>9.4f}")
     

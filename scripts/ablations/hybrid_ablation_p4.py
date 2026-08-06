@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """hybrid_ablation_p4.py
 
-Hybrid pipeline ablation on P4 — all 5 configs:
+Hybrid pipeline ablation on P4 - all 5 configs:
 
   T5 baseline          manual 2-round + tuned thresholds (no CL)
   T5 + CL              hybrid: CL consensus → manual 2-round + tuned
   SPACE baseline       manual 2-round + tuned thresholds (no CL)
   SPACE + CL           hybrid: CL consensus → manual 2-round + tuned
-  T5 + SPACE + CL 🏆   hybrid: CL consensus → manual 2-round + tuned
+  T5 + SPACE + CL    hybrid: CL consensus → manual 2-round + tuned
 
 Compare: Manual (from output_ablation_tuned.json) vs Hybrid.
 
@@ -46,7 +46,7 @@ CL_CUTOFF = 0.40; MIN_FLAGS = 3
 THR_GRID = np.arange(0.02, 0.96, 0.02)
 
 
-# ═══════════════ Sklearn MLP (per-compartment binary — for CleanLearning) ═══════════════
+# ═══════════════ Sklearn MLP (per-compartment binary - for CleanLearning) ═══════════════
 
 class SklearnMLP(BaseEstimator, ClassifierMixin):
     def __init__(self, indim=1026, hidden=512, dropout=0.5, lr=1e-4, max_ep=50, patience=5, bs=256):
@@ -295,7 +295,7 @@ def run_hybrid(config_name, Xtr, Ytr, Xte, Yte, indim):
 def main():
     t0 = time.time()
     print("=" * 80, flush=True)
-    print("  HYBRID ABLATION — P4 — ALL 5 CONFIGS", flush=True)
+    print("  HYBRID ABLATION - P4 - ALL 5 CONFIGS", flush=True)
     print("=" * 80, flush=True)
 
     # Load data
@@ -327,7 +327,7 @@ def main():
         ("T5 + CL",            X_t5[train_mask],    X_t5[test_mask],    X_t5.shape[1],    True),
         ("SPACE only",         X_space[train_mask], X_space[test_mask], X_space.shape[1], False),
         ("SPACE + CL",         X_space[train_mask], X_space[test_mask], X_space.shape[1], True),
-        ("T5 + SPACE + CL 🏆", X_t5s[train_mask],   X_t5s[test_mask],   X_t5s.shape[1],   True),
+        ("T5 + SPACE + CL ", X_t5s[train_mask],   X_t5s[test_mask],   X_t5s.shape[1],   True),
     ]
 
     results = {}
@@ -362,10 +362,10 @@ def main():
                     continue
     else:
         manual_lookup = {"T5 only": 0.7826, "T5 + CL": 0.7809, "SPACE only": 0.7292,
-                         "SPACE + CL": 0.7054, "T5 + SPACE + CL 🏆": 0.7994}
+                         "SPACE + CL": 0.7054, "T5 + SPACE + CL ": 0.7994}
 
     print(f"\n{'='*95}", flush=True)
-    print(f"  HYBRID ABLATION RESULTS — P4  (min_flags={MIN_FLAGS})", flush=True)
+    print(f"  HYBRID ABLATION RESULTS - P4  (min_flags={MIN_FLAGS})", flush=True)
     print(f"{'='*95}", flush=True)
     print(f"  {'Config':<25s}  {'Method':>7}  {'Start':>7}  {'CLdrop':>7}  {'R1':>7}  {'R2':>7}  {'F1@0.5':>8}  {'F1@tuned':>8}  {'Manual':>8}  {'Δ':>8}", flush=True)
     print(f"  {'─'*25}  {'─'*7}  {'─'*7}  {'─'*7}  {'─'*7}  {'─'*7}  {'─'*8}  {'─'*8}  {'─'*8}  {'─'*8}", flush=True)

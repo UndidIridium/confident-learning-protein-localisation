@@ -12,7 +12,7 @@ Usage:
   → outputs inputs/deeploc_prott5_colab.ipynb
 
 Upload this notebook + deeploc-2.1.All.tar + df_adi.csv to Colab with A100 GPU.
-Wall time: ~8–12 min per partition = ~50 min total.
+Wall time: ~8-12 min per partition = ~50 min total.
 """
 
 import json, textwrap
@@ -84,15 +84,15 @@ def build():
     cells = []
 
     cells.append(cell(
-        """# DeepLoc 2.1 — ProtT5-XL (Accurate) 5-fold CV
+        """# DeepLoc 2.1 - ProtT5-XL (Accurate) 5-fold CV
         #
-        # Runs inference on ALL 5 partitions (0–4) for an apples-to-apples
+        # Runs inference on ALL 5 partitions (0-4) for an apples-to-apples
         # 5-fold cross-validation comparison against our pipeline.
         #
         # **Runtime**: A100 GPU (~50 min total, ~10 min per partition).
         # First run also downloads ~10 GB ProtT5-XL weights (3-5 min).
         #
-        # **Step 1**: Upload these 2 files via sidebar (📁):
+        # **Step 1**: Upload these 2 files via sidebar ():
         #   - `/content/deeploc-2.1.All.tar`  (~50 MB, from colab_uploads/)
         #   - `/content/df_adi.csv`           (~10 MB, from colab_uploads/)
         #
@@ -121,7 +121,7 @@ def build():
     cells.append(cell(
         """# Upload the DeepLoc 2.1 tarball + df_adi.csv
         #
-        # Use the 📁 sidebar to upload:
+        # Use the  sidebar to upload:
         #   1. deeploc-2.1.All.tar  (from Downloads or colab_uploads/)
         #   2. df_adi.csv           (from data/df_adi.csv)
         #
@@ -138,7 +138,7 @@ def build():
             shutil.copy(tar_src, f"{UPLOAD_DIR}/deeploc-2.1.All.tar")
             print(f"Found tar: {tar_src}")
         else:
-            print("TARBALL NOT FOUND — upload via sidebar.")
+            print("TARBALL NOT FOUND - upload via sidebar.")
             raise FileNotFoundError("Upload deeploc-2.1.All.tar first")
 
         # Check for CSV
@@ -151,7 +151,7 @@ def build():
             n_parts = df['partition'].nunique() if 'partition' in df else 0
             print(f"Found df_adi.csv: {n} rows, {n_parts} partitions")
         else:
-            print("df_adi.csv NOT FOUND — upload via sidebar.")
+            print("df_adi.csv NOT FOUND - upload via sidebar.")
             raise FileNotFoundError("Upload df_adi.csv first")
         """ ))
 
@@ -226,7 +226,7 @@ def build():
             result = subprocess.run(["deeploc2", "--help"], capture_output=True, text=True)
             print(result.stdout[:300])
         else:
-            print("deeploc2 not on PATH — will use python -m for inference")
+            print("deeploc2 not on PATH - will use python -m for inference")
             result = subprocess.run(
                 [sys.executable, "-m", "DeepLoc2.deeploc2", "--help"],
                 capture_output=True, text=True
@@ -265,21 +265,21 @@ def build():
             dt = time.time() - t0
 
             if proc.returncode != 0:
-                print(f"\\n❌ Partition {partition} FAILED with code {proc.returncode}")
+                print(f"\\n Partition {partition} FAILED with code {proc.returncode}")
                 return False
 
             csv_files = [f for f in os.listdir(output_dir) if f.endswith(".csv")]
             if csv_files:
                 fpath = os.path.join(output_dir, csv_files[0])
                 size = os.path.getsize(fpath) / 1024
-                print(f"\\n✅ Partition {partition} done in {dt:.0f}s ({dt/60:.1f}m)")
+                print(f"\\n Partition {partition} done in {dt:.0f}s ({dt/60:.1f}m)")
                 print(f"   CSV: {csv_files[0]} ({size:.1f} KB)")
             else:
-                print(f"\\n⚠️  Partition {partition} done but no CSV found")
+                print(f"\\nWARNING:  Partition {partition} done but no CSV found")
                 print(f"   Files in output: {os.listdir(output_dir)}")
             return True
 
-        print("Helper function defined. Ready to run partitions 0–4.")
+        print("Helper function defined. Ready to run partitions 0-4.")
         """ ))
 
     for part in range(5):
@@ -289,7 +289,7 @@ def build():
             sys.stdout.flush()
             ok = run_partition({part})
             if not ok:
-                raise RuntimeError(f"Partition {part} failed — stopping.")
+                raise RuntimeError(f"Partition {part} failed - stopping.")
             print(f"Finished partition {part}.")
             """ ))
 
@@ -318,9 +318,9 @@ def build():
             path = os.path.join(drive_dir, f"results_partition{part}.csv")
             if os.path.exists(path):
                 rows = sum(1 for _ in open(path))
-                print(f"  Partition {part}: {rows-1} predictions ✅")
+                print(f"  Partition {part}: {rows-1} predictions ")
             else:
-                print(f"  Partition {part}: MISSING ❌")
+                print(f"  Partition {part}: MISSING ")
         """ ))
 
     cells.append(cell(
@@ -329,7 +329,7 @@ def build():
         # Option A: From Google Drive
         #   My Drive → deeploc_5fold/ → download all 5 CSV files
         #
-        # Option B: From Colab sidebar (📁)
+        # Option B: From Colab sidebar ()
         #   /content/deeploc_results_p{0..4}/ → download CSV from each
         #
         # === THEN LOCALLY ===

@@ -6,7 +6,7 @@ Train on DeepLoc folds 0-3 (~22,642 proteins), test on fold 4 (~5,660).
 Includes both df_adi and DeepLoc embeddings, mapped to our 7 compartments.
 
 P4 = DeepLoc partition 4, independently held out from DeepLoc training.
-This is a fresh test set — none of these proteins were trained on.
+This is a fresh test set - none of these proteins were trained on.
 """
 import h5py, numpy as np, pandas as pd, warnings, json, time
 from sklearn.decomposition import PCA
@@ -91,7 +91,7 @@ def cleanlab_step(Y, oof, cutoff):
     return keep
 
 print("="*62)
-print("  DEEPLOC P4 COMPARISON — PCA 100d")
+print("  DEEPLOC P4 COMPARISON - PCA 100d")
 print("  Train: DeepLoc folds 0-3  |  Test: DeepLoc fold 4")
 print("="*62)
 
@@ -244,7 +244,7 @@ for j, c in enumerate(['Membrane','Cytoplasm','Nucleus','Extracell','Cell_surf',
 
 # ── Summary ──
 print(f"\n{'='*55}")
-print(f"  DEEPLOC PARTITION 4 — SUMMARY (PCA {N_COMP}d)")
+print(f"  DEEPLOC PARTITION 4 - SUMMARY (PCA {N_COMP}d)")
 print(f"{'='*55}")
 print(f"  Train: {len(Y_tr):,} (DeepLoc folds 0-3)")
 print(f"  Test:  {len(Y_te):,} (DeepLoc fold 4, {n_adi_in_test} from df_adi)")

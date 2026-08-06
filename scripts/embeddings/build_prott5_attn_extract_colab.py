@@ -44,7 +44,7 @@ def code(src):
 # ============================================================================
 # CELL 1: Markdown intro
 # ============================================================================
-md(r"""# Attention-Pooled ProtT5-XL — per-layer df_adi embedding extraction
+md(r"""# Attention-Pooled ProtT5-XL - per-layer df_adi embedding extraction
 
 Extracts **mean-pooled** and **attention-pooled** 1024-d embeddings from all 24 encoder layers of `Rostlab/prot_t5_xl_uniref50` for every protein in `df_adi.csv`.
 
@@ -90,7 +90,7 @@ if torch.cuda.is_available():
     print(f'GPU: {torch.cuda.get_device_name(0)}')
     print(f'VRAM: {torch.cuda.get_device_properties(0).total_memory / 1e9:.1f} GB')
 else:
-    print('WARNING: no GPU — extraction will be extremely slow (~hours).')
+    print('WARNING: no GPU - extraction will be extremely slow (~hours).')
 
 subprocess.run([sys.executable, '-m', 'pip', 'install', '-q',
     'transformers>=4.40', 'sentencepiece>=0.2', 'protobuf>=4',
@@ -116,7 +116,7 @@ print(f'Drive root: {DRIVE_ROOT}')
 # CELL 4: Upload df_adi.csv
 # ============================================================================
 code(r"""# ── 2. Upload df_adi.csv ───────────────────────────────────────────────
-# Run this cell MANUALLY (not via "Run All") — files.upload() needs your click.
+# Run this cell MANUALLY (not via "Run All") - files.upload() needs your click.
 from google.colab import files
 import shutil
 
@@ -190,7 +190,7 @@ print(f'Loaded. Encoder blocks: {len(model.encoder.block)} (expected {N_LAYERS})
 # ============================================================================
 # CELL 7: Tokenizer diagnostic gate
 # ============================================================================
-code(r"""# ── 5. TOKENIZER DIAGNOSTIC GATE ⛔ ──────────────────────────────────
+code(r"""# ── 5. TOKENIZER DIAGNOSTIC GATE  ──────────────────────────────────
 # CRITICAL: ProtT5 tokenizer expects SPACE-SEPARATED amino acids.
 # 'MILKRTV' -> 'M I L K R T V' (without spaces, only the first char is recognized).
 
@@ -225,9 +225,9 @@ print(f'Unique token sequences: {len(unique_ids)} / {len(test_seqs)}')
 if len(unique_ids) < 2:
     raise RuntimeError('TOKENIZER BUG: All test sequences produced SAME token IDs!')
 elif ids.shape[1] <= 3:
-    print('WARNING: sequences tokenized to <=3 tokens — check space-formatting.')
+    print('WARNING: sequences tokenized to <=3 tokens - check space-formatting.')
 else:
-    print(f'✅ PASS: {len(unique_ids)} unique sequences, {ids.shape[1]} tokens.')
+    print(f' PASS: {len(unique_ids)} unique sequences, {ids.shape[1]} tokens.')
 """)
 
 # ============================================================================
@@ -239,7 +239,7 @@ code(r"""# ── 6. Define ATTENTION POOL head (per-layer, learnable) ───
 #   weights = softmax(scores * mask)
 #   pooled = sum(weights * hidden)
 #
-# This is the same paradigm as DeepLoc 2.1. Transformer is FROZEN — only
+# This is the same paradigm as DeepLoc 2.1. Transformer is FROZEN - only
 # the attention head is trained.
 
 import torch.nn as nn
@@ -262,7 +262,7 @@ class AttentionPool(nn.Module):
         return (x * weights.unsqueeze(-1)).sum(dim=1)    # (B, D)
 
 
-# 24 attention heads (one per layer), tiny — ~1.6M params total
+# 24 attention heads (one per layer), tiny - ~1.6M params total
 attn_heads = nn.ModuleList([AttentionPool(EMBED_DIM) for _ in range(N_LAYERS)])
 attn_heads = attn_heads.to(device)
 attn_heads.train()
@@ -270,7 +270,7 @@ attn_heads.train()
 # Final linear projection: concat all 24 layers' pooled embeddings -> 7 compartments
 combined_proj = nn.Linear(N_LAYERS * EMBED_DIM, M).to(device)
 
-# Optimizer — only train attention heads + final linear
+# Optimizer - only train attention heads + final linear
 optimizer = torch.optim.Adam(
     list(attn_heads.parameters()) + list(combined_proj.parameters()),
     lr=1e-3,
@@ -506,7 +506,7 @@ with h5py.File(str(H5_PATH), 'w') as h5:
         arr = mmap[:, layer_i, :].astype(np.float32)
         h5.create_dataset(f'df_adi_layer_{layer_i:02d}', data=arr,
                            compression='gzip', compression_opts=4)
-    # Attention-pooled per layer (NEW — separate namespace)
+    # Attention-pooled per layer (NEW - separate namespace)
     for layer_i in range(N_LAYERS):
         arr = mmap[:, N_LAYERS + layer_i, :].astype(np.float32)
         h5.create_dataset(f'attn_layer_{layer_i:02d}', data=arr,

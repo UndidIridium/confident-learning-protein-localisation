@@ -30,7 +30,7 @@ CUTOFFS = [0.30, 0.35, 0.45]
 
 def main():
     print("=" * 72)
-    print("  Cleanlab cutoff sweep — 5-fold CV at each CL_CUTOFF")
+    print("  Cleanlab cutoff sweep - 5-fold CV at each CL_CUTOFF")
     print("=" * 72)
     print(f"  cutoffs to test: {CUTOFFS}")
     print()
@@ -54,7 +54,7 @@ def main():
             capture_output=True, text=True, timeout=1800,  # bumped from 900s (code-reviewer)
         )
         if proc.returncode != 0:
-            print(f"  ❌ FAIL — last stderr: {proc.stderr[-1500:]}")
+            print(f"   FAIL - last stderr: {proc.stderr[-1500:]}")
             continue
         # Save the resulting per-cutoff report
         tag = f"cutoff_{c:.2f}".replace(".", "p")
@@ -64,7 +64,7 @@ def main():
         d["cl_cutoff"] = c
         json.dump(d, open(dst, "w"), indent=2)
         results[c] = d
-        print(f"  ✓ champion_mean={d['champion_mean']:.4f}  baseline_mean={d['baseline_mean']:.4f}  "
+        print(f"   champion_mean={d['champion_mean']:.4f}  baseline_mean={d['baseline_mean']:.4f}  "
               f"gain={d['overall_gain']:+.4f}  per-fold std={d['champion_std']:.4f}  "
               f"({time.time()-t_one:.0f}s)")
 
@@ -79,7 +79,7 @@ def main():
 
     # ---- Aggregate ----
     print("\n" + "=" * 72)
-    print("  SUMMARY — cleanlab cutoff sweep")
+    print("  SUMMARY - cleanlab cutoff sweep")
     print("=" * 72)
     print(f"  {'cutoff':>8}  {'baseline':>10}  {'champion':>10}  {'gain':>8}  {'per-fold std':>12}")
     print(f"  {'-'*8}  {'-'*10}  {'-'*10}  {'-'*8}  {'-'*12}")
@@ -102,7 +102,7 @@ def main():
 
     # ---- Find the best cutoff ----
     best_cutoff = max(results.keys(), key=lambda k: results[k]['champion_mean'])
-    print(f"\n  ⭐ Best cutoff: {best_cutoff}  →  champion_mean={results[best_cutoff]['champion_mean']:.4f}")
+    print(f"\n   Best cutoff: {best_cutoff}  →  champion_mean={results[best_cutoff]['champion_mean']:.4f}")
 
     # ---- Save aggregate report ----
     summary_path = OUT_DIR / "summary.json"

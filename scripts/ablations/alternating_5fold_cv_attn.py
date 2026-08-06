@@ -43,7 +43,7 @@ CL_CUTOFF = 0.40; MIN_FLAGS = 3
 THR_GRID = np.arange(0.02, 0.96, 0.02)
 
 
-# ═══════════════ Sklearn MLP (per-compartment binary — for CleanLearning) ═══════════════
+# ═══════════════ Sklearn MLP (per-compartment binary - for CleanLearning) ═══════════════
 
 class SklearnMLP(BaseEstimator, ClassifierMixin):
     def __init__(self, indim=1026, hidden=512, dropout=0.5, lr=1e-4, max_ep=50, patience=5, bs=256):
@@ -293,7 +293,7 @@ def run_fold(holdout):
 def main():
     t0 = time.time()
     print("=" * 80, flush=True)
-    print("  ALTERNATING CL — 5-FOLD CROSS-VALIDATION", flush=True)
+    print("  ALTERNATING CL - 5-FOLD CROSS-VALIDATION", flush=True)
     print("  Pipeline: CL consensus → MLP self-confidence → CL consensus → final MLP", flush=True)
     print("=" * 80, flush=True)
 
@@ -315,7 +315,7 @@ def main():
     f1_tuneds = [r["f1_tuned"] for r in results]
 
     print(f"\n{'='*80}", flush=True)
-    print(f"  5-FOLD CV SUMMARY — ALTERNATING CL", flush=True)
+    print(f"  5-FOLD CV SUMMARY - ALTERNATING CL", flush=True)
     print(f"{'='*80}", flush=True)
     print(f"  {'Holdout':>8}  {'Baseline':>9}  {'Alt@0.5':>9}  {'Alt@tuned':>10}  "
           f"n_train → n_final", flush=True)

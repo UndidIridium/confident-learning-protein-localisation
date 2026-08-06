@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""save_cleaned_data.py — Phase 1: run 2-round cleanlab once, save to disk."""
+"""save_cleaned_data.py - Phase 1: run 2-round cleanlab once, save to disk."""
 
 import os, warnings, time
 os.environ["OMP_NUM_THREADS"] = "1"
@@ -124,7 +124,7 @@ print("\nRound 2 OOF...", flush=True)
 oof_r2 = gen_oof(X_r1, Y_r1, label="R2 ")
 keep_r2 = cleanlab_step(Y_r1, oof_r2, CL_CUTOFF)
 X_r2, Y_r2 = X_r1[keep_r2], Y_r1[keep_r2]
-print(f"R2: {len(Y_r2)} kept ({100*len(Y_r2)/len(Y_r1):.1f}%) — "
+print(f"R2: {len(Y_r2)} kept ({100*len(Y_r2)/len(Y_r1):.1f}%) - "
       f"total {100*len(Y_r2)/n_tr:.1f}%", flush=True)
 
 # Save

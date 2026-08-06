@@ -12,9 +12,9 @@ main benchmark:
 
 Output H5:
   /Users/aditya/Downloads/df_adi_attn_pool_v2.h5
-    - attn_layer_22 : (16741, 1024) float32  — attention-pooled L22
-    - sp_score      : (16741,)     float32  — model-predicted P(signal peptide)
-    - tmd_count     : (16741,)     float32  — model-predicted # TMDs
+    - attn_layer_22 : (16741, 1024) float32  - attention-pooled L22
+    - sp_score      : (16741,)     float32  - model-predicted P(signal peptide)
+    - tmd_count     : (16741,)     float32  - model-predicted # TMDs
     - accessions    : (16741,)     string
 
 Difference from prior shortcut (build_df_adi_aux_features.py):
@@ -62,7 +62,7 @@ CELLS = []
 CELLS.append({
     "cell_type": "markdown",
     "source": [
-        "# Attention-Pooled ProtT5 L22 + Aux Heads — v2 for df_adi\n",
+        "# Attention-Pooled ProtT5 L22 + Aux Heads - v2 for df_adi\n",
         "\n",
         "Mirror of the Kaggle v2 notebook but for the **main benchmark** (df_adi).\n",
         "\n",
@@ -141,7 +141,7 @@ CELLS.append({
         "    if p.exists():\n",
         "        print(f'  {name:>12s}: {p}  ({p.stat().st_size / 1e6:.1f} MB)')\n",
         "    else:\n",
-        "        print(f'  {name:>12s}: MISSING  — upload to /content/')\n",
+        "        print(f'  {name:>12s}: MISSING  - upload to /content/')\n",
         "status(ADJ_PATH, 'df_adi.csv')\n",
         "assert ADJ_PATH.exists(), 'df_adi.csv must be uploaded before proceeding.'\n",
     ],
@@ -244,7 +244,7 @@ CELLS.append({
         "                    add_special_tokens=True)\n",
         "ids = encoded['input_ids']\n",
         "unique = set(tuple(ids[i].tolist()) for i in range(len(test_seqs)))\n",
-        "assert len(unique) >= 4, 'Tokenizer bug — distinct sequences produced same IDs'\n",
+        "assert len(unique) >= 4, 'Tokenizer bug - distinct sequences produced same IDs'\n",
         "print(f'  tokenizer OK ({ids.shape[1]} tokens, {len(unique)} unique)')\n",
     ],
 })
@@ -499,7 +499,7 @@ CELLS.append({
         "    assert h5['attn_layer_22'].shape == (n_total, EMB_DIM)\n",
         "    assert h5['sp_score'].shape == (n_total,)\n",
         "    assert h5['tmd_count'].shape == (n_total,)\n",
-        "    print('  format-verified ✅')\n",
+        "    print('  format-verified ')\n",
         "\n",
         "from google.colab import files as colab_files\n",
         "print(f'\\nDownloading: {TMP_H5} ({TMP_H5.stat().st_size / 1e6:.1f} MB)')\n",

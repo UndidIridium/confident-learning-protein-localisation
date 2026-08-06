@@ -90,7 +90,7 @@ def get_neighbor_labels(space_emb, nn_model, graph_mask, Y_all, train_ix, target
     Args:
         space_emb: (n, 512) SPACE embeddings
         nn_model: fitted NearestNeighbors on SPACE graph
-        graph_mask: (n,) bool — which proteins have SPACE edges
+        graph_mask: (n,) bool - which proteins have SPACE edges
         Y_all: (n, 7) full labels
         train_ix: indices of training proteins
         target_ix: indices of target proteins (could be train or test)
@@ -243,7 +243,7 @@ def cleanlab_step(Y, oof, cutoff, label=""):
 
 def main():
     print("=" * 70)
-    print("  LABEL PROPAGATION CHAMPION — PARTITION 4")
+    print("  LABEL PROPAGATION CHAMPION - PARTITION 4")
     print(f"  SPACE kNN (k={LP_K}) → neighbor label propensities → +{LP_FEATURES}d features")
     print("=" * 70)
     
@@ -320,7 +320,7 @@ def main():
     # ROUND 1: OOF + cleanlab (with per-fold neighbor recomputation)
     # ===================================================================
     print(f"\n{'='*60}")
-    print(f"  ROUND 1 — OOF + CLEANLAB")
+    print(f"  ROUND 1 - OOF + CLEANLAB")
     print(f"  {'='*60}")
     all_ix = train_ix
     oof_r1 = gen_oof(X_base[train_ix], Y_tr, nn_model, graph_mask, net_emb, Y_all_full, all_ix)
@@ -339,7 +339,7 @@ def main():
     # ROUND 2: OOF + cleanlab
     # ===================================================================
     print(f"\n{'='*60}")
-    print(f"  ROUND 2 — OOF + CLEANLAB")
+    print(f"  ROUND 2 - OOF + CLEANLAB")
     print(f"  {'='*60}")
     all_r1 = r1_ix
     oof_r2 = gen_oof(X_base[r1_ix], Y_r1, nn_model, graph_mask, net_emb, Y_all_full, all_r1)
@@ -372,7 +372,7 @@ def main():
     # REPORT
     # ===================================================================
     print("\n" + "=" * 65)
-    print("  LABEL PROPAGATION — PARTITION 4 RESULTS")
+    print("  LABEL PROPAGATION - PARTITION 4 RESULTS")
     print("=" * 65)
     print(f"  {'Metric':>30s}  {'Score':>8s}")
     print(f"  {'-'*30}  {'-'*8}")
@@ -393,7 +393,7 @@ def main():
     for j, c in enumerate(COMPARTMENTS):
         mlp_v = mlp_ref.get(c, 0.0)
         delta = final_pc[j] - mlp_v
-        marker = " 🏆" if final_pc[j] > mlp_v + 0.005 else (" 📉" if mlp_v > final_pc[j] + 0.005 else "")
+        marker = " " if final_pc[j] > mlp_v + 0.005 else (" " if mlp_v > final_pc[j] + 0.005 else "")
         print(f"  {c:>15s}  {final_pc[j]:>8.4f}  {mlp_v:>8.4f}  {delta:>+8.4f}{marker}")
     
     print(f"\n  {'Overall':>15s}  {final_f1:>8.4f}  {0.8011:>8.4f}  {final_f1 - 0.8011:>+8.4f}")
@@ -403,9 +403,9 @@ def main():
     print("=" * 65)
     print(f"  {'Model':>35s}  {'F1-macro':>9s}")
     print(f"  {'-'*35}  {'-'*9}")
-    print(f"  {'🏆  Label Prop champion (this run)':>35s}  {final_f1:>9.4f}")
+    print(f"  {'  Label Prop champion (this run)':>35s}  {final_f1:>9.4f}")
     print(f"  {'    Label Prop baseline':>35s}  {base_f1:>9.4f}")
-    print(f"  {'🏆  Raw ProtT5 MLP champion':>35s}  {0.8011:>9.4f}")
+    print(f"  {'  Raw ProtT5 MLP champion':>35s}  {0.8011:>9.4f}")
     print(f"  {'    DeepLoc Accurate (ProtT5-XL)':>35s}  {0.7674:>9.4f}")
     print(f"  {'    DeepLoc Fast (ESM-1b)':>35s}  {0.7491:>9.4f}")
     

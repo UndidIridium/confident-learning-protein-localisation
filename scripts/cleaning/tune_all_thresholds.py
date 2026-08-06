@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """tune_all_thresholds.py
 
-Matches champion_5fold_cv.py EXACTLY — same train_mlp, MLP, posw, gen_oof,
+Matches champion_5fold_cv.py EXACTLY - same train_mlp, MLP, posw, gen_oof,
 cleanlab_step, hyperparams, and aux features.
 
 Runs 4 variants on P4 with threshold tuning:
@@ -138,7 +138,7 @@ def cleanlab_step(Y, oof, cutoff=CL_CUTOFF):
 # ─── Threshold tuning ─────────────────────────────────────────────────────
 
 def tune_thresholds(oof, Y):
-    """Sweep THR_GRID 0.02–0.94 on OOF, per-class max F1."""
+    """Sweep THR_GRID 0.02-0.94 on OOF, per-class max F1."""
     best = np.full(M, 0.5, dtype=np.float32)
     for j in range(M):
         cands = np.array([f1_score(Y[:,j].astype(int),(oof[:,j]>=t).astype(int),zero_division=0)
@@ -230,7 +230,7 @@ def run_variant(name, X_tr, Y_tr, X_te, Y_te, do_cleanlab=False):
 def main():
     t0 = time.time()
     print("=" * 65)
-    print("  THRESHOLD TUNING — All Variants (P4)")
+    print("  THRESHOLD TUNING - All Variants (P4)")
     print("  Matches champion_5fold_cv.py exactly")
     print("=" * 65)
 
@@ -291,11 +291,11 @@ def main():
     results.append(run_variant("SPACE + cleanlab", X_space_tr, Y_tr, X_space_te, Y_te, do_cleanlab=True))
 
     # E: T5 + SPACE + cleanlab (champion)
-    results.append(run_variant("T5 + SPACE + cleanlab 🏆", X_t5s_tr, Y_tr, X_t5s_te, Y_te, do_cleanlab=True))
+    results.append(run_variant("T5 + SPACE + cleanlab ", X_t5s_tr, Y_tr, X_t5s_te, Y_te, do_cleanlab=True))
 
     # ─── Final table ───────────────────────────────────────────────────────
     print("\n" + "=" * 85)
-    print("  FINAL RESULTS — All Variants with Threshold Tuning (P4)")
+    print("  FINAL RESULTS - All Variants with Threshold Tuning (P4)")
     print("  (Matches champion_5fold_cv.py protocol: aux feats, 2-round cleanlab)")
     print("=" * 85)
 
@@ -309,8 +309,8 @@ def main():
         bl_d  = bl_t - bl_05
         cl_05 = r.get("cleanlab_f1_05")
         cl_t  = r.get("cleanlab_f1_tuned")
-        def fmt(v): return f"{v:>8.4f}" if v is not None else f"{'—':>8}"
-        def fmt_d(v): return f"{v:>+8.4f}" if v is not None else f"{'—':>8}"
+        def fmt(v): return f"{v:>8.4f}" if v is not None else f"{'-':>8}"
+        def fmt_d(v): return f"{v:>+8.4f}" if v is not None else f"{'-':>8}"
         print(f"  {r['name']:<32s}  {bl_05:>8.4f}  {bl_t:>8.4f}  {bl_d:>+8.4f}  "
               f"{fmt(cl_05)}  {fmt(cl_t)}  {fmt_d(cl_t - cl_05 if cl_t is not None and cl_05 is not None else None)}")
 

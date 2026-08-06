@@ -3,13 +3,13 @@
 
 Diagnostic: re-run the specific (pool, layer, cutoff, fold=4) configs that
 produced the high scores, but LOG ALL METRICS (accuracy / recall / macro-F1)
-per compartment + overall — since tinker9/tinker10 only logged F1.
+per compartment + overall - since tinker9/tinker10 only logged F1.
 
 Two configs:
   A. attn L22 + SPACE + cleanlab@0.50, partition 4  → wrote 0.8011 in tinker9
   B. mean L22 + SPACE + cleanlab@0.30, partition 4  → mean's best at 0.7926 (tinker10)
 
-Wall time: ~3-5 min (18 MLP trainings total — 9 per config).
+Wall time: ~3-5 min (18 MLP trainings total - 9 per config).
 """
 import json, os, time, warnings
 from pathlib import Path
@@ -145,7 +145,7 @@ def evaluate_full(probs, Y):
         'precision': float(precision_score(flat_t, flat_p, zero_division=0)),
         'f1_micro':  float(f1_score(flat_t, flat_p, zero_division=0, average='micro')),
     }
-    # Macro average (mean of per-class metrics — same as F1-macro we already report)
+    # Macro average (mean of per-class metrics - same as F1-macro we already report)
     overall['f1_macro'] = float(np.mean(per['f1']))
     overall['accuracy_macro'] = float(np.mean(per['accuracy']))
     overall['recall_macro'] = float(np.mean(per['recall']))
@@ -196,7 +196,7 @@ def run_one(pool, layer, cutoff, k, X_all, Y_all, parts):
 def main():
     t0 = time.time()
     print("=" * 65)
-    print("  TINKER11 — partition-4 metric diagnostic")
+    print("  TINKER11 - partition-4 metric diagnostic")
     print("    accuracy + recall + precision + F1 per compartment & overall")
     print("=" * 65)
 
@@ -234,13 +234,13 @@ def main():
                                      'results': results}, indent=2, default=str))
 
     PRINT = []
-    PRINT.append('### TINKER11 — partition-4 metric diagnostic ###')
+    PRINT.append('### TINKER11 - partition-4 metric diagnostic ###')
     PRINT.append('')
     PRINT.append(f'  Two configs on partition {K_TARGET} (3,276 held-out rows):')
     PRINT.append('')
     for r in results:
         m = r['metrics']
-        PRINT.append(f'  ## {r["label"]} — {r["config"]}')
+        PRINT.append(f'  ## {r["label"]} - {r["config"]}')
         PRINT.append(f'  train n: {r["n_train"]} -> R1: {r["n_after_r1"]} -> R2: {r["n_after_r2"]}')
         PRINT.append(f'  test  n: {r["n_test"]}    wall: {r["wall_s"]}s')
         PRINT.append('')

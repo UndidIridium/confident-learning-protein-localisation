@@ -5,7 +5,7 @@ Sweep cleanlab self_confidence cutoff ∈ {0.30, 0.35, 0.40, 0.50, 0.60}
 for attn L22 + SPACE in 5-fold CV.
 
 Goal: determine whether a different cutoff value closes the −0.0065 gap
-with mean + cleanlab (0.7672 vs attn + cleanlab = 0.7607) — i.e. is the
+with mean + cleanlab (0.7672 vs attn + cleanlab = 0.7607) - i.e. is the
 gap a calibration issue (which retuning can fix) or a structural issue
 (which it can't)?
 
@@ -183,7 +183,7 @@ def run_one(cutoff, k, X_all, Y_all, parts):
 def main():
     t0 = time.time()
     print("=" * 65)
-    print("  TINKER9 — attn L22 + SPACE × cleanlab cutoff sweep")
+    print("  TINKER9 - attn L22 + SPACE × cleanlab cutoff sweep")
     print("=" * 65)
     print(f"  Cutoffs: {CUTOFFS}")
 
@@ -252,7 +252,7 @@ def main():
 
     # ---- headline ----
     print("\n" + "=" * 65)
-    print("  HEADLINE — cutoff sweep (attn L22 + SPACE)")
+    print("  HEADLINE - cutoff sweep (attn L22 + SPACE)")
     print("=" * 65)
     print(f"  Reference: mean L22 + cleanlab = 0.7672  (the wall to beat)")
     print(f"  Reference: attn L22 + SPACE noClean = 0.7680  (tinker8)")

@@ -2,15 +2,15 @@
 """build_deeploc_accurate_p4_colab.py
 
 Generates a Colab notebook (.ipynb) for running DeepLoc 2.1 Accurate
-(ProtT5-XL) on just partition 4 — for the definitive apples-to-apples
+(ProtT5-XL) on just partition 4 - for the definitive apples-to-apples
 head-to-head against our ProtT5 champion (0.8011).
 
 Runtime: ~10-15 min on A100 GPU (first run also downloads ~10 GB ProtT5-XL
 weights). Much faster than the full 5-fold notebook (~50 min).
 
 Upload to Colab:
-  1.  deeploc-2.1.All.tar  (from inputs/ — ~50 MB)
-  2.  df_adi.csv           (from data/ — ~10 MB)
+  1.  deeploc-2.1.All.tar  (from inputs/ - ~50 MB)
+  2.  df_adi.csv           (from data/ - ~10 MB)
 
 Or use the notebook's built-in FASTA generator from df_adi.csv.
 """
@@ -64,7 +64,7 @@ def build():
     cells = []
 
     cells.append(cell(
-        """# DeepLoc 2.1 Accurate (ProtT5-XL) — Partition 4 Inference
+        """# DeepLoc 2.1 Accurate (ProtT5-XL) - Partition 4 Inference
         #
         # Runs deeploc2 on partition 4 only for an apples-to-apples head-to-head
         # against our ProtT5 champion pipeline (0.8011 F1 on this same partition).
@@ -73,24 +73,24 @@ def build():
         #   - First run: ~3-5 min to download ProtT5-XL weights (~10 GB)
         #   - Inference: ~0.3s/protein × 3,276 proteins ≈ 15 min
         #
-        # **Upload these files via 📁 sidebar** before running:
+        # **Upload these files via  sidebar** before running:
         #   1. `/content/deeploc-2.1.All.tar` (~50 MB)
         #   2. `/content/df_adi.csv` (~10 MB)
         #
-        # **After completion**: download from 📁 → `/content/deeploc_p4_results/`
+        # **After completion**: download from  → `/content/deeploc_p4_results/`
         #
         # **Then locally**: eval_against_deeploc_2_1.py on the CSV
         """ , "markdown"))
 
     cells.append(cell(
-        """# Mount Google Drive (optional — for backup)
+        """# Mount Google Drive (optional - for backup)
         from google.colab import drive
         drive.mount('/content/drive')
         print("Drive mounted.")
         """ ))
 
     cells.append(cell(
-        """# Upload files — check they exist or prompt user
+        """# Upload files - check they exist or prompt user
         import os, shutil
 
         UPLOAD_DIR = "/content/uploads"
@@ -100,9 +100,9 @@ def build():
         tar_src = "/content/deeploc-2.1.All.tar"
         if os.path.exists(tar_src):
             shutil.copy(tar_src, f"{UPLOAD_DIR}/deeploc-2.1.All.tar")
-            print(f"✅ Found tar: {tar_src} ({os.path.getsize(tar_src)/1024**2:.0f} MB)")
+            print(f" Found tar: {tar_src} ({os.path.getsize(tar_src)/1024**2:.0f} MB)")
         else:
-            print("❌ TARBALL NOT FOUND — upload deeploc-2.1.All.tar via sidebar.")
+            print(" TARBALL NOT FOUND - upload deeploc-2.1.All.tar via sidebar.")
             raise FileNotFoundError("Upload deeploc-2.1.All.tar first")
 
         # Check for CSV
@@ -113,9 +113,9 @@ def build():
             df = pd.read_csv(csv_src)
             n = len(df)
             n_p4 = (df['partition'] == 4).sum()
-            print(f"✅ Found df_adi.csv: {n} rows, {n_p4} in partition 4")
+            print(f" Found df_adi.csv: {n} rows, {n_p4} in partition 4")
         else:
-            print("❌ df_adi.csv NOT FOUND — upload via sidebar.")
+            print(" df_adi.csv NOT FOUND - upload via sidebar.")
             raise FileNotFoundError("Upload df_adi.csv first")
         """ ))
 
@@ -177,7 +177,7 @@ def build():
         if result.returncode != 0:
             print("STDERR:", result.stderr[-3000:])
             raise RuntimeError(f"pip install failed with code {result.returncode}")
-        print("✅ Dependencies installed.")
+        print(" Dependencies installed.")
 
         print("Installing DeepLoc2...")
         result = subprocess.run(
@@ -189,13 +189,13 @@ def build():
         if result.returncode != 0:
             print("STDERR:", result.stderr[-3000:])
             raise RuntimeError(f"DeepLoc2 install failed with code {result.returncode}")
-        print("✅ DeepLoc2 installed.")
+        print(" DeepLoc2 installed.")
 
         # Verify
         import shutil
         deeploc2_path = shutil.which("deeploc2")
         if deeploc2_path:
-            print(f"✅ deeploc2 found at {deeploc2_path}")
+            print(f" deeploc2 found at {deeploc2_path}")
             result = subprocess.run(["deeploc2", "--help"], capture_output=True, text=True)
             print(result.stdout[:300])
         else:
@@ -241,11 +241,11 @@ def build():
         dt = time.time() - t0
 
         if proc.returncode != 0:
-            print(f"\n❌ Inference FAILED with code {proc.returncode}.")
+            print(f"\n Inference FAILED with code {proc.returncode}.")
             raise RuntimeError(f"deeploc2 exited with code {proc.returncode}")
 
         print(f"\n{'='*60}")
-        print(f"✅ INFERENCE COMPLETED in {dt:.0f}s ({dt/60:.1f}m)")
+        print(f" INFERENCE COMPLETED in {dt:.0f}s ({dt/60:.1f}m)")
         print(f"{'='*60}")
         print()
 
@@ -277,7 +277,7 @@ def build():
         #
         # The prediction CSV is in TWO places:
         #
-        #   1. Colab 📁 sidebar:  /content/deeploc_p4_results/
+        #   1. Colab  sidebar:  /content/deeploc_p4_results/
         #   2. Google Drive:      MyDrive/deeploc_p4_accurate/
         #
         # Download the CSV file from either location.
@@ -313,9 +313,9 @@ def build():
                 if df[c].dtype in ['float64', 'float32']:
                     print(f"  {c:>20s}: mean={df[c].mean():.3f}, "
                           f">=0.5={(df[c] >= 0.5).sum()}")
-            print(f"\n✅ Ready for download.")
+            print(f"\n Ready for download.")
         else:
-            print("No CSV found yet — inference may still be running.")
+            print("No CSV found yet - inference may still be running.")
         """ ))
 
     # ─── Compile notebook ──────────────────────────

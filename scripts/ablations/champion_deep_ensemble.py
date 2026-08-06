@@ -148,7 +148,7 @@ def load_data():
 
 def main():
     print("=" * 70)
-    print("  DEEP ENSEMBLE CHAMPION — PARTITION 4")
+    print("  DEEP ENSEMBLE CHAMPION - PARTITION 4")
     print(f"  {N_SEEDS} independent MLPs + averaged predictions + 2-round cleanlab")
     print("=" * 70)
 
@@ -192,7 +192,7 @@ def main():
     # ROUND 1: OOF from all seeds, averaged, then cleanlab
     # ===================================================================
     print(f"\n  {'='*60}")
-    print(f"  ROUND 1 — OOF × {N_SEEDS} seeds → averaged → cleanlab")
+    print(f"  ROUND 1 - OOF × {N_SEEDS} seeds → averaged → cleanlab")
     print(f"  {'='*60}")
 
     # Sum OOF across seeds (will divide later)
@@ -221,7 +221,7 @@ def main():
     # ROUND 2: OOF on R1-kept rows, averaged, then cleanlab
     # ===================================================================
     print(f"\n  {'='*60}")
-    print(f"  ROUND 2 — OOF × {N_SEEDS} seeds on R1-kept → averaged → cleanlab")
+    print(f"  ROUND 2 - OOF × {N_SEEDS} seeds on R1-kept → averaged → cleanlab")
     print(f"  {'='*60}")
 
     oof_sum_r2 = np.zeros((len(Y_r1), M), dtype=np.float64)
@@ -275,7 +275,7 @@ def main():
     # REPORT
     # ===================================================================
     print("\n" + "=" * 65)
-    print("  DEEP ENSEMBLE — PARTITION 4 RESULTS")
+    print("  DEEP ENSEMBLE - PARTITION 4 RESULTS")
     print("=" * 65)
     print(f"  {'Metric':>30s}  {'Score':>8s}")
     print(f"  {'-'*30}  {'-'*8}")
@@ -299,7 +299,7 @@ def main():
     for j, c in enumerate(COMPARTMENTS):
         mlp_v = mlp_ref.get(c, 0.0)
         delta = champ_pc_ens[j] - mlp_v
-        marker = " 🏆" if champ_pc_ens[j] > mlp_v + 0.005 else (" 📉" if mlp_v > champ_pc_ens[j] + 0.005 else "")
+        marker = " " if champ_pc_ens[j] > mlp_v + 0.005 else (" " if mlp_v > champ_pc_ens[j] + 0.005 else "")
         print(f"  {c:>15s}  {champ_pc_ens[j]:>9.4f}  {champ_pc_std[j]:>7.4f}  {mlp_v:>8.4f}  {delta:>+8.4f}{marker}")
 
     print(f"\n  {'Overall':>15s}  {champ_f1_ens:>9.4f}  {'':>7s}  {0.8011:>8.4f}  {champ_f1_ens - 0.8011:>+8.4f}")
@@ -310,10 +310,10 @@ def main():
     print("=" * 65)
     print(f"  {'Model':>35s}  {'F1-macro':>9s}")
     print(f"  {'-'*35}  {'-'*9}")
-    print(f"  {'🏆  Deep Ensemble champion (this run)':>35s}  {champ_f1_ens:>9.4f}")
+    print(f"  {'  Deep Ensemble champion (this run)':>35s}  {champ_f1_ens:>9.4f}")
     print(f"  {'    Baseline ensemble (no cleanlab)':>35s}  {base_f1_ens:>9.4f}")
     print(f"  {'    Single MLP individual mean':>35s}  {np.mean([np.mean(p) for p in base_pc_all]):>9.4f}")
-    print(f"  {'🏆  Single MLP champion (0.8011)':>35s}  {0.8011:>9.4f}")
+    print(f"  {'  Single MLP champion (0.8011)':>35s}  {0.8011:>9.4f}")
     print(f"  {'    DeepLoc Accurate (ProtT5-XL)':>35s}  {0.7674:>9.4f}")
     print(f"  {'    DeepLoc Fast (ESM-1b)':>35s}  {0.7491:>9.4f}")
 

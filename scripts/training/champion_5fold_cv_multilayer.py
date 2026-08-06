@@ -222,8 +222,8 @@ def main():
 
     t0 = time.time()
     print("=" * 72)
-    print(f"  MULTI-LAYER ATTN CHAMPION — 5-FOLD CV (CL_CUTOFF={CL_CUTOFF})")
-    print(f"  Features: attn layers {ATTN_LAYERS[0]}–{ATTN_LAYERS[-1]} concat + SPACE + aux = 4610d")
+    print(f"  MULTI-LAYER ATTN CHAMPION - 5-FOLD CV (CL_CUTOFF={CL_CUTOFF})")
+    print(f"  Features: attn layers {ATTN_LAYERS[0]}-{ATTN_LAYERS[-1]} concat + SPACE + aux = 4610d")
     print("  MLP: 4610→512→7, drop=0.5, cleanlab 2-pass self_confidence")
     print("=" * 72)
 
@@ -234,7 +234,7 @@ def main():
 
     # Summary
     print("\n" + "=" * 72)
-    print("  5-FOLD CV SUMMARY — Multi-layer attn champion")
+    print("  5-FOLD CV SUMMARY - Multi-layer attn champion")
     print("=" * 72)
     print(f"  {'Holdout':>8}  {'Baseline':>9}  {'Champion':>9}  {'Gain':>8}  n_train → n_R2")
     print(f"  {'-'*8}  {'-'*9}  {'-'*9}  {'-'*8}  {'-'*18}")

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """hybrid_5fold_cv.py
 
-HYBRID CL — 5-FOLD CROSS-VALIDATION on champion config (T5+SPACE+CL, min_flags=3).
+HYBRID CL - 5-FOLD CROSS-VALIDATION on champion config (T5+SPACE+CL, min_flags=3).
 
 Per fold:
   1. CleanLearning per-compartment → flag_counts
@@ -47,7 +47,7 @@ THR_GRID = np.arange(0.02, 0.96, 0.02)
 
 
 # ═══════════════════════════════════════════════════════════════════
-#  Sklearn MLP (per-compartment binary — for CleanLearning)
+#  Sklearn MLP (per-compartment binary - for CleanLearning)
 # ═══════════════════════════════════════════════════════════════════
 
 class SklearnMLP(BaseEstimator, ClassifierMixin):
@@ -278,7 +278,7 @@ def run_fold(holdout, X_all, Y_all, parts, fold_t0):
 def main():
     t0 = time.time()
     print("=" * 75, flush=True)
-    print("  HYBRID CL — 5-FOLD CROSS-VALIDATION", flush=True)
+    print("  HYBRID CL - 5-FOLD CROSS-VALIDATION", flush=True)
     print(f"  Config: T5+SPACE+CL  |  min_flags={MIN_FLAGS}", flush=True)
     print("  Strategy: CL noise detection → manual 2-round + tuned thresholds", flush=True)
     print("=" * 75, flush=True)
@@ -305,7 +305,7 @@ def main():
 
     # ═══ Summary ════════════════════════════════════════════════════════
     print(f"\n{'='*75}", flush=True)
-    print(f"  5-FOLD CV SUMMARY — HYBRID CL", flush=True)
+    print(f"  5-FOLD CV SUMMARY - HYBRID CL", flush=True)
     print(f"{'='*75}", flush=True)
     print(f"  {'Holdout':>8}  {'Baseline':>9}  {'Hyb@0.5':>9}  {'Hyb@tuned':>9}  {'n_train → n_R2':>16}", flush=True)
     print(f"  {'─'*8}  {'─'*9}  {'─'*9}  {'─'*9}  {'─'*16}", flush=True)

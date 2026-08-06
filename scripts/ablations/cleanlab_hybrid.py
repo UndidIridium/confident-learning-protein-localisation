@@ -108,7 +108,7 @@ class SklearnMLP(BaseEstimator, ClassifierMixin):
 
 
 # ═══════════════════════════════════════════════════════════════════
-#  Manual pipeline (multi-output MLP) — from champion_5fold_cv.py
+#  Manual pipeline (multi-output MLP) - from champion_5fold_cv.py
 # ═══════════════════════════════════════════════════════════════════
 
 class MLP(nn.Module):
@@ -247,10 +247,10 @@ def run_hybrid_from_flags(flag_counts, Xtr, Ytr, Xte, Yte, indim, min_flags, t0)
     keep_mask = flag_counts < min_flags
     print(f"    Step 2/4: Flag counts per protein → drop if >= {min_flags} compartments", flush=True)
     print(f"      Flag distribution: {dict(zip(*np.unique(flag_counts, return_counts=True)))}", flush=True)
-    print(f"      Dropped {n_drop}/{n} ({100*n_drop/n:.1f}%)  — kept {int(keep_mask.sum())}", flush=True)
+    print(f"      Dropped {n_drop}/{n} ({100*n_drop/n:.1f}%)  - kept {int(keep_mask.sum())}", flush=True)
 
     if int(keep_mask.sum()) < 500:
-        print(f"      ⚠️  Too few proteins kept — skipping", flush=True)
+        print(f"      WARNING:  Too few proteins kept - skipping", flush=True)
         return None
 
     X_kp, Y_kp = Xtr[keep_mask], Ytr[keep_mask]
@@ -337,7 +337,7 @@ def main():
     configs = [
         ("T5 + CL",            X_t5[train_mask],    X_t5[test_mask],    X_t5.shape[1]),
         ("SPACE + CL",         X_space[train_mask], X_space[test_mask], X_space.shape[1]),
-        ("T5 + SPACE + CL 🏆", X_t5s[train_mask],   X_t5s[test_mask],   X_t5s.shape[1]),
+        ("T5 + SPACE + CL", X_t5s[train_mask],   X_t5s[test_mask],   X_t5s.shape[1]),
     ]
 
     all_results = []
@@ -367,12 +367,12 @@ def main():
 
     # ═══ Summary ════════════════════════════════════════════════════════
     print(f"\n{'='*90}", flush=True)
-    print(f"  HYBRID CL RESULTS — P4", flush=True)
+    print(f"  HYBRID CL RESULTS - P4", flush=True)
     print(f"{'='*90}", flush=True)
     print(f"  {'Config':<25s}  {'min_flags':>10}  {'CL Drop':>8}  {'Final N':>8}  {'F1@0.5':>8}  {'F1@tuned':>8}  {'Manual':>8}", flush=True)
     print(f"  {'─'*25}  {'─'*10}  {'─'*8}  {'─'*8}  {'─'*8}  {'─'*8}  {'─'*8}", flush=True)
 
-    manual = {"T5 + CL": 0.7809, "SPACE + CL": 0.7054, "T5 + SPACE + CL 🏆": 0.7994}
+    manual = {"T5 + CL": 0.7809, "SPACE + CL": 0.7054, "T5 + SPACE + CL": 0.7994}
 
     for r in all_results:
         n = r["name"]
@@ -381,7 +381,7 @@ def main():
                   f"{rd['f1_05']:>8.4f}  {rd['f1_tuned']:>8.4f}  {manual.get(n,0):>8.4f}", flush=True)
         if r["best_min_flags"]:
             br = r["min_flags_sweep"][r["best_min_flags"]]
-            print(f"  {'  ★ best':<25s}  {r['best_min_flags']:>10}  {br['n_drop_cl']:>8}  {br['n_after_r2']:>8}  "
+            print(f"  {'  * best':<25s}  {r['best_min_flags']:>10}  {br['n_drop_cl']:>8}  {br['n_after_r2']:>8}  "
                   f"{br['f1_05']:>8.4f}  {br['f1_tuned']:>8.4f}", flush=True)
 
     print(f"\n  Wall time: {time.time()-t0:.1f}s", flush=True)

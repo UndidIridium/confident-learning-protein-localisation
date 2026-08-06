@@ -2,7 +2,7 @@
 """deeploc_transfer_manual.py
 
 Manual 2-round MLP cleanlab pipeline trained on DeepLoc (11,562 SwissProt proteins),
-tested on df_adi P4. True held-out transfer — no df_adi training data used.
+tested on df_adi P4. True held-out transfer - no df_adi training data used.
 
 Both sides use attention-pooled ProtT5 L22 (only option for DeepLoc).
 SPACE is zero-filled for DeepLoc proteins (no SPACE coverage).
@@ -137,7 +137,7 @@ def eval_at_thresholds(probs, Y, thresholds):
 
 t0 = time.time()
 print("=" * 75, flush=True)
-print("  MANUAL PIPELINE — DEEPLOC TRANSFER TEST", flush=True)
+print("  MANUAL PIPELINE - DEEPLOC TRANSFER TEST", flush=True)
 print("  Train: DeepLoc new (11,562)  |  Test: df_adi P4 (3,276)", flush=True)
 print("  Pipeline: Manual 2-round MLP self-confidence → tuned thresholds", flush=True)
 print("  Embeddings: Attention-pooled ProtT5 L22 (both sides)", flush=True)
@@ -212,7 +212,7 @@ print(f"  DeepLoc aux: sp_mean={aux_dl[:,0].mean():.3f}, tmd_mean={aux_dl[:,1].m
 # Concat DeepLoc features
 X_tr = np.concatenate([prot5_dl, space_dl, aux_dl], axis=1).astype(np.float32)
 
-# ProtT5 for df_adi test (attn-pooled L22 — same feature space)
+# ProtT5 for df_adi test (attn-pooled L22 - same feature space)
 with h5py.File(ADI_H5, "r") as f:
     prot5_adi = f[f"attn_layer_{LAYER:02d}"][:].astype(np.float32)
 prot5_test = prot5_adi[adi["partition"] == 4]
@@ -256,7 +256,7 @@ tuned_f1, tuned_pc = eval_at_thresholds(final_tp, Y_te, thr)
 
 # ═══ Results ═══
 print(f"\n{'='*65}", flush=True)
-print(f"  DEEPLOC TRANSFER RESULTS — MANUAL PIPELINE", flush=True)
+print(f"  DEEPLOC TRANSFER RESULTS - MANUAL PIPELINE", flush=True)
 print(f"{'='*65}", flush=True)
 print(f"  Baseline (no cleaning):           {bf1:.4f}", flush=True)
 print(f"  Manual F1@0.5:                    {final_f1_05:.4f}", flush=True)

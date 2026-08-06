@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """p4_mean_pooled_test.py
 
-Quick single P4 run — same pipeline as champion_5fold_cv_attn.py but with
+Quick single P4 run - same pipeline as champion_5fold_cv_attn.py but with
 MEAN-POOLED ProtT5 L22 embeddings (from prott5_all_layers_dfadi-3.h5).
-No aux features — matches the original 0.8011 champion_pipeline.py exactly.
+No aux features - matches the original 0.8011 champion_pipeline.py exactly.
 
 Purpose: does mean-pooled embedding give us 0.80 on P4?
 """
@@ -118,10 +118,10 @@ def cleanlab_step(Y, oof, cutoff):
 def main():
     t0 = time.time()
     print("=" * 70)
-    print("  P4 TEST — ATTN-POOLED ProtT5 L22 + CL_CUTOFF=0.50")
+    print("  P4 TEST - ATTN-POOLED ProtT5 L22 + CL_CUTOFF=0.50")
     print("  Pipeline: 2-round MLP self-confidence → final MLP")
     print("  Features: ProtT5 L22 attn-pooled (1024d) + SPACE (512d) + aux (2d) = 1538d")
-    print("  CL_CUTOFF=0.50 — matched to tinker9 config that produced 0.8011")
+    print("  CL_CUTOFF=0.50 - matched to tinker9 config that produced 0.8011")
     print("=" * 70)
 
     # ── Load data ──
@@ -181,7 +181,7 @@ def main():
 
     # ── Report ──
     print("\n" + "=" * 70)
-    print("  RESULTS — ATTN-POOLED P4, CL_CUTOFF=0.50")
+    print("  RESULTS - ATTN-POOLED P4, CL_CUTOFF=0.50")
     print("=" * 70)
     print(f"  {'Baseline (no cleaning)':>35s}  {base_f1:.4f}")
     print(f"  {'Champion (2-round cleanlab)':>35s}  {final_f1:.4f}")

@@ -3,9 +3,9 @@
 
 3-way comparison of cleaning methods on the multi-layer attn champion:
 
-  cleanlab  — current champion: cleanlab 2-pass self_confidence @ 0.40 (per-row)
-  v47       — historical best: per-cell OOF<0.005 → flip Y=1→0 (no cleanlab)
-  hybrid    — cleanlab 2-pass + v47 per-cell drops + v41 per-cell corrections
+  cleanlab  - current champion: cleanlab 2-pass self_confidence @ 0.40 (per-row)
+  v47       - historical best: per-cell OOF<0.005 → flip Y=1→0 (no cleanlab)
+  hybrid    - cleanlab 2-pass + v47 per-cell drops + v41 per-cell corrections
 
 All use: multi-layer attn L20-23 (4096d) + SPACE (512d) + aux (2d) = 4610d
          MLP 4610→512→7, dropout=0.5, early stopping
@@ -13,7 +13,7 @@ All use: multi-layer attn L20-23 (4096d) + SPACE (512d) + aux (2d) = 4610d
 Usage:
   python3 champion_cleaning_sweep.py --mode cleanlab   (≈40 min)
   python3 champion_cleaning_sweep.py --mode v47        (≈40 min)
-  python3 champion_cleaning_sweep.py --mode hybrid     (≈50 min — extra per-cell fix step)
+  python3 champion_cleaning_sweep.py --mode hybrid     (≈50 min - extra per-cell fix step)
 
   # Run all 3:
   for m in cleanlab v47 hybrid; do python3 champion_cleaning_sweep.py --mode $m; done
@@ -149,7 +149,7 @@ def cleanlab_step(Y, oof, cutoff):
 def v47_per_cell_fix(Y, oof, drop_thr=V47_DROP_THR):
     """v47-style per-cell drop: flip Y[i,j]=1→0 where OOF[i,j] < drop_thr.
     
-    Returns corrected Y. Does NOT drop rows — fixes individual cells only.
+    Returns corrected Y. Does NOT drop rows - fixes individual cells only.
     """
     Y_fixed = Y.copy()
     drop_mask = (Y == 1) & (oof < drop_thr)
@@ -166,7 +166,7 @@ def v47_per_cell_fix(Y, oof, drop_thr=V47_DROP_THR):
 def v41_per_cell_correct(Y, oof, corr_thr=V41_CORR_THR):
     """v41-style per-cell correction: flip Y[i,j]=0→1 where OOF[i,j] > corr_thr.
     
-    Returns corrected Y. Does NOT drop rows — fixes individual cells only.
+    Returns corrected Y. Does NOT drop rows - fixes individual cells only.
     """
     Y_fixed = Y.copy()
     corr_mask = (Y == 0) & (oof > corr_thr)
@@ -332,7 +332,7 @@ def run_fold_hybrid(X_tr, Y_tr, X_te, Y_te, holdout):
     Y_r3 = v47_per_cell_fix(Y_r2, oof_r3)
     n_v47_drops = int((Y_r3 != Y_r2).sum())
     print(f"        v47 drop cells: {n_v47_drops}")
-    Y_r4 = v41_per_cell_correct(Y_r3, oof_r3)  # same OOF — disjoint cells
+    Y_r4 = v41_per_cell_correct(Y_r3, oof_r3)  # same OOF - disjoint cells
     n_v41_corrs = int((Y_r4 != Y_r3).sum())
     print(f"        v41 correction cells: {n_v41_corrs}")
     
@@ -368,7 +368,7 @@ def main():
     
     # Load data once (all modes share the same features)
     print("=" * 72)
-    print("  CLEANING METHOD SWEEP — Multi-layer attn champion")
+    print("  CLEANING METHOD SWEEP - Multi-layer attn champion")
     print("=" * 72)
     X_all, Y_all, parts, _ = load_data()
     
@@ -400,7 +400,7 @@ def main():
         
         # Summary for this mode
         print(f"\n  {'='*50}")
-        print(f"  5-FOLD CV SUMMARY — {mode.upper()}")
+        print(f"  5-FOLD CV SUMMARY - {mode.upper()}")
         print(f"  {'='*50}")
         print(f"  {'Holdout':>8}  {'Baseline':>9}  {'Champion':>9}  {'Gain':>8}")
         print(f"  {'-'*8}  {'-'*9}  {'-'*9}  {'-'*8}")

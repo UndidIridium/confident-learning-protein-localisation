@@ -5,7 +5,7 @@ Runs our champion pipeline (MLP + iterative cleanlab) on ESM2 features
 instead of ProtT5, for a fair comparison against DeepLoc Fast (ESM-1b).
 
 DeepLoc Fast uses:  ESM-1b (650M params, 33 layers, 1280-d)
-We use:            ESM-2 650M (33 layers, 1280-d) — closest available
+We use:            ESM-2 650M (33 layers, 1280-d) - closest available
 
 Pipeline: ESM2 L32 (1280) + SPACE (512) + aux (2) = 1794d
           → baseline MLP → cleanlab R1 → retrain → cleanlab R2 → eval on P4
@@ -110,7 +110,7 @@ def posw(Y):
 #  MAIN
 # ═══════════════════════════════════════════════════════════
 print("=" * 60)
-print("CHAMPION PIPELINE — ESM2 L32 + SPACE + aux")
+print("CHAMPION PIPELINE - ESM2 L32 + SPACE + aux")
 print("Apples-to-apples vs DeepLoc Fast (both ESM-family, 650M, 1280-d)")
 print("=" * 60)
 
@@ -159,7 +159,7 @@ print(f"  Baseline F1: {baseline_f1:.4f}")
 print(f"Generating OOF predictions...")
 oof_r1 = gen_oof(X_tr, Y_tr, 5, FEAT_DIM)
 
-# 9. R1 cleaning — manual self-confidence scoring
+# 9. R1 cleaning - manual self-confidence scoring
 # (cleanlab v2.9.0 multilabel API breaks on imbalanced compartments)
 print(f"R1 cleanlab (self-confidence cutoff={CL_CUTOFF})...")
 # Self-confidence = mean over classes of P(Y_true|model)

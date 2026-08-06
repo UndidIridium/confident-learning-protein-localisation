@@ -215,7 +215,7 @@ def cleanlab_filter(Y, oof, cutoff):
 def main():
     t0 = time.time()
     print("=" * 70)
-    print("  CHAMPION PIPELINE — Subcellular Localisation")
+    print("  CHAMPION PIPELINE - Subcellular Localisation")
     print("  ProtT5 L22 + SPACE → Iterative Cleanlab → MLP")
     print("=" * 70)
 
