@@ -74,7 +74,7 @@ protein-subcellular-localization/
 ├── README.md                 # this file
 ├── requirements.txt          # pinned, verified environment
 ├── .gitignore
-├── data/                     # NOT committed (~62 GB) — see Reproduction
+├── data/                     # df_adi.csv only (~10 MB) — embeddings, see Reproduction
 ├── scripts/
 │   ├── embeddings/           # Colab builders: attention-pooled ProtT5 + SPACE extraction
 │   ├── cleaning/             # the confident-learning core (p4_cutoff_sweep.py, champion_pipeline.py)
@@ -101,16 +101,15 @@ Verified on Python 3.14.4 / torch 2.12.1 / numpy 2.4.4. **Pin the stack** — a 
 upgrade in late July 2026 shifted scores (the original 0.8011 is no longer reproducible on the
 current env; 0.8002 is the current-env canonical number).
 
-### 2. Data (not committed, ~62 GB)
+### 2. Data (df_adi.csv included; ~62 GB of embeddings is not)
 
-**Where the data comes from.** `df_adi.csv` is the project's core dataset: 16,741 proteins with 7 binary compartment labels, split into 5 fixed partitions. Partition 4 (3,276 proteins) is the held-out test set DeepLoc 2.1 is also scored on; the embeddings and aux features are derived from it by the scripts below. <!-- TODO: add the exact original download URL/DOI for df_adi.csv here if publicly available. -->
+**Where the data comes from.** `df_adi.csv` is the project's core dataset: 16,741 proteins with 7 binary compartment labels, split into 5 fixed partitions. Partition 4 (3,276 proteins) is the held-out test set DeepLoc 2.1 is also scored on; the embeddings and aux features are derived from it by the scripts below. **The CSV ships in this repo** at `data/df_adi.csv` (~10 MB) — no download needed.
 
 Scripts resolve `data/` **relative to their own folder** (`Path(__file__).parent / "data"`),
 so from the repo root link one data dir into every scripts subfolder:
 
 ```bash
-# place these files in ./data/:
-#   df_adi.csv                      (16,741 proteins, 7 binary labels, 5 fixed partitions)
+# df_adi.csv is already in this repo (data/df_adi.csv); add only the derived files:
 #   prott5_attn_all_layers.h5       (attention-pooled ProtT5-XL, all 24 layers, 1024-d)
 #   space_network_embeddings.npy    (SPACE embeddings, 16741 x 512)
 #   space_network_mask.npy          (SPACE coverage mask, 16741)

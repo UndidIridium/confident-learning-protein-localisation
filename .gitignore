@@ -6,8 +6,9 @@ __pycache__/
 venv/
 .ipynb_checkpoints/
 
-# Data — 62 GB, never committed
-data/
+# Data — df_adi.csv is committed; the ~62 GB of derived embeddings is not
+data/*
+!data/df_adi.csv
 *.h5
 *.npy
 
