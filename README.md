@@ -192,6 +192,12 @@ original working directory, where every idea gets its own script; anything that 
    protein language models. *Nucleic Acids Research*, 52(W1), W215–W220.
    https://doi.org/10.1093/nar/gkae237
    The published benchmark we compare against on the same held-out partition.
-4. SPACE network embeddings. 512-d graph autoencoder embeddings of the STRING v12.0
-   protein-interaction network, described in `docs/CHAMPION_PIPELINE_REPORT.md` §1.2.
-   <!-- TODO: add the canonical SPACE citation (paper/DOI) here. -->
+4. Hu, D., Szklarczyk, D., von Mering, C., & Jensen, L. J. (2025). SPACE: STRING proteins as
+   complementary embeddings. *Bioinformatics*, 41(9), btaf496.
+   https://doi.org/10.1093/bioinformatics/btaf496
+   Source of the 512-d STRING v12.0 protein-interaction-network embeddings used as
+   ProtT5-complementary features.
+5. Szklarczyk, D., et al. (2025). The STRING database in 2025: protein networks with
+   directionality of regulation. *Nucleic Acids Research*, 53(D1), D730–D737.
+   https://doi.org/10.1093/nar/gkae1113
+   The PPI network underlying the SPACE embeddings.
