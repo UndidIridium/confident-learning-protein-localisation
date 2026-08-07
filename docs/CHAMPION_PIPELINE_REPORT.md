@@ -173,7 +173,7 @@ Input (1,536) → Linear(1,536 → 512) → ReLU → Dropout(0.5) → Linear(512
 
 | Compartment | Baseline | Champion (R2) | Gain | Impact |
 |---|---:|---:|---:|---|
-| **Mitochondrion** | 0.7579 | **0.8224** | **+0.0645** | Noisiest - mito annotation is hardest |
+| **Mitochondrion** | 0.7579 | **0.8224** | **+0.0645** | Rarest - most sensitivity-damaging |
 | **Endomembrane** | 0.6345 | **0.6880** | **+0.0535** | ER vs Golgi boundary is intrinsically fuzzy |
 | Cytoplasm | 0.7471 | 0.7603 | +0.0132 | Moderate noise - default compartment |
 | Cell_surface | 0.7255 | 0.7308 | +0.0053 | Low noise |
