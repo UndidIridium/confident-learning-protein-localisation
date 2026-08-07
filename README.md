@@ -26,6 +26,8 @@ That single idea — no architectural complexity, no ensembling, no extra data �
 
 *The 5-fold CV row was run at CL_CUTOFF=0.40, before the cutoff sweep; the single-holdout headline is at the tuned 0.50. See Reproduction step 4.*
 
+*P4 is a single held-out partition — the same one DeepLoc 2.1 is scored on, so the comparison is apples-to-apples. The 5-fold mean above is the better estimate of expected performance on unseen partitions.*
+
 ## The core idea: confident learning
 
 **How it works.** A 4-fold out-of-fold MLP is trained on the full training set, then cleanlab's
@@ -39,8 +41,9 @@ not see.
 training set (13,465 → 7,111 proteins). The measured estimate of true label noise is **37.6%**, computed with cleanlab's calibrated confident joint on out-of-fold predictions (`label_quality_check.py`), which estimates the joint distribution of observed vs true labels without needing ground truth. Cytoplasm is the noisiest compartment (est.
 11.3% of its labels), extracellular the cleanest (1.0%).
 
-**Where the gains come from.** The biggest wins are in the noisiest compartments — exactly where
-a model trained on bad labels suffers most:
+**Where the gains come from.** The biggest wins are in the rarest, most sensitivity-damaging
+classes — not the noisiest. Cytoplasm, the noisiest compartment (est. 11.3% of its labels),
+gains the least (+0.013); mitochondrion, the rarest, gains the most:
 
 | Compartment | Baseline F1 | Champion F1 | Gain |
 |---|---:|---:|---:|
@@ -55,12 +58,20 @@ simply wrong. This is the opposite of what you would expect if cleaning were har
 ({0.40: 0.7994, 0.45: 0.7985, 0.50: 0.8002, 0.55: 0.7968}): 0.50 is the best point, but the
 0.40–0.50 plateau is flat — 0.50 edges out 0.40 by +0.0008, within run-to-run noise.
 
-**Cleaning and features compound.** The no-cleaning baseline on the full feature set is 0.7815;
-the champion with cleaning is 0.8002, so cleaning alone is worth **+0.019**. SPACE's PPI features
-contribute separately (~+0.021 over ProtT5-only features). The two compound: network features
-make the OOF model confident enough for cleanlab to spot real mislabels (an earlier protocol's
-ablation found the combined gain exceeded the sum of the parts by +0.020 — see
-`docs/CHAMPION_PIPELINE_REPORT.md`).
+**Cleaning and features compound.** Building the feature set one step at a time (same protocol: P4, prediction threshold 0.5; cleanlab rows at CL_CUTOFF=0.40):
+
+| Configuration | F1-macro |
+|---|---:|
+| ProtT5 L22 + aux only | 0.7605 |
+| + cleanlab | 0.7777 |
+| + SPACE | 0.7815 |
+| + cleanlab + SPACE (champion) | **0.7994** |
+
+Each lever adds roughly +0.02 on its own; both together reach 0.7994, and the champion adds the
+tuned 0.50 cutoff from the sweep below to land at **0.8002**. The gains are approximately
+additive in F1, but the mechanism is not independent: SPACE's network features change which
+proteins cleanlab flags, and an ablation on an earlier protocol measured the combined gain
+exceeding the sum of the parts by +0.020 (`docs/CHAMPION_PIPELINE_REPORT.md`).
 
 **The model is not data-limited; the labels are.** Adding 11,562 more proteins (+86% data)
 changed nothing (0.8005 vs 0.8002). Every architectural upgrade we tried — deeper MLP,
