@@ -1,4 +1,4 @@
-# Experiment Log — Protein Localization Project
+# Experiment Log - Protein Localization Project
 
 ## Protocol Overview
 - **Splitting:** 5-Fold Partition-Aware Cross-Validation.
@@ -10,31 +10,31 @@
 
 **Active track:** PCA-500 automated cleaning + submission-level ensembling.
 - **Latest runs:**
-  - **v47 (Drop 99.5% ONLY, no corrections):** Private 0.71528 / Public 0.71617 / OOF 0.74778 — **BEST PCA-500 ON PVT**.
-  - **v48d_and (intersect of v43 + v47 test predictions):** Private 0.71472 / Public **0.71991** — **BEST PCA-500 ON PUB**; avg(PVT,PUB)=0.71732 (best across all candidates).
-  - **v49 (Drop 0.1% tighter, threshold 0.001):** Private **0.70297** / Public **0.70524** / OOF 0.72730 — **REGRESSION**. Tightening DROP_THRESHOLD 0.005 → 0.001 globally restored 719 cells; they were signal, not noise.
-  - **v50 (Per-organelle DROP_THRESHOLD, calibration-driven, 21 trials):** **PVT 0.70972 / PUB 0.71320** — **REGRESSED** both vs v47 (−0.00556 PVT, −0.00297 PUB) despite OOF Macro F1 **0.75840** (Δ **+0.01062 vs v47 0.74778**). **OOF→PVT transfer is broken on per-organelle leverage alone — the cells the OOF sweep added when loosening thresholds >0.005 turned out to be FALSE drops on the test set (mito +84 false drops, endom +99, extracellular +57).** Greedy 1-round sweep picked: `cytoplasm=0.010, nucleus=0.010, extracellular=0.015, cell_surface=0.005 (held), mitochondrion=0.015, endom=0.008`. Total drops: **1349** (Δ +361 vs v47's 988). Per-organelle: mito 326 (was 242), endom 284 (was 185), cell_surface 242 (held), cyto 189, extracellular 176 (was 119), nucleus 132 (was 94). output-thresholds per organelle (post-cal): cyto 0.27, nucleus 0.23, extracellular 0.10 (held at edge), cell_surface 0.10, mitochondrion 0.10, endom 0.10. **v50∩v43 (4875 positives)** → PVT 0.71331 / PUB 0.71439 — regresses vs v48d_and (−0.00141 PVT, −0.00552 PUB). **v50∩v47 (4942 positives)** → **PVT 0.71562 / PUB 0.71406 — NARROW NEW PCA-500 PVT-BEST** (+0.00034 over v47 standalone, at −0.00585 PUB cost). Submission-level intersect salvaged a marginal PVT gain from a regressed standalone.
-  - **v52 (asymmetric per-organelle TIGHTENING, UniProt-prior driven, 1-shot):** **PVT 0.70655 / PUB 0.70638** — **REGRESSED hard** vs v47 (−0.00873 PVT, −0.00979 PUB) AND vs v48d_and (−0.00817 PVT, −0.01353 PUB), with OOF Macro F1 **0.73607** worse than v47 (−0.01171) AND worse than v50 (−0.02233). Fixed threshold map (no sweep): `mito=0.001, extracellular=0.001 (tighter on 0%-UniProt-confirmed compartments), cyto=0.002, nucleus=0.002 (slightly tighter on low-divergence), endom=0.005 (held), cell_surface=0.008 (loosened on 6.6%-UniProt-confirmed)`. Total drops: **754** (Δ −234 vs v47's 988). Per-organelle: mito 92 (was 242), endom 185 (held), extracellular 69 (was 119), cyto 42 (was 106), nucleus 61 (was 94), cell_surface 305 (was 242). **v52∩v43 (4909 positives)** → PVT 0.71047 / PUB 0.71600 — regresses vs v48d_and (−0.00425 PVT, −0.00391 PUB) but **+0.00161 PUB over v50∩v43 (narrow gain)**. **v52∩v47 (4971 positives)** → PVT 0.71342 / PUB 0.71463 — regresses vs v47 (−0.00186 PVT, −0.00154 PUB), also regresses vs v50∩v47 (−0.00220 PVT, +0.00057 PUB). All three v52 outputs regress — **the OPPOSITE direction from v50 also failed**, confirming: per-organelle DROP_THRESHOLD scalar calibration is dead in BOTH directions.
+  - **v47 (Drop 99.5% ONLY, no corrections):** Private 0.71528 / Public 0.71617 / OOF 0.74778 - **BEST PCA-500 ON PVT**.
+  - **v48d_and (intersect of v43 + v47 test predictions):** Private 0.71472 / Public **0.71991** - **BEST PCA-500 ON PUB**; avg(PVT,PUB)=0.71732 (best across all candidates).
+  - **v49 (Drop 0.1% tighter, threshold 0.001):** Private **0.70297** / Public **0.70524** / OOF 0.72730 - **REGRESSION**. Tightening DROP_THRESHOLD 0.005 → 0.001 globally restored 719 cells; they were signal, not noise.
+  - **v50 (Per-organelle DROP_THRESHOLD, calibration-driven, 21 trials):** **PVT 0.70972 / PUB 0.71320** - **REGRESSED** both vs v47 (−0.00556 PVT, −0.00297 PUB) despite OOF Macro F1 **0.75840** (Δ **+0.01062 vs v47 0.74778**). **OOF→PVT transfer is broken on per-organelle leverage alone - the cells the OOF sweep added when loosening thresholds >0.005 turned out to be FALSE drops on the test set (mito +84 false drops, endom +99, extracellular +57).** Greedy 1-round sweep picked: `cytoplasm=0.010, nucleus=0.010, extracellular=0.015, cell_surface=0.005 (held), mitochondrion=0.015, endom=0.008`. Total drops: **1349** (Δ +361 vs v47's 988). Per-organelle: mito 326 (was 242), endom 284 (was 185), cell_surface 242 (held), cyto 189, extracellular 176 (was 119), nucleus 132 (was 94). output-thresholds per organelle (post-cal): cyto 0.27, nucleus 0.23, extracellular 0.10 (held at edge), cell_surface 0.10, mitochondrion 0.10, endom 0.10. **v50∩v43 (4875 positives)** → PVT 0.71331 / PUB 0.71439 - regresses vs v48d_and (−0.00141 PVT, −0.00552 PUB). **v50∩v47 (4942 positives)** → **PVT 0.71562 / PUB 0.71406 - NARROW NEW PCA-500 PVT-BEST** (+0.00034 over v47 standalone, at −0.00585 PUB cost). Submission-level intersect salvaged a marginal PVT gain from a regressed standalone.
+  - **v52 (asymmetric per-organelle TIGHTENING, UniProt-prior driven, 1-shot):** **PVT 0.70655 / PUB 0.70638** - **REGRESSED hard** vs v47 (−0.00873 PVT, −0.00979 PUB) AND vs v48d_and (−0.00817 PVT, −0.01353 PUB), with OOF Macro F1 **0.73607** worse than v47 (−0.01171) AND worse than v50 (−0.02233). Fixed threshold map (no sweep): `mito=0.001, extracellular=0.001 (tighter on 0%-UniProt-confirmed compartments), cyto=0.002, nucleus=0.002 (slightly tighter on low-divergence), endom=0.005 (held), cell_surface=0.008 (loosened on 6.6%-UniProt-confirmed)`. Total drops: **754** (Δ −234 vs v47's 988). Per-organelle: mito 92 (was 242), endom 185 (held), extracellular 69 (was 119), cyto 42 (was 106), nucleus 61 (was 94), cell_surface 305 (was 242). **v52∩v43 (4909 positives)** → PVT 0.71047 / PUB 0.71600 - regresses vs v48d_and (−0.00425 PVT, −0.00391 PUB) but **+0.00161 PUB over v50∩v43 (narrow gain)**. **v52∩v47 (4971 positives)** → PVT 0.71342 / PUB 0.71463 - regresses vs v47 (−0.00186 PVT, −0.00154 PUB), also regresses vs v50∩v47 (−0.00220 PVT, +0.00057 PUB). All three v52 outputs regress - **the OPPOSITE direction from v50 also failed**, confirming: per-organelle DROP_THRESHOLD scalar calibration is dead in BOTH directions.
   - Reproducibility verified: v48d_v43_only and v48d_v47_only re-uploads reproduce original v43/v47 scores exactly.
 - **Best PCA-500 leaderboard lines on record (post-v52 submission):**
   - **PCA-500 PVT-best: v50∩v47** at **0.71562** (narrow +0.00034 over v47; submission-level intersect of v50 + v47).
   - **PCA-500 PVT-best drops-only solo: v47** at **0.71528**.
   - **PCA-500 PUB-best: v48d_and** at **0.71991** (submission-level intersect of v43 + v47).
-  - **PCA-500 average-best: v48d_and** at **0.71732** — **production pick** (highest avg of PVT+PUB across all variants).
+  - **PCA-500 average-best: v48d_and** at **0.71732** - **production pick** (highest avg of PVT+PUB across all variants).
   - **PCA-500 PVT-second via v50∩v43 (regression): 0.71331**. **v50 alone (regression): 0.70972**. **v44: 0.71015**.
   - Decision rule: ship `v48d_and` for safety-of-leaderboard; ship `v50∩v47` if PVT is the priority delta vs prior; ship `v47` for the next-best avg without intersect overhead.
 - **Open hypotheses** (descending confidence):
-  1. **Confirmed** — v44 ≈ v43: manual mito adds zero marginal signal on top of automated rules.
-  2. **Confirmed** — v46 UniProt revert DEAD paired with corrections; v49 closed threshold sweeps below 0.005; do not pursue further.
-  3. **Confirmed (v47)** — DROP RULE IS THE DOMINANT SIGNAL CARRIER. v47 (drops only) > v43 (corrections+drops) by +0.005 PVT. Corrections are dead weight when stacked on drops.
-  4. **Confirmed (v48d)** — Submission-level INTERSECT (AND) sets the new PUB best at 0.71991; UNION (OR) regresses vs both solos. ENSEMBLES ARE AN ORTHOGONAL LEVER.
-  5. **Confirmed (v49)** — DROP_THRESHOLD 0.005 IS WELL-TUNED at the global level. Sweeping down to 0.001 regressed hard (PVT −0.01231, PUB −0.01093 vs v47). The remaining lever on cleaning is per-organelle thresholds (mito 19.4% drop rate vs nucleus/cytoplasm 1.8%), NOT threshold-level sweeps.
-  6. **Confirmed (v50 + v52 — both directions dead)**: Per-organelle DROP_THRESHOLD REGRESSES in BOTH directions tested. LOOSENING (v50) had strong OOF lift (+0.01062) but regressed PVT (−0.00556) and PUB (−0.00297) vs v47. TIGHTENING (v52) regressed standalone by −0.00873 PVT/−0.00979 PUB vs v47, **AND regressed in both intersects** (v52∩v43 −0.00425 PVT/−0.00391 PUB vs v48d_and, v52∩v47 −0.00186 PVT/−0.00154 PUB vs v47). The submission-level intersect trick salvages marginal PVT/cross-metric gains across direction but never recovers the standalone regression. **No per-organelle scalar map transfers.** Conclusion: cleaning-side lever on per-organelle thresholds is exhausted in BOTH directions; remaining headroom is submission-level (already plateaued at v48d_and 0.71991 PUB) and dimensionality/architecture.
-  7. **Confirmed (v50 + v52)**: Submission-level intersect DOES hold across threshold variations — v50∩v47 (narrow new PVT best), v52∩v43 (+0.00161 PUB over v50∩v43), v52∩v47 (−0.00186/−0.00154 vs v47). AND-pattern generalizes across all cleaning variants but at best salvages marginal gains, NOT major lifts. v48d_and's PUB lift baseline (0.71991) is unchallenged.
+  1. **Confirmed** - v44 ≈ v43: manual mito adds zero marginal signal on top of automated rules.
+  2. **Confirmed** - v46 UniProt revert DEAD paired with corrections; v49 closed threshold sweeps below 0.005; do not pursue further.
+  3. **Confirmed (v47)** - DROP RULE IS THE DOMINANT SIGNAL CARRIER. v47 (drops only) > v43 (corrections+drops) by +0.005 PVT. Corrections are dead weight when stacked on drops.
+  4. **Confirmed (v48d)** - Submission-level INTERSECT (AND) sets the new PUB best at 0.71991; UNION (OR) regresses vs both solos. ENSEMBLES ARE AN ORTHOGONAL LEVER.
+  5. **Confirmed (v49)** - DROP_THRESHOLD 0.005 IS WELL-TUNED at the global level. Sweeping down to 0.001 regressed hard (PVT −0.01231, PUB −0.01093 vs v47). The remaining lever on cleaning is per-organelle thresholds (mito 19.4% drop rate vs nucleus/cytoplasm 1.8%), NOT threshold-level sweeps.
+  6. **Confirmed (v50 + v52 - both directions dead)**: Per-organelle DROP_THRESHOLD REGRESSES in BOTH directions tested. LOOSENING (v50) had strong OOF lift (+0.01062) but regressed PVT (−0.00556) and PUB (−0.00297) vs v47. TIGHTENING (v52) regressed standalone by −0.00873 PVT/−0.00979 PUB vs v47, **AND regressed in both intersects** (v52∩v43 −0.00425 PVT/−0.00391 PUB vs v48d_and, v52∩v47 −0.00186 PVT/−0.00154 PUB vs v47). The submission-level intersect trick salvages marginal PVT/cross-metric gains across direction but never recovers the standalone regression. **No per-organelle scalar map transfers.** Conclusion: cleaning-side lever on per-organelle thresholds is exhausted in BOTH directions; remaining headroom is submission-level (already plateaued at v48d_and 0.71991 PUB) and dimensionality/architecture.
+  7. **Confirmed (v50 + v52)**: Submission-level intersect DOES hold across threshold variations - v50∩v47 (narrow new PVT best), v52∩v43 (+0.00161 PUB over v50∩v43), v52∩v47 (−0.00186/−0.00154 vs v47). AND-pattern generalizes across all cleaning variants but at best salvages marginal gains, NOT major lifts. v48d_and's PUB lift baseline (0.71991) is unchallenged.
   8. **Closed (v50 + v52)**: Per-organelle DROP_THRESHOLD REGRESSES standalone in BOTH tested directions (loosen via OOF calibration, tighten via UniProt priors). All three v52 variants regressed. Do not pursue further per-organelle scalar calibration. The OOF→PVT transfer gap is structurally too large across both directions (~−0.007 to −0.013 standalone).
 - **Architecture pinned:** PCA-500 + XGB(n_est=500, lr=0.05, depth=8, subsample=0.8, colsample=0.4) + LGBM(n_est=500, lr=0.05, num_leaves=63, subsample=0.8, colsample=0.4) soft-voting; 5-fold partitions [0..3]; joblib-parallel across 6 organelles `cytoplasm, nucleus, extracellular, cell_surface, mitochondrion, endom`. Do not modify in derivative scripts.
-- **Teacher signal:** `data/v22_oof_probs.npy` (shape (16077, 6), float32, zero NaN) — shared by all v40+ scripts, do not modify.
-- **Blocker for v42 / v44 reproduction:** the 17 manual mito accessions in `/Users/aditya/Downloads/mito_FN_named_15.csv` are not in this repo. The most likely in-repo correlate is `mitochondria/mito_accessions.txt` — cross-walk required before reproducing v42 or any hypothetical v44 outside their current submission CSVs.
+- **Teacher signal:** `data/v22_oof_probs.npy` (shape (16077, 6), float32, zero NaN) - shared by all v40+ scripts, do not modify.
+- **Blocker for v42 / v44 reproduction:** the 17 manual mito accessions in `/Users/aditya/Downloads/mito_FN_named_15.csv` are not in this repo. The most likely in-repo correlate is `mitochondria/mito_accessions.txt` - cross-walk required before reproducing v42 or any hypothetical v44 outside their current submission CSVs.
 
 
 ### v21: ProtT5 Alignment Fix
@@ -98,43 +98,43 @@
 ### v44 (PCA-500 + Manual Mito (17) + Correction 98% + Drop 99.5%)
 - **Action:** Same PCA-500 architecture as v43, plus stacking the v22/v29/v42 manual mitochondrial enrichment of 17 verified accessions. Three-phase cleaning order: (0) manual mito (17→mito=1), (1) automated correction (0→1 at OOF>0.98), (2) automated drop (1→0 at OOF<0.005).
 - **Results:** **Private F1 0.71015 / Public F1 0.71845 / OOF Macro F1 0.75201.** Action counts: 6 manual mito flips, 107 corrections, 988 drops.
-- **Delta vs v43 (PVT 0.71032, PUB 0.71829):** PVT −0.00017, PUB +0.00016 — **within noise; v44 ≈ v43 confirmed.** Manual mito enrichment adds essentially zero marginal lift on top of v43's automated rules, consistent with the v42→v41 null result (ΔPVT −0.00169).
+- **Delta vs v43 (PVT 0.71032, PUB 0.71829):** PVT −0.00017, PUB +0.00016 - **within noise; v44 ≈ v43 confirmed.** Manual mito enrichment adds essentially zero marginal lift on top of v43's automated rules, consistent with the v42→v41 null result (ΔPVT −0.00169).
 - **Phase-0 audit:** Six of the 17 accessions are missing from `data/train.csv` (P00390, P40630, Q6P1S2, Q8C5B0, Q92834, Q9W4L8); six of the 11 present were true 0→1 flips; five were already annotated mitochondrion=1 in train.csv, so Phase 0 was a no-op for them.
-- **Insight:** The Phase-0 audit log is written as `output_v44_manual_and_dropped/phase0_status.csv` with one row per accession (In_Train / Rows / Raw_Mito_Set / Final_Mito / Flipped). Per-(acc,row) cross-check vs `corrections_and_drops_log.csv` is enforced in `fix_v44_phase0_status.py`. Combined with the v22→v41→v42→v43→v44 line of evidence: manual annotation in the PCA-500 regime effectively adds zero signal — the only signal carrier is the drop rule. Headroom, if any, sits in threshold tuning (72.8% of drops cluster just below 0.005 — see `output_v43_corrected_98_dropped_99/drop_audit_report.html`) and per-organelle thresholds (mitochondrion has 19.4% drop rate vs nucleus/cytoplasm 1.8%).
+- **Insight:** The Phase-0 audit log is written as `output_v44_manual_and_dropped/phase0_status.csv` with one row per accession (In_Train / Rows / Raw_Mito_Set / Final_Mito / Flipped). Per-(acc,row) cross-check vs `corrections_and_drops_log.csv` is enforced in `fix_v44_phase0_status.py`. Combined with the v22→v41→v42→v43→v44 line of evidence: manual annotation in the PCA-500 regime effectively adds zero signal - the only signal carrier is the drop rule. Headroom, if any, sits in threshold tuning (72.8% of drops cluster just below 0.005 - see `output_v43_corrected_98_dropped_99/drop_audit_report.html`) and per-organelle thresholds (mitochondrion has 19.4% drop rate vs nucleus/cytoplasm 1.8%).
 
 ### v43 Drop Audit (analyze_v43_drop_audit.py)
 - **Action:** Read-only analysis of v43's `corrections_and_drops_log.csv` (988 dropped cells + 107 corrected cells across 855 unique proteins).
 - **Per-organelle drop rates (% of raw positives):** mitochondrion 19.4%, cell_surface 7.4%, endom 7.0%, extracellular 5.0%, nucleus 1.8%, cytoplasm 1.8%.
-- **Confidence depth:** 27.2% of drops are "deep" (<0.001 OOF) and 72.8% are "near" (0.001–0.005). Threshold sweep likely productive since most drops are clustered just below 0.005.
-- **Multi-organelle droppers:** 163/792 proteins (20.6%) had ≥2 organelles dropped — same protein dropped from 2 or 3 different organelles. Top offender: P63158 (cell_surface + endom + extracellular, all dropped).
+- **Confidence depth:** 27.2% of drops are "deep" (<0.001 OOF) and 72.8% are "near" (0.001-0.005). Threshold sweep likely productive since most drops are clustered just below 0.005.
+- **Multi-organelle droppers:** 163/792 proteins (20.6%) had ≥2 organelles dropped - same protein dropped from 2 or 3 different organelles. Top offender: P63158 (cell_surface + endom + extracellular, all dropped).
 - **Cross-action overlap:** 35/855 touched (4.1%) proteins were both corrected AND dropped in different organelles, demonstrating that v22 OOF is organelle-specific rather than protein-specific.
 - **Cardinality enrichment** (touched% ÷ baseline%): cardinality 1 = 0.44×, 2 = 1.95×, 3 = 7.15×, 4 = 10.02×, 5 = 14.5×. Confirms v25's "33× noise at cardinality 4+" finding under stricter 99.5% opposite-confidence rule.
 - **Artifacts:** `output_v43_corrected_98_dropped_99/audit_per_organelle.csv`, `audit_cardinality.csv`, `audit_multi_drop.csv`, `audit_overlap.csv`, `audit_summary.txt`.
 
 ### v46 (PCA-500 + Correction 98% + UniProt-Validated Conservative Drops)
-- **Action:** Same PCA-500 architecture as v43. Identical correction logic (107 cells at OOF>0.98). Drop rule fires at OOF<0.005, BUT the 961 cells whose dropped organelle is explicitly *supported* by UniProt (via the user's full 792-accession ID-mapping, with combined Subcellular-location + GO-ID matching across our 6 organelle labels) are reverted — kept as label 1, no action in v46's audit log. Net drops: 988 base → 27 applied (1 cyto + 1 nuc + 17 cell_surface + 8 endo + 0 extra + 0 mito).
+- **Action:** Same PCA-500 architecture as v43. Identical correction logic (107 cells at OOF>0.98). Drop rule fires at OOF<0.005, BUT the 961 cells whose dropped organelle is explicitly *supported* by UniProt (via the user's full 792-accession ID-mapping, with combined Subcellular-location + GO-ID matching across our 6 organelle labels) are reverted - kept as label 1, no action in v46's audit log. Net drops: 988 base → 27 applied (1 cyto + 1 nuc + 17 cell_surface + 8 endo + 0 extra + 0 mito).
 - **Internal:** v46 OOF Macro F1 = 0.72216; corrections preserved exactly (107/107 ↔ v43); drop-diff CSV at `output_v46_uniprot_validated_drop/v43_to_v46_drop_diff.csv` (961 reverted cells).
 - **Results:** **Private F1 0.70044 / Public F1 0.70449.**
-- **Delta vs v43 (PVT 0.71032 / PUB 0.71829):** PVT **−0.00988**, PUB **−0.01380** — significant BLINDED regression.
-- **Delta vs v22 raw (PVT 0.70380):** PVT **−0.00336** — v46 is strictly WORSE than no cleaning at all.
-- **Delta vs v42 (corrections only, PVT 0.71032):** PVT **−0.00988** — v46 is much worse than corrections-only.
-- **Insight:** **The UniProt-oracle hypothesis is empirically DEAD.** Trusting an external annotation system (UniProt) to revert confident v22-OOF drops produced a substantial test-set regression. The drop rule's −0.00017 in v43 (correct intuition on noisy labels) was correct because the model is calibrated to this dataset's specific annotation conventions, while UniProt uses broader criteria (sequence similarity, curator inference, multiple-evidence weighting). Manual spot-checks by the user were selection-biased — surfaces cases where UniProt agrees with original labels, but aggregating across 961 cells overwhelms any local wins with systematic precision loss. Take-away: cleaning rules must be defined against *the dataset's* oracle (v22 OOF + dataset-specific evidence), not external databases. Don't try UniProt-driven reverting again.
+- **Delta vs v43 (PVT 0.71032 / PUB 0.71829):** PVT **−0.00988**, PUB **−0.01380** - significant BLINDED regression.
+- **Delta vs v22 raw (PVT 0.70380):** PVT **−0.00336** - v46 is strictly WORSE than no cleaning at all.
+- **Delta vs v42 (corrections only, PVT 0.71032):** PVT **−0.00988** - v46 is much worse than corrections-only.
+- **Insight:** **The UniProt-oracle hypothesis is empirically DEAD.** Trusting an external annotation system (UniProt) to revert confident v22-OOF drops produced a substantial test-set regression. The drop rule's −0.00017 in v43 (correct intuition on noisy labels) was correct because the model is calibrated to this dataset's specific annotation conventions, while UniProt uses broader criteria (sequence similarity, curator inference, multiple-evidence weighting). Manual spot-checks by the user were selection-biased - surfaces cases where UniProt agrees with original labels, but aggregating across 961 cells overwhelms any local wins with systematic precision loss. Take-away: cleaning rules must be defined against *the dataset's* oracle (v22 OOF + dataset-specific evidence), not external databases. Don't try UniProt-driven reverting again.
 
 ### v43 (PCA-500 + Automated Correction 98% + Automated Drop 99.5%)
-- **Action:** Same PCA-500 architecture as v41, plus a per-label subtractive drop rule. Combines (a) v41's additive rule (`raw=0 AND v22_OOF > 0.98` → flip to 1) with (b) a new subtractive rule (`raw=1 AND v22_OOF < 0.005` → flip to 0). Only individual (protein, organelle) cells are touched — no full rows are deleted.
+- **Action:** Same PCA-500 architecture as v41, plus a per-label subtractive drop rule. Combines (a) v41's additive rule (`raw=0 AND v22_OOF > 0.98` → flip to 1) with (b) a new subtractive rule (`raw=1 AND v22_OOF < 0.005` → flip to 0). Only individual (protein, organelle) cells are touched - no full rows are deleted.
 - **Results:** 0.71829 Public / 0.71032 Private F1.
-- **Insight:** First hybrid additive+subtractive rule to beat v41 in the 500-dim space (+0.00562 private, +0.01346 public). The drop rule alone produced more lift than any prior cleaning strategy attempted in this project — larger than the +0.006 lift of additive correction alone, and larger than the marginal (effectively zero) lift of the manual 17-label mito enrichment in v42. Validates that the dataset has *both* label incompleteness *and* a small amount of confidently-wrong label error, and the latter can be removed surgically by trusting a strong teacher at >99.5% opposite-confidence. Per-cell audit log written to `output_v43_corrected_98_dropped_99/corrections_and_drops_log.csv`.
+- **Insight:** First hybrid additive+subtractive rule to beat v41 in the 500-dim space (+0.00562 private, +0.01346 public). The drop rule alone produced more lift than any prior cleaning strategy attempted in this project - larger than the +0.006 lift of additive correction alone, and larger than the marginal (effectively zero) lift of the manual 17-label mito enrichment in v42. Validates that the dataset has *both* label incompleteness *and* a small amount of confidently-wrong label error, and the latter can be removed surgically by trusting a strong teacher at >99.5% opposite-confidence. Per-cell audit log written to `output_v43_corrected_98_dropped_99/corrections_and_drops_log.csv`.
 
-### v47 (PCA-500 + Drop 99.5% ONLY, no corrections) — *new top PCA-500*
-- **Action:** Same PCA-500 architecture as v43. The **correction step is suppressed** — only the drop rule fires (raw=1 & v22_OOF<0.005 → flip to 0). Total: 988 drop cells applied, **0 corrections applied** (verified by `assert y_train_full[correction_mask] == y_raw[correction_mask]` invariant).
+### v47 (PCA-500 + Drop 99.5% ONLY, no corrections) - *new top PCA-500*
+- **Action:** Same PCA-500 architecture as v43. The **correction step is suppressed** - only the drop rule fires (raw=1 & v22_OOF<0.005 → flip to 0). Total: 988 drop cells applied, **0 corrections applied** (verified by `assert y_train_full[correction_mask] == y_raw[correction_mask]` invariant).
 - **Internal:** v47 OOF Macro F1 = 0.74778; drop mask count = 988 (matches v43 exactly via invariant assertion).
 - **Results:** **Private F1 0.71528 / Public F1 0.71617** (assuming 2nd-public reading per project pattern, see CONTEXT note). Awaiting re-confirmation with explicit (private, public) labels from user.
 - **Delta vs v43 (PVT 0.71032 / PUB 0.71829):** PVT **+0.00496**, PUB **−0.00212**. **v47 beats v43 on private by 0.005**.
-- **Delta vs v22 raw (PVT 0.70380):** PVT **+0.01148** — the largest single clean-rule lift in this project.
-- **Delta vs v41 (corrections only, PVT 0.70470):** PVT **+0.01058** — drop rule alone gives 10× the corrections-only lift.
+- **Delta vs v22 raw (PVT 0.70380):** PVT **+0.01148** - the largest single clean-rule lift in this project.
+- **Delta vs v41 (corrections only, PVT 0.70470):** PVT **+0.01058** - drop rule alone gives 10× the corrections-only lift.
 - **Insight:** **The drop rule is the dominant signal carrier.** The corrections (raw=0 & v22_OOF>0.98 → flip to 1) are dead-weight when stacked on the drop rule: removing them gives a +0.005 PVT gain. The combined rule (v43: corrections + drops) was likely under-fitting the positive side because the noise introduced by aggressive corrections actually competed against the drop rule's signal. Take-aways:
   - Single biggest cleaning-rule PVT lift in the project is the drop rule, NOT corrections.
-  - Don't add corrections on top of drops — they hurt private.
+  - Don't add corrections on top of drops - they hurt private.
   - The optimal cleaning stack is: **drop rule only** (v47).
 - **Ablation chain now complete:**
   - v41 (corrections only) → v22 raw: PVT +0.00090.
@@ -143,18 +143,18 @@
   - v47 vs v43: −0.00496 (drops alone > corrections+drops).
 - **Next step (v48):** Sweep DROP_THRESHOLD on the drops-only architecture: 0.001, 0.002, 0.005 (current v47), 0.01, 0.02, 0.05. Identify the optimal threshold; 72.8% of v47 drops are in [0.001, 0.005) so the sweep is likely productive.
 
-### v49 (PCA-500 + Drop 0.1% tighter, DROP_THRESHOLD = 0.001, no corrections) — *CLOSES the threshold-sweep hypothesis*
+### v49 (PCA-500 + Drop 0.1% tighter, DROP_THRESHOLD = 0.001, no corrections) - *CLOSES the threshold-sweep hypothesis*
 - **Action:** Same PCA-500 architecture as v47. **Single parameter change**: `DROP_THRESHOLD = 0.001` (was `0.005`). All else identical: same XGB+LGBM, 4-fold partition CV, drop-only cleaning, corrections suppressed. v49 is intended to be a strict subset of v47's drop mask (cells with v22_OOF < 0.001 were also < 0.005). Implementation: `baseline_v49_drop_001.py`.
 - **Internal:** v49 OOF Macro F1 = 0.72730 (lower than v47's 0.74778; expected since fewer drops = looser cleaner); drop count = **269** (vs v47's 988; subset, as expected).
 - **Results:** **Private F1 0.70297 / Public F1 0.70524**.
-- **Delta vs v47 (PVT 0.71528 / PUB 0.71617):** PVT **−0.01231**, PUB **−0.01093** — significant regression.
-- **Delta vs v22 raw (PVT 0.70380):** PVT **−0.00083** — v49 is strictly WORSE than no cleaning on private, +0.00539 on public.
-- **Delta vs v41 (corrections only, PVT 0.70470):** PVT **−0.00173** — minor regression on private.
+- **Delta vs v47 (PVT 0.71528 / PUB 0.71617):** PVT **−0.01231**, PUB **−0.01093** - significant regression.
+- **Delta vs v22 raw (PVT 0.70380):** PVT **−0.00083** - v49 is strictly WORSE than no cleaning on private, +0.00539 on public.
+- **Delta vs v41 (corrections only, PVT 0.70470):** PVT **−0.00173** - minor regression on private.
 - **Per-organelle drops at threshold 0.001:** 269 total, deep-subset of v47's 988. Disproportionately concentrated in organelles with the highest baseline drop rates (mito/cell_surface); endom's 163 borderline drops in [0.001, 0.005) reverted to label=1.
-- **Insight:** **The drop rule's lift does NOT scale with "more aggressive dropping".** v49 sweeps 719 cells back to label=1 and loses **+0.01231 PVT**. This DISCONFIRMS the prior v48d_audit thesis that "endom's 163 borderline drops were noise". **They are signal.** The v47 lift comes from the SPECIFIC 988 cells the v22 OOF most confidently disagrees with (`OOF < 0.005` ≈ 99.5% opposite-confidence). At `OOF < 0.001` we keep only the cells where teacher is most confident in the flip — but in aggregate those 988 cells ARE the lift source, with the borderline band [0.001, 0.005) carrying meaningful signal as a group. The proper interpretation: the lift is from **which cells** (cell-level OOF<0.005), not **how many** (global threshold).
+- **Insight:** **The drop rule's lift does NOT scale with "more aggressive dropping".** v49 sweeps 719 cells back to label=1 and loses **+0.01231 PVT**. This DISCONFIRMS the prior v48d_audit thesis that "endom's 163 borderline drops were noise". **They are signal.** The v47 lift comes from the SPECIFIC 988 cells the v22 OOF most confidently disagrees with (`OOF < 0.005` ≈ 99.5% opposite-confidence). At `OOF < 0.001` we keep only the cells where teacher is most confident in the flip - but in aggregate those 988 cells ARE the lift source, with the borderline band [0.001, 0.005) carrying meaningful signal as a group. The proper interpretation: the lift is from **which cells** (cell-level OOF<0.005), not **how many** (global threshold).
 - **Closing implications:**
   - **STOP** sweeping DROP_THRESHOLD below 0.005 on the drops-only architecture. v47's 0.005 is the validated optimum under the global application.
-  - **Move to per-organelle thresholds** as the next lever — mitochondrion drops at 19.4% of positives (242/1,247) vs nucleus/cytoplasm at 1.8% each; per-organelle tuning is the untested direction that respects the cell-specific signal.
+  - **Move to per-organelle thresholds** as the next lever - mitochondrion drops at 19.4% of positives (242/1,247) vs nucleus/cytoplasm at 1.8% each; per-organelle tuning is the untested direction that respects the cell-specific signal.
   - The lift from v22 raw → v47 (PVT +0.01148) was the project's largest single cleaning-rule lift. v49 confirms that lift comes from a **specific cell-by-cell teacher-confident choice**, not a "broader-is-better" hypothesis.
 
 ### v37 (Baseline PCA-500)
@@ -163,9 +163,9 @@
 - **Insight:** Establishes a benchmark for evaluating cleaning and enrichment strategies.
 
 
-## Stage D: N-terminal-aware architecture variant (v57, v58) — NEW LEVER
+## Stage D: N-terminal-aware architecture variant (v57, v58) - NEW LEVER
 
-### v57 (PCA-500 + N-terminal-aware engineered features) — NEW ARCHITECTURE
+### v57 (PCA-500 + N-terminal-aware engineered features) - NEW ARCHITECTURE
 - **Action:** Build a new PCA-500 baseline that *bypasses* PCA on hand-engineered
   N-terminal + C-terminal features. Concat **733 engineered features** (windowed
   AAC of first 30 AA × 3 bins, per-position OHE 30×21=630, MTS-motif count
@@ -186,36 +186,36 @@
   - The two proteins share **≥92 % sequence identity**. Under mean-pooled
     ProtT5/ESM2 (the entire v22 → v56 architecture), their embeddings are near-
     indistinguishable. **v22-OOF probability for P49916's `mitochondrion` cell is
-    ≈ 0.00440** — putting this on v47's drop-rule edge as a borderline false
+    ≈ 0.00440** - putting this on v47's drop-rule edge as a borderline false
     positive drop.
 - **Why features pass *around* PCA, not through it.** The 600-d binary
   per-position OHE has very different variance regime from the continuous
   dense 4864-d embedding. PCA would drown sparse low-variance positional
   signal into rare-residue noise and over-weight frequent-token variance from
-  the dense block. Trees handle mixed binary/continuous natively — so the
+  the dense block. Trees handle mixed binary/continuous natively - so the
   engineered features stack onto PCA's 500-d output with no further
   compression.
 - **Tripled defects caught in code-review:** `(i)` runtime `assert out.shape ==
-  (731,)` crashed on first call — actual shape is 733 because the C-terminal
+  (731,)` crashed on first call - actual shape is 733 because the C-terminal
   block was 4 scalars + 21-dim AAC = 25 (not 23 as the documentation claimed).
   Fixed: comments + assert updated to 733. `(ii)` two redundant copies of
   `oof_probs.npy` (one in OUTPUT_DIR, one in `data/`). Fixed: keep only the
   `data/v57_oof_probs.npy` teacher convention to match `data/v22_oof_probs.npy`.
-  `(iii)` v58's worker re-implemented v57's worker — consolidated by direct
+  `(iii)` v58's worker re-implemented v57's worker - consolidated by direct
   import.
 - **Result (2026-06-30).** Kaggle: **PVT 0.70299 / PUB 0.70866** (avg 0.70583).
   OOF Macro F1 = **0.71857** (just above v37 OOF 0.71794 sanity floor; engineered
   features are not strictly buggy but barely useful on OOF).
-  - ΔPVT vs v37 raw = **+0.00462** (small positive — features are not noise)
+  - ΔPVT vs v37 raw = **+0.00462** (small positive - features are not noise)
   - ΔPVT vs v47 (drops-only) = **−0.01229** (well below the cleaning ceiling)
   - ΔPVT vs v48d_and = **−0.01173** (well below the submission-level intersect)
   - ΔPVT vs v29 (full-dim champion) = **−0.03407**
-  - PUB > PVT pattern (0.70866 > 0.70299, gap 0.00567) is anomalous — likely
+  - PUB > PVT pattern (0.70866 > 0.70299, gap 0.00567) is anomalous - likely
     indicates some lift on the public test half that did not transfer to
     private. Possible model-disagreement artifact; track for next sweep.
 - **Decision (2026-06-30).** **v57 IS the new compressed-500-dim baseline.** It
   outperforms v37 (the prior PCA-500 raw baseline) by **+0.00462 PVT / +0.00911
-  PUB** — a positive result on the architectural axis. The earlier framing of
+  PUB** - a positive result on the architectural axis. The earlier framing of
   "negative Kaggle result" was an apples-to-oranges comparison (v57 = new arch,
   raw vs v47 = old arch, cleaned). Correctly framed: v57 = next-generation
   PCA-500 raw baseline; v47 dominates v57 only because v47 has the cleaning
@@ -230,11 +230,11 @@
     hurts on new arch.
   - **Path B = ESM2-truncated faithful N-terminal embeddings.** Only escalate
     to Path B if v58 falls short of v47 in absolute terms (or if the cleaning
-    lever doesn't transfer). Path B is the heavier lever — ~60 min Colab
+    lever doesn't transfer). Path B is the heavier lever - ~60 min Colab
     re-embedding of ESM2 on truncated N-termini, plus a new fusion architecture.
     It's the right move later; not a substitute for v58.
 
-### v58 (v57 architecture + drop-rule on v57-OOF teacher) — first self-teacher cleaning
+### v58 (v57 architecture + drop-rule on v57-OOF teacher) - first self-teacher cleaning
 - **Action.** Mirror v47's drops-only cleaning cell, but **on v57's
   architecture** with v57's *own* OOF probs as the teacher (`data/v57_oof_probs.npy`),
   *not* v22's. Same `raw=1 & OOF<0.005 → flip to 0` rule, no corrections, same
@@ -245,15 +245,15 @@
   `baseline_v58_v57_cleaned.py` (271 lines, 0 emojis).
 - **Why a self-teacher.** v22-OOF was generated under v22's
   (no-N-terminal-features) protocol. Using it as a teacher on v57's cleaner
-  would mix two oracles — a tax v43 already paid a −0.005 PVT penalty for.
+  would mix two oracles - a tax v43 already paid a −0.005 PVT penalty for.
   v57-OOF is generated under v57's protocol, so the drop rule doesn't pay the
   oracle-mismatch cost.
 - **Status.** Script implemented, compile-clean, 0 emojis. First Kaggle submission: **PVT 0.70711 / PUB 0.71283 / OOF 0.75487** (canonical DROP_THRESHOLD=0.005; n_drop=997).
 
-### v58_thresh_sweep / v58_t0008 (DROP_THRESHOLD=0.008) — NEW PROJECT PVT CHAMPION
+### v58_thresh_sweep / v58_t0008 (DROP_THRESHOLD=0.008) - NEW PROJECT PVT CHAMPION
 - **Action.** Sweep `DROP_THRESHOLD ∈ {0.001, 0.002, 0.005, 0.008, 0.012, 0.020}` on the v58 architecture. Script: `baseline_v58_thresh_sweep.py`; per-threshold output dirs in `output_v58_thresh_sweep/`; summary at `output_v58_thresh_sweep/sweep_summary.csv`.
 - **Internal.** OOF Macro F1 rises monotonically with threshold: t001=0.73303 (n_drop=309), t002=0.74172 (530), t005=0.75487 (997), **t008=0.76066 (1359)**, t0012=0.77075 (1742), t0020=0.78123 (2260).
-- **Kaggle benchmark (per-threshold submission re-uploads).** **v58_t0008 (DROP_THRESHOLD=0.008) is the NEW PROJECT PVT CHAMPION** at **PVT 0.71633 / PUB 0.71665** (avg 0.71649 — the only threshold where PUB > PVT). Beats v47 (PVT 0.71528) by +0.00105 PVT, +0.00048 PUB. Full sweep transfer:
+- **Kaggle benchmark (per-threshold submission re-uploads).** **v58_t0008 (DROP_THRESHOLD=0.008) is the NEW PROJECT PVT CHAMPION** at **PVT 0.71633 / PUB 0.71665** (avg 0.71649 - the only threshold where PUB > PVT). Beats v47 (PVT 0.71528) by +0.00105 PVT, +0.00048 PUB. Full sweep transfer:
   | threshold | PVT | PUB | avg | PVT−PUB |
   |---:|---:|---:|---:|---:|
   | 0.001 | 0.70903 | 0.71123 | 0.71013 | −0.00220 |
@@ -263,49 +263,49 @@
   | 0.012 | 0.71644 | 0.70901 | 0.71273 | +0.00743 |
   | 0.020 | 0.71015 | 0.70700 | 0.70857 | +0.00315 |
 - **Per-organelle drops at t008.** cyto 44, nuc 78, extra 184, cell_surface 316, mito 352, endo 385 (sum 1359, matches sweep).
-- **OOF→Kaggle transfer cliff.** t0012 has the highest OOF (0.77075) and is within 0.00011 PVT of t008, but PUB crashes 0.00764. t0020 (n_drop=2260, 3.2× the canonical) drops too aggressively — PVT/PUB both regress. **Sweet spot is t008..t012, but only t008 generalises** (PUB > PVT by 0.00032).
+- **OOF→Kaggle transfer cliff.** t0012 has the highest OOF (0.77075) and is within 0.00011 PVT of t008, but PUB crashes 0.00764. t0020 (n_drop=2260, 3.2× the canonical) drops too aggressively - PVT/PUB both regress. **Sweet spot is t008..t012, but only t008 generalises** (PUB > PVT by 0.00032).
 - **Submission file.** `output_v58_thresh_sweep/t008/submission_v58_t008.csv` (already on disk and on Kaggle leaderboard).
-- **Insight.** v47's 0.005 (v22-arch canonical) and v58's 0.005 (v57-arch canonical) are both NOT optimal. v58-arch's optimal is **0.008** (n_drop=1359). Per-threshold OOF gains (0.733 → 0.781) DO transfer to PVT up to t008; OOF→PUB transfer diverges at t012 — classic overfit-to-OOF cliff on the new arch.
-- **Production pick update.** v48d_and (PUB 0.71991) remains the safest averaged submission. **v58_t0008 (PVT 0.71633) is the new PVT champion** — narrowly above v47 (0.71528) and v50∩v47 (0.71562). Use v58_t0008 for PVT priority; v48d_and for PUB / average.
+- **Insight.** v47's 0.005 (v22-arch canonical) and v58's 0.005 (v57-arch canonical) are both NOT optimal. v58-arch's optimal is **0.008** (n_drop=1359). Per-threshold OOF gains (0.733 → 0.781) DO transfer to PVT up to t008; OOF→PUB transfer diverges at t012 - classic overfit-to-OOF cliff on the new arch.
+- **Production pick update.** v48d_and (PUB 0.71991) remains the safest averaged submission. **v58_t0008 (PVT 0.71633) is the new PVT champion** - narrowly above v47 (0.71528) and v50∩v47 (0.71562). Use v58_t0008 for PVT priority; v48d_and for PUB / average.
 
 ### Why the cleaning-side ceiling may shift for v57/v58
-- All v41–v56 perturbations share the same feature pipeline as v22: 4864-d
+- All v41-v56 perturbations share the same feature pipeline as v22: 4864-d
   ProtT5+ESM2 → PCA(500) → XGB+LGBM. The cleaning-side PVT/PUB ceiling at
   PVT ≈ 0.716 / PUB ≈ 0.720 is partly *architectural*, not just cleaning.
   v57's 733-position-biased features give the cleaner a different X-space to
   operate on. The drop rule might surface different cells now.
 - **Strategic hope:** architectural change resets the ceiling.
-- **Realistic expectation:** ceiling shifts to PVT ≈ 0.720–0.730 if the
+- **Realistic expectation:** ceiling shifts to PVT ≈ 0.720-0.730 if the
   features carry signal; flat if not.
 
-### v59 (Two-Tree Late-Fusion Ensemble — Branch A PCA-only ⨆ Branch B engineered-only, α=0.5, NO class/sample/per-compartment tuning) — *DEAD*
+### v59 (Two-Tree Late-Fusion Ensemble - Branch A PCA-only ⨆ Branch B engineered-only, α=0.5, NO class/sample/per-compartment tuning) - *DEAD*
 - **Action.** Split the v57 input into **two orthogonal feature blocks** and train one XGB+LGBM ensemble per block per organelle, then late-fuse at α=0.5 per cell.
-  - **Branch A** trains on PCA(500)-only — the same 500-d input as v37.
+  - **Branch A** trains on PCA(500)-only - the same 500-d input as v37.
   - **Branch B** trains on the 733-d N-terminal+C-terminal engineered block alone.
   - Final test prediction = 0.5·Branch_A + 0.5·Branch_B per cell. α hardcoded at 0.5; NO `sample_weight`, NO `class_weight`, NO per-compartment hyperparameter override.
   - P49916 diagnostic gate at script end (`P49916 mito raw=1, v57-OOF=…, Branch-A=…, Branch-B=…, v59-late=…`) verified the structural fix in OOF (Branch-B's P49916-mito went 0.0022 → 0.0758 = 33× lift on OOF).
 - **Internal:**
   - **v59 OOF Macro F1 = 0.72249** (sanity: ≥ v57 raw 0.71857 , +0.00392 over v57 raw; modest positive because the PCA-buries-MTS bug mainly constrained mitochondrion, not the other 5 compartments).
-  - Branch A OOF Macro F1 @0.5: 0.60230 — Branch A's standalone signal is poor without engineered features.
-  - Branch B OOF Macro F1 @0.5: 0.58621 — Branch B's standalone is also poor.
+  - Branch A OOF Macro F1 @0.5: 0.60230 - Branch A's standalone signal is poor without engineered features.
+  - Branch B OOF Macro F1 @0.5: 0.58621 - Branch B's standalone is also poor.
   - P49916 family OOF: Branch-A=0.0012, Branch-B=0.0758, v59-late=0.0385 (still ≪ binary threshold 0.46).
 - **Smoking gun #1: Branch B collapsed to a constant.** Per-compartment OOF probability distribution stats (post-run):
   - Branch B std ≤ 0.01 across ALL 6 compartments, with **0% of Branch B predictions crossing 0.5** (vs Branch A ~12%, late-fusion ~14%).
-  - Branch B's tree depth=8 / num_leaves=63 on 733-d compositional features cannot find a calibration across only ~1300 mito positives — every leaf collapses to a near-constant prior. The "structural fix to PCA-buries-MTS" hypothesis works in *principle* (Branch-B's P49916-mito moved from 0.0022 to 0.0758) but in absolute terms the signal is starved by the limited positive count.
+  - Branch B's tree depth=8 / num_leaves=63 on 733-d compositional features cannot find a calibration across only ~1300 mito positives - every leaf collapses to a near-constant prior. The "structural fix to PCA-buries-MTS" hypothesis works in *principle* (Branch-B's P49916-mito moved from 0.0022 to 0.0758) but in absolute terms the signal is starved by the limited positive count.
 - **Smoking gun #2: Endomembrane over-prediction.** Per-compartment positive counts in `submission_v59.csv`:
-  - cytoplasm 3320 / nucleus 1935 / extracellular 1715 / cell_surface 821 / mitochondrion 1245 / **endom 847** (vs v58 393, v48d_and 369, v22 511 — v59 predicts **2.3× too many endom** positives).
+  - cytoplasm 3320 / nucleus 1935 / extracellular 1715 / cell_surface 821 / mitochondrion 1245 / **endom 847** (vs v58 393, v48d_and 369, v22 511 - v59 predicts **2.3× too many endom** positives).
   - Test-time predictions inherit Branch B's constant drag, which organelle-shifts in a compartment-specific way; endom hit hardest.
-- **Results (Kaggle 2026-06-30):** **Private F1 0.69053 / Public F1 0.68494** ("Complete (after deadline)" badge — leaderboard likely closed for new scoring).
+- **Results (Kaggle 2026-06-30):** **Private F1 0.69053 / Public F1 0.68494** ("Complete (after deadline)" badge - leaderboard likely closed for new scoring).
 - **Δ vs v22 raw (PVT 0.69837 / PUB 0.69955):** PVT **−0.00784**, PUB **−0.01461**. v59 is **strictly WORSE than no cleaning** on both leaderboards.
 - **Δ vs v47 (PVT 0.71528 / PUB 0.71617):** PVT **−0.02475**, PUB **−0.03123**. v59 lost to the cleaning-only solo by a catastrophic margin.
 - **Δ vs v57 raw (PVT 0.70299 / PUB 0.70866):** PVT **−0.00416**, PUB **−0.00689**. The late-fusion architecture *also* worsened over the concat-into-one-tree architecture on Kaggle, even though it helped on OOF (+0.00392 OOF Macro F1).
-- **OOF→Kaggle transfer gap:** Δ −0.03196 PVT / Δ −0.03821 PUB — both ≫ the project's previously-observed transfer gaps (v58: −0.01386 PVT; v50: −0.01618 PVT). v59's OOF is the most misleading in the project to date.
+- **OOF→Kaggle transfer gap:** Δ −0.03196 PVT / Δ −0.03821 PUB - both ≫ the project's previously-observed transfer gaps (v58: −0.01386 PVT; v50: −0.01618 PVT). v59's OOF is the most misleading in the project to date.
 - **Why no in-band fix without breaking the user's constraint.** The repair that would salvage v59 (organelle-specific gain on Branch B's contribution, e.g. relaxed α for mitochondrion / tighter α for endom) explicitly violates the **NO class weighting / NO sample weighting / NO per-compartment tuning** invariant the user imposed before v59 ran. So v59 is unrepairable without violating the constraint; it is dead.
 - **Insight / closing the architectural-fix lever.** **The "PCA-buries-engineered-signal" structural hypothesis is empirically confirmed but quantitatively insufficient.** Branch-B's P49916-mito went +33× on OOF, but absolute magnitude is 0.0758 (still ≪ binary threshold), and Branch B's statistical pattern across the corpus (std ≤ 0.01 / 0% > 0.5 / 0.58621 OOF) shows the engineered block has insufficient signal at the column-level, not just at the per-row level. The next architectural move CANNOT be a re-arrangement of the same 733-d features. It must be either (a) **richer engineered features targeted at the failing cases** (MPP-cleavage motif, helical amphipathicity moment, R-2↓F/I/L/S/T/A), or (b) **a different embedding channel entirely** (Path B: ESM2-truncated on first 50 AAs). v59 closes the late-fusion re-arrangement of v57's feature space.
-- **Submission file:** `output_v59_late_fusion/submission_v59.csv` (well-formed — Id set matches v48d_and exactly, all 6 target columns present, 3,409 rows × 7 cols).
+- **Submission file:** `output_v59_late_fusion/submission_v59.csv` (well-formed - Id set matches v48d_and exactly, all 6 target columns present, 3,409 rows × 7 cols).
 - **Branch-OOF files (still on disk for diagnostic):** `output_v59_late_fusion/branch_a_oof_probs.npy`, `branch_b_oof_probs.npy`, `oof_probs.npy`, `oof_preds.npy`. **Output kept** in case future scripts want to read Branch-level OOF.
 
-### Deferred Path B — ESM2-truncated (faithful)
+### Deferred Path B - ESM2-truncated (faithful)
 - **User explicit choice.** Implement compositional v57 first; defer the
   ESM2-650M-truncated variant (re-compute ESM2 on the first 50 AA only, then
   concat with the 4864-d full-sequence embeddings and re-PCA) until later.
@@ -320,29 +320,29 @@
 1.  **v29 (Enriched Champion):** 0.73706 Private F1 (Full-Dimensional, Manual Mitochondrial Enrichment)
 
 **Top 500-Dimension Models:**
-1.  **v48d_and (submission-level INTERSECT of v43 + v47 test predictions, PCA-500):** 0.71472 Private F1 / **0.71991 Public F1** — **BEST PCA-500 ON PUBLIC** (+0.00162 over v43, +0.00374 over v47); 2nd on PVT-behind (Δ vs v50∩v47 = −0.00090). Best avg(PVT,PUB)=0.71732.
-2.  **v50∩v47 (submission-level INTERSECT of v50 + v47 test predictions, PCA-500):** **0.71562 Private F1 / 0.71406 Public F1** — **NEW PCA-500 PVT-BEST** (narrow +0.00034 over v47). Marginal PVT lift at PUB cost (−0.00585 vs v47). Submission-level intersect salvaged a marginal gain from per-organelle sweeps that regressed standalone.
-3.  **v47 (PCA-500 + Drop 99.5% ONLY, no corrections):** 0.71528 Private F1 / 0.71617 Public — **PCA-500 PVT-BEST DROPS-ONLY SOLO**; average 0.71573 (next-best avg after v48d_and).
+1.  **v48d_and (submission-level INTERSECT of v43 + v47 test predictions, PCA-500):** 0.71472 Private F1 / **0.71991 Public F1** - **BEST PCA-500 ON PUBLIC** (+0.00162 over v43, +0.00374 over v47); 2nd on PVT-behind (Δ vs v50∩v47 = −0.00090). Best avg(PVT,PUB)=0.71732.
+2.  **v50∩v47 (submission-level INTERSECT of v50 + v47 test predictions, PCA-500):** **0.71562 Private F1 / 0.71406 Public F1** - **NEW PCA-500 PVT-BEST** (narrow +0.00034 over v47). Marginal PVT lift at PUB cost (−0.00585 vs v47). Submission-level intersect salvaged a marginal gain from per-organelle sweeps that regressed standalone.
+3.  **v47 (PCA-500 + Drop 99.5% ONLY, no corrections):** 0.71528 Private F1 / 0.71617 Public - **PCA-500 PVT-BEST DROPS-ONLY SOLO**; average 0.71573 (next-best avg after v48d_and).
 4.  **v43 (PCA-500 + Correction 98% + Subtractive Drop 99.5%):** 0.71032 Private F1 / 0.71829 Public.
-5.  **v50 (PCA-500 + Per-organelle DROP_THRESHOLD, drops-only solo):** **0.70972 Private F1 / 0.71320 Public F1** — *regression vs v47 standalone despite +0.01062 OOF Macro F1 lift*. OOF→PVT transfer gap −0.01618.
-6.  **v50∩v43 (submission-level INTERSECT of v50 + v43 test predictions, PCA-500):** **0.71331 Private F1 / 0.71439 Public F1** — *regression vs v48d_and* (−0.00141 PVT, −0.00552 PUB). Per-organelle sweep did not improve intersect; AND of v50+v43 is HIGHER-set than AND of v43+v47 because v50's looser drops removed positives that v43's corrections would have kept.
-7.  **v52 (PCA-500 + asymmetric per-organelle TIGHTENING, UniProt-prior driven, drops-only solo):** **0.70655 Private F1 / 0.70638 Public F1** — *hard regression; −0.00873 PVT / −0.00979 PUB vs v47*. UniProt-prior opposite-direction test from v50 — tightening on 0%-confirmed compartments (mito, extra) and slightly loosening on cell_surface — also failed to transfer. OOF Macro F1 **0.73607** (Δ −0.01171 vs v47).
-8.  **v52∩v43 (submission-level INTERSECT of v52 + v43 test predictions, PCA-500):** **0.71047 Private F1 / 0.71600 Public F1** — *regression vs v48d_and* (−0.00425 PVT, −0.00391 PUB). **+0.00161 PUB over v50∩v43** (the only marginal gain v52 produced).
-9.  **v52∩v47 (submission-level INTERSECT of v52 + v47 test predictions, PCA-500):** **0.71342 Private F1 / 0.71463 Public F1** — *regression vs v47* (−0.00186 PVT, −0.00154 PUB) and *small PUB gain over v50∩v47* (+0.00057 PUB at −0.00220 PVT).
-10.  **v48d_or (submission-level UNION of v43 + v47 test predictions, PCA-500):** 0.71101 Private F1 / 0.71473 Public — *regression vs both solos*; corrections-induced test noise dominates.
+5.  **v50 (PCA-500 + Per-organelle DROP_THRESHOLD, drops-only solo):** **0.70972 Private F1 / 0.71320 Public F1** - *regression vs v47 standalone despite +0.01062 OOF Macro F1 lift*. OOF→PVT transfer gap −0.01618.
+6.  **v50∩v43 (submission-level INTERSECT of v50 + v43 test predictions, PCA-500):** **0.71331 Private F1 / 0.71439 Public F1** - *regression vs v48d_and* (−0.00141 PVT, −0.00552 PUB). Per-organelle sweep did not improve intersect; AND of v50+v43 is HIGHER-set than AND of v43+v47 because v50's looser drops removed positives that v43's corrections would have kept.
+7.  **v52 (PCA-500 + asymmetric per-organelle TIGHTENING, UniProt-prior driven, drops-only solo):** **0.70655 Private F1 / 0.70638 Public F1** - *hard regression; −0.00873 PVT / −0.00979 PUB vs v47*. UniProt-prior opposite-direction test from v50 - tightening on 0%-confirmed compartments (mito, extra) and slightly loosening on cell_surface - also failed to transfer. OOF Macro F1 **0.73607** (Δ −0.01171 vs v47).
+8.  **v52∩v43 (submission-level INTERSECT of v52 + v43 test predictions, PCA-500):** **0.71047 Private F1 / 0.71600 Public F1** - *regression vs v48d_and* (−0.00425 PVT, −0.00391 PUB). **+0.00161 PUB over v50∩v43** (the only marginal gain v52 produced).
+9.  **v52∩v47 (submission-level INTERSECT of v52 + v47 test predictions, PCA-500):** **0.71342 Private F1 / 0.71463 Public F1** - *regression vs v47* (−0.00186 PVT, −0.00154 PUB) and *small PUB gain over v50∩v47* (+0.00057 PUB at −0.00220 PVT).
+10.  **v48d_or (submission-level UNION of v43 + v47 test predictions, PCA-500):** 0.71101 Private F1 / 0.71473 Public - *regression vs both solos*; corrections-induced test noise dominates.
 11.  **v41 (PCA-500 + Automated Correction 98%):** 0.70470 Private F1
 12.  **v42 (PCA-500 + Manual Mito Enrichment + Automated Correction 98%):** 0.70301 Private F1
-13.  **v49 (PCA-500 + Drop 0.1% tighter, DROP_THRESHOLD = 0.001):** 0.70297 Private F1 / 0.70524 Public — *regression; tighter threshold HURT. v47's 0.005 is well-tuned*.
-14.  **v46 (PCA-500 + Correction 98% + UniProt-Validated Drops):** 0.70044 Private F1 — *regression; UniProt reverted drops HURT*
+13.  **v49 (PCA-500 + Drop 0.1% tighter, DROP_THRESHOLD = 0.001):** 0.70297 Private F1 / 0.70524 Public - *regression; tighter threshold HURT. v47's 0.005 is well-tuned*.
+14.  **v46 (PCA-500 + Correction 98% + UniProt-Validated Drops):** 0.70044 Private F1 - *regression; UniProt reverted drops HURT*
 15.  **v25 (Label Dropping):** 0.706 F1 (Note: Score comparison may be indirect due to differing protocols/logs)
 16. **v37 (Baseline PCA-500):** 0.69837 Private F1
 
 *Note: The F1 score for v25 is presented as reported in earlier logs, and direct comparison with v41/v42 might need re-evaluation under identical conditions. However, v41 shows a clear improvement over the v37 baseline and v25 in terms of private score.*
 
-**Cleaning-rule summary (post-v52 submission):** v47 (drops only, threshold 0.005) is the strongest cleaning-rule cell on PCA-500 (PVT 0.71528, avg 0.71573). v50 (per-organelle loosening) REGRESSED standalone (PVT 0.70972) despite the largest OOF Macro F1 in the project (+0.01062); v52 (per-organelle TIGHTENING with UniProt priors) REGRESSED standalone (PVT 0.70655) — **OOF→test transfer is broken in BOTH per-organelle directions**. Submission-level intersect salvages a marginal PVT gain from the regressed v50: **v50∩v47 = 0.71562 (narrow new PVT best)**, while v50∩v43 regresses and v52∩v43/v52∩v47 both regress. v52∩v43 narrowly beats v50∩v43 on PUB (+0.00161) but loses on PVT (−0.00284) — net zero or negative. v49 (tighter threshold) regressed on both leaderboards — confirms v47's 0.005 is the validated threshold at the global level. v48d_and still owns PUB at 0.71991 by +0.00532 over next-best. **Cleaning-side lever is fully exhausted** — all 5 perturbations (v46 UniProt revert, v49 tighter global, v50 per-org loosen, v52 per-org tighten UniProt-prior, corrections-on-drops closed at v43-vs-v47) regress.
+**Cleaning-rule summary (post-v52 submission):** v47 (drops only, threshold 0.005) is the strongest cleaning-rule cell on PCA-500 (PVT 0.71528, avg 0.71573). v50 (per-organelle loosening) REGRESSED standalone (PVT 0.70972) despite the largest OOF Macro F1 in the project (+0.01062); v52 (per-organelle TIGHTENING with UniProt priors) REGRESSED standalone (PVT 0.70655) - **OOF→test transfer is broken in BOTH per-organelle directions**. Submission-level intersect salvages a marginal PVT gain from the regressed v50: **v50∩v47 = 0.71562 (narrow new PVT best)**, while v50∩v43 regresses and v52∩v43/v52∩v47 both regress. v52∩v43 narrowly beats v50∩v43 on PUB (+0.00161) but loses on PVT (−0.00284) - net zero or negative. v49 (tighter threshold) regressed on both leaderboards - confirms v47's 0.005 is the validated threshold at the global level. v48d_and still owns PUB at 0.71991 by +0.00532 over next-best. **Cleaning-side lever is fully exhausted** - all 5 perturbations (v46 UniProt revert, v49 tighter global, v50 per-org loosen, v52 per-org tighten UniProt-prior, corrections-on-drops closed at v43-vs-v47) regress.
 
 ### v48d (Submission-level Hard-Vote Ensemble of v43 + v47, PCA-500)
-- **Action:** No model retraining. Read existing v43 and v47 submission CSVs, generate 4 ensemble candidates: **OR** (union: 1 if either says 1), **AND** (intersect: 1 only if both say 1), v43-solo, v47-solo. Script: `baseline_v48d_ensemble.py`. Output dir: `output_v48d_ensemble/`. Coverage: 4,378 rows × 7 cols, int64 throughout. Per-organelle divergence: 588/157,572 cells disagree (0.37%); largest disagreements in nucleus (141) and cytoplasm (237) — matches where v43's corrections concentrate.
+- **Action:** No model retraining. Read existing v43 and v47 submission CSVs, generate 4 ensemble candidates: **OR** (union: 1 if either says 1), **AND** (intersect: 1 only if both say 1), v43-solo, v47-solo. Script: `baseline_v48d_ensemble.py`. Output dir: `output_v48d_ensemble/`. Coverage: 4,378 rows × 7 cols, int64 throughout. Per-organelle divergence: 588/157,572 cells disagree (0.37%); largest disagreements in nucleus (141) and cytoplasm (237) - matches where v43's corrections concentrate.
 - **Reproducibility verified:** v48d_v43_only re-upload reproduces original v43 scores (0.71032 PVT / 0.71829 PUB) exactly; v48d_v47_only re-upload reproduces original v47 scores (0.71528 PVT / 0.71617 PUB) exactly. Confirms the ensemble pipeline is read-only and reliable.
 - **Results:**
   | Submission | Positive cells | Private F1 | Public F1 | Average |
@@ -351,26 +351,26 @@
   | v48d_and (intersect)| 4,943 | 0.71472 | **0.71991** | **0.71732** |
   | v48d_v47_only       | 5,260 | **0.71528** | 0.71617 | 0.71573 |
   | v48d_v43_only       | 5,214 | 0.71032 | 0.71829 | 0.71431 |
-- **Best-of-both finding:** **v48d_and** is the new project PUB best at **0.71991** (+0.00162 vs v43 0.71829, +0.00374 vs v47 0.71617). Average-of-(PVT,PUB) = 0.71732 — best across all candidates. v47-only remains the PVT best (0.71528); only 0.00056 PVT gap to v48d_and, so v48d_and is the strongest averaged submission across both leaderboards.
-- **Insight:** **INTERSECT (AND) captures high-confidence labels both cleaning approaches independently agree on.** UNION (OR) overpredicts by reintroducing v43's corrections signal at test time — those labels are wrong ~half the time, dragging both PVT and PUB below the solo baselines. Net: **submission-level ensembling is a confirmed orthogonal lever on top of the underlying cleaning stack.** The intersect picks up roughly the same pattern as v47 (drops-only) but excludes cells where v43's corrections pushed the prediction without drop-rule agreement — and that higher bar pays off on PUB.
-- **Next step (v49 — threshold sweep on intersect-or-solo):** Run `DROP_THRESHOLD` sweep on the v47/drops-only baseline; the best-performing threshold becomes the new solo, then `AND`-intersect it with v43 to see if the intersect lift holds or reinforces across thresholds.
+- **Best-of-both finding:** **v48d_and** is the new project PUB best at **0.71991** (+0.00162 vs v43 0.71829, +0.00374 vs v47 0.71617). Average-of-(PVT,PUB) = 0.71732 - best across all candidates. v47-only remains the PVT best (0.71528); only 0.00056 PVT gap to v48d_and, so v48d_and is the strongest averaged submission across both leaderboards.
+- **Insight:** **INTERSECT (AND) captures high-confidence labels both cleaning approaches independently agree on.** UNION (OR) overpredicts by reintroducing v43's corrections signal at test time - those labels are wrong ~half the time, dragging both PVT and PUB below the solo baselines. Net: **submission-level ensembling is a confirmed orthogonal lever on top of the underlying cleaning stack.** The intersect picks up roughly the same pattern as v47 (drops-only) but excludes cells where v43's corrections pushed the prediction without drop-rule agreement - and that higher bar pays off on PUB.
+- **Next step (v49 - threshold sweep on intersect-or-solo):** Run `DROP_THRESHOLD` sweep on the v47/drops-only baseline; the best-performing threshold becomes the new solo, then `AND`-intersect it with v43 to see if the intersect lift holds or reinforces across thresholds.
 
 ## Cleaning-Rule Lift Ablation (PCA-500 track)
 Reference: v22 raw = 0.70380 PVT
 - **Drop rule alone (v47): +0.01148 PVT** (largest lift in project; threshold 0.005 is validated optimum after v49)
-- **Drop rule tighter (v49, threshold 0.001): −0.00083 PVT** — v49 REGRESSED below raw; the lift comes from the SPECIFIC 988 cells, not "broader-is-better"
+- **Drop rule tighter (v49, threshold 0.001): −0.00083 PVT** - v49 REGRESSED below raw; the lift comes from the SPECIFIC 988 cells, not "broader-is-better"
 - **Corrections + drop (v43): +0.00652 PVT** (combined, suboptimal due to corrections noise)
 - **Manual + auto (v44): +0.00635 PVT** (manual mito adds nothing vs v43)
 - **Corrections alone (v41): +0.00090 PVT** (near zero)
 - **UniProt-revert + auto (v46): −0.00336 PVT** (regression; external oracle dead)
-- **v48d_and (intersect v43+v47 at submission level):** PVT −0.00056 vs v47 (within noise), PUB **+0.00374** vs v47 (best PUB lift), avg +(PVT+PUB)/2 over v43 = +0.00301 — submission-level intersect is an orthogonal lift on top of cleaning.
+- **v48d_and (intersect v43+v47 at submission level):** PVT −0.00056 vs v47 (within noise), PUB **+0.00374** vs v47 (best PUB lift), avg +(PVT+PUB)/2 over v43 = +0.00301 - submission-level intersect is an orthogonal lift on top of cleaning.
 - **Net closing of levers:** All 3 stack-level levers (corrections, threshold sweep, external oracle) tested. **Drop rule at threshold 0.005 is the validated optimum.** Per-organelle thresholds remain untested (next direction).
 
 ## Stage C: Exploratory verification of the UniProt paradox
 
 Three audits built to convert the v43-v46 audit into a peer-verifiable, fully-deduplicated supervisor-ready artefact set. All output files are prefixed `exploratory_` to keep them clearly outside the production submission pipeline unless explicitly promoted by the user.
 
-### 04p_macro_verdict_breakdown.py — per-compartment verdict bar chart (unique proteins)
+### 04p_macro_verdict_breakdown.py - per-compartment verdict bar chart (unique proteins)
 - **Action:** Read `output_v43_corrected_98_dropped_99/uniprot_validation_full/drop_verdicts.csv`. Bucket by `(compartment, verdict)`, dedup accession IDs via `defaultdict(set)` (792 unique proteins across 988 source rows). Compute per-compartment disputed %, plus a global unique-set union across compartments.
 - **Stdout (key lines):**
   ```
@@ -384,21 +384,21 @@ Three audits built to convert the v43-v46 audit into a peer-verifiable, fully-de
   GLOBAL (per-compartment sums): 25 / 815 / 1 = 841 dispatch events
   GLOBAL (unique proteins): 25 / 768 / 1 = 792 unique (97.0% disputed)
   ```
-- **Headline finding.** Both **mitochondrion** (0/206) and **extracellular** (0/99) are **100% UniProt-disputed**. Every drop in those compartments contradicts UniProt's descriptive annotation — and yet lifting those drops gave v47 +0.01148 PVT.
+- **Headline finding.** Both **mitochondrion** (0/206) and **extracellular** (0/99) are **100% UniProt-disputed**. Every drop in those compartments contradicts UniProt's descriptive annotation - and yet lifting those drops gave v47 +0.01148 PVT.
 - **Output files:** `figures/fig_exploratory_uniprot_verdict_breakdown.png`, `figures/data/exploratory_uniprot_verdict_breakdown.csv`.
 
-### 04q_function_table.py — top-25 most-confident drops + top-25 most-confident corrections, with UniProt annotation
+### 04q_function_table.py - top-25 most-confident drops + top-25 most-confident corrections, with UniProt annotation
 - **Action:** Join `output_v47_drops_only/corrections_and_drops_log.csv` + `output_v43_corrected_98_dropped_99/corrections_and_drops_log.csv` + `output_v43_corrected_98_dropped_99/uniprot_validation_full/drop_verdicts.csv` + `cleanlab_v9_side_analysis/top_reannotation_targets.csv` + `cleanlab_v9_side_analysis/strong_reannotation_candidates_v9.csv`. Output top-25 drops sorted by Confidence ASC (model said *not that compartment* most strongly), and top-25 corrections sorted by Confidence DESC. Each row carries UniProt Protein names / Gene / Subcellular-location [CC] / Verdict when present.
 - **Stdout (key lines):**
   ```
   Drops with UniProt in top-25:         0/25
   Corrections with UniProt in top-25:   3/25
   ```
-- **Note on the 0/25 drops number.** Our `top_reannotation_targets.csv` query captured **high-OOF *uncertain* proteins** rather than the most confident flips where the teacher strongly disagrees. So the 0/25 is not that UniProt confirms or contradicts the drops — it's that our reference set didn't capture these specific proteins. The drops are still documented with their full protein-level annotation when available.
-- **Note on the 3/25 corrections number.** Out of 25 most-confident corrections (`raw=0 → v22_OOF > 0.98 → flip to 1`), 3 have UniProt records in our reference files; 22 do not. The 22 lacking UniProt coverage are evidence of independent model-vs-Uniprot divergence at the high-correction end — the model strongly disagrees with descriptive annotations for these accessions.
+- **Note on the 0/25 drops number.** Our `top_reannotation_targets.csv` query captured **high-OOF *uncertain* proteins** rather than the most confident flips where the teacher strongly disagrees. So the 0/25 is not that UniProt confirms or contradicts the drops - it's that our reference set didn't capture these specific proteins. The drops are still documented with their full protein-level annotation when available.
+- **Note on the 3/25 corrections number.** Out of 25 most-confident corrections (`raw=0 → v22_OOF > 0.98 → flip to 1`), 3 have UniProt records in our reference files; 22 do not. The 22 lacking UniProt coverage are evidence of independent model-vs-Uniprot divergence at the high-correction end - the model strongly disagrees with descriptive annotations for these accessions.
 - **Output files:** `figures/data/exploratory_function_table.md`, `figures/data/exploratory_function_table.csv`. Markdown has 100-char text clipping; CSV has 200-char clipping.
 
-### 04r_uniprot_location_cluster.py — UniProt subcellular-location phrase cluster bar chart
+### 04r_uniprot_location_cluster.py - UniProt subcellular-location phrase cluster bar chart
 - **Action:** For each of the 792 unique dropped proteins, parse UniProt Subcellular-location [CC] text via `phrases_in_text()` (new helper): strip `{ECO:...}` annotations, strip everything after `Note=`, tokenise by `.` and `;` into clauses, split each clause by `,` into items, apply **longest-match-wins** against a canonical phrase list (sorted by length descending), match each item to one canonical phrase or none. Bucket by `(phrase, dropped-compartment)`.
 - **Stdout (top 15):**
   ```
@@ -419,7 +419,7 @@ Three audits built to convert the v43-v46 audit into a peer-verifiable, fully-de
   Extracellular                             65  extracellular 30 / ...
   Chromosome                                46  cell_surface 18 / ...
   ```
-- **Why longest-match-wins.** Previous substring-matching loop double-counted cases like `Cell membrane` ⊂ `Apical cell membrane` and `Mitochondrion` ⊂ `Mitochondrion inner membrane`. Clause-by-`.`, item-by-`,`, then item-equals-phrase or item-startswith-phrase + space, breaks early after match — so each compartment phrase counts once per UniProt-text-mention.
+- **Why longest-match-wins.** Previous substring-matching loop double-counted cases like `Cell membrane` ⊂ `Apical cell membrane` and `Mitochondrion` ⊂ `Mitochondrion inner membrane`. Clause-by-`.`, item-by-`,`, then item-equals-phrase or item-startswith-phrase + space, breaks early after match - so each compartment phrase counts once per UniProt-text-mention.
 - **Insight.** The dropped proteins' UniProt text is overwhelmingly multi-compartment descriptive (Cytoplasm 625 mentions across 792 dropped proteins is an average of 0.79 per drop, and Cytoplasm-or-Cell-membrane-or-Nucleus-or-Mitochondrion-or-Secreted account for ~1,863 mentions across 792 proteins ≈ **2.36 UniProt locations per drop protein on average**). This is the structural signature of the paradox: dropped proteins are multi-compartment by UniProt's descriptive view, even though they were assigned a primary compartment by the Kaggle pipeline.
 - **Output files:** `figures/fig_exploratory_uniprot_location_cluster.png`, `figures/data/exploratory_uniprot_location_cluster.csv`.
 
@@ -427,31 +427,31 @@ Three audits built to convert the v43-v46 audit into a peer-verifiable, fully-de
 - Cell-level audit (v43 / output_v43_corrected_98_dropped_99): 988 cells, 961 disputed (97.3%).
 - Unique-protein dedup audit (04p): 792 proteins, 768 disputed (97.0%).
 - Per-organelle disputed-rates (04p): 100%-to-92.1%, monotonically mitochondrion > extracellular > cytoplasm > nucleus > endom > cell_surface.
-- Phrase-cluster cross-check (04r): top 5 phrases overlap heavily with the dropped compartments in each protein's UniProt text — confirms 97.0% rate is real descriptive-annotation support, not query noise.
+- Phrase-cluster cross-check (04r): top 5 phrases overlap heavily with the dropped compartments in each protein's UniProt text - confirms 97.0% rate is real descriptive-annotation support, not query noise.
 
 The two cell-level and unique-protein-level numbers reconcile exactly: 792 < 988 because some proteins dropped in 2+ organs are deduped. The 97.0% vs 97.3% gap is denominators-only. Verified.
 
 
 ## Submission-Level Ensemble Ablation (PCA-500 track)
 Reference: v43 = 0.71032 PVT / 0.71829 PUB; v47 = 0.71528 PVT / 0.71617 PUB
-- **v48d_and (intersect): 0.71472 PVT / 0.71991 PUB** — best PUB, 2nd-best PVT (Δ vs v50∩v47 = −0.00090). Best avg 0.71732. PRODUCTION PICK.
-- **v50∩v47 (intersect with v50's looser per-organelle drops): 0.71562 PVT / 0.71406 PUB** — NEW PCA-500 PVT-BEST (salvaged from v50's regressed standalone). −0.00585 PUB vs v47 alone.
-- **v50∩v43 (intersect with v50's looser per-organelle drops): 0.71331 PVT / 0.71439 PUB** — regression vs v48d_and (−0.00141 PVT, −0.00552 PUB). Looser drops removed positives that v43's corrections would have kept.
-- **v52∩v43 (intersect with v52's tighter UniProt-prior drops): 0.71047 PVT / 0.71600 PUB** — regression vs v48d_and (−0.00425 PVT, −0.00391 PUB); **+0.00161 PUB over v50∩v43** (narrow marginal gain).
-- **v52∩v47 (intersect with v52's tighter UniProt-prior drops): 0.71342 PVT / 0.71463 PUB** — regression vs v47 (−0.00186 PVT, −0.00154 PUB); +0.00057 PUB / −0.00220 PVT vs v50∩v47.
-- **v48d_or (union): 0.71101 PVT / 0.71473 PUB** — worse than both solos on PVT+PUB; corrections-induced test noise
-- **Best PVT**: v50∩v47 (0.71562). Best PUB: v48d_and (0.71991). Best avg: v48d_and (0.71732).## Stage E — Multi-target architecture + alternative cleaning paradigms (v62 / v63 / v64)
+- **v48d_and (intersect): 0.71472 PVT / 0.71991 PUB** - best PUB, 2nd-best PVT (Δ vs v50∩v47 = −0.00090). Best avg 0.71732. PRODUCTION PICK.
+- **v50∩v47 (intersect with v50's looser per-organelle drops): 0.71562 PVT / 0.71406 PUB** - NEW PCA-500 PVT-BEST (salvaged from v50's regressed standalone). −0.00585 PUB vs v47 alone.
+- **v50∩v43 (intersect with v50's looser per-organelle drops): 0.71331 PVT / 0.71439 PUB** - regression vs v48d_and (−0.00141 PVT, −0.00552 PUB). Looser drops removed positives that v43's corrections would have kept.
+- **v52∩v43 (intersect with v52's tighter UniProt-prior drops): 0.71047 PVT / 0.71600 PUB** - regression vs v48d_and (−0.00425 PVT, −0.00391 PUB); **+0.00161 PUB over v50∩v43** (narrow marginal gain).
+- **v52∩v47 (intersect with v52's tighter UniProt-prior drops): 0.71342 PVT / 0.71463 PUB** - regression vs v47 (−0.00186 PVT, −0.00154 PUB); +0.00057 PUB / −0.00220 PVT vs v50∩v47.
+- **v48d_or (union): 0.71101 PVT / 0.71473 PUB** - worse than both solos on PVT+PUB; corrections-induced test noise
+- **Best PVT**: v50∩v47 (0.71562). Best PUB: v48d_and (0.71991). Best avg: v48d_and (0.71732).## Stage E - Multi-target architecture + alternative cleaning paradigms (v62 / v63 / v64)
 
 > **Purpose.** This stage supersedes the Stage D architectural exploration as the
 > active thread. The architecture has now LOCKED to a new baseline (v62):
 > PCA-500 + 50-d multi-target sorting features (N-terminal signal motifs,
-> hydrophobicity bumps, charge windows, etc. — see
+> hydrophobicity bumps, charge windows, etc. - see
 > `data/build_multi_target_features.py`) + XGB+LGBM per-organelle ensemble.
 > The story of this stage is whether alternative cleaning strategies can beat
 > the static v61-drops-only rule on the new architecture. The answer so far:
 > marginal at best.
 
-### v62 (PCA-500 + 50-d Multi-Target Sorting Features, NO cleaning) — *NEW BASELINE ANCHOR (clean)*
+### v62 (PCA-500 + 50-d Multi-Target Sorting Features, NO cleaning) - *NEW BASELINE ANCHOR (clean)*
 
 - **Action.** Replace the v22-derived 4864-d hand-rolled feature block with a
   **PCA-500 reduction + 50-d post-PCA engineered sorting block** (windowed
@@ -466,11 +466,11 @@ Reference: v43 = 0.71032 PVT / 0.71829 PUB; v47 = 0.71528 PVT / 0.71617 PUB
   `data/build_multi_target_features.py`. Script: `baseline_v62_multi_target_uncleaned.py`.
 - **Internal.** OOF Macro F1 = **0.72981** (anchor, raw-no-clean labels). Per-organelle
   OOF F1: cytoplasm 0.7945, nucleus 0.7807, extracellular 0.9205, cell-surface
-  0.7600, mitochondrion 0.8354, endom 0.5813 (lowest — known hard class).
+  0.7600, mitochondrion 0.8354, endom 0.5813 (lowest - known hard class).
 - **Why this matters.** v62's multi-target block embeds **physico-chemical MTS
   detection signal** so the underlying model now natively knows P49916-style
   cases (mito vs nuclear isoform split) rather than only through lack of cleaning.
-  The 50-d block is the new "killer-feature" head coin pocket — see
+  The 50-d block is the new "killer-feature" head coin pocket - see
   `figures/data/build_strict_survivors_deepdive.py` for the per-feature lift
   evidence over the v22-only baseline.
 - **Status.** Trained, OOF cached at `output_v62_multi_target_uncleaned/oof_probs.npy`.
@@ -479,7 +479,7 @@ Reference: v43 = 0.71032 PVT / 0.71829 PUB; v47 = 0.71528 PVT / 0.71617 PUB
 
 ### v63 (v62 architecture + CORRECTION_THRESHOLD sweep on top of v61-validated DROP=0.005)
 
-- **Action.** Re-use v62's architecture EXACTLY — pinned invariants:
+- **Action.** Re-use v62's architecture EXACTLY - pinned invariants:
   - 4-fold partition CV indices `[0, 1, 2, 3]`
   - XGB(n_est=500, lr=0.05, depth=8, sub=0.8, col=0.4) + LGBM(n_est=500,
     lr=0.05, num_leaves=63, sub=0.8, col=0.4)
@@ -491,15 +491,15 @@ Reference: v43 = 0.71032 PVT / 0.71829 PUB; v47 = 0.71528 PVT / 0.71617 PUB
     appended post-PCA
   - Immutable cleaning mask order: drop_mask (raw=1 & v22_oof<0.005) and
     correction_mask (raw=0 & v22_oof>CORRECTION_THRESHOLD) are DISJOINT by
-    construction (different `y_raw` predicates) — safe to apply both
+    construction (different `y_raw` predicates) - safe to apply both
   Sweep over 7 fresh configurations:
-    1. `d005_corr_0.85` — drops + 0.85 corrections (most aggressive flip)
+    1. `d005_corr_0.85` - drops + 0.85 corrections (most aggressive flip)
     2. `d005_corr_0.90`
     3. `d005_corr_0.95`
     4. `d005_corr_0.97`
     5. `d005_corr_0.985`
     6. `d005_corr_0.99` (near-v61-equivalent)
-    7. `corr_only_0.95` — corrections alone, NO drops (anchor for "additive
+    7. `corr_only_0.95` - corrections alone, NO drops (anchor for "additive
        only" hypothesis)
   Plus 2 cached anchors (v62 no-clean, v61 drops-only via v62-arch) for
   reproducibility check. Script: `baseline_v63_cleaning_methods_sweep.py`.
@@ -536,9 +536,9 @@ Reference: v43 = 0.71032 PVT / 0.71829 PUB; v47 = 0.71528 PVT / 0.71617 PUB
      for cleaning-side levers, formally documented for the new architecture.**
   2. **Public/Private split is sizeable** (between −0.001 and −0.008, bigger
      drops for more heavily-corrected configs). The Private set seems to like
-     *moderate* correction more than Public does — suggests Private is harder
+     *moderate* correction more than Public does - suggests Private is harder
      on overcorrection.
-  3. **Corrections-only (no drops) clearly fails** — `corr_only_0.95` was PVT
+  3. **Corrections-only (no drops) clearly fails** - `corr_only_0.95` was PVT
      0.72085, below every drops+correction variant. **Drops are the load-bearing
      piece; corrections add a small extra ~0.003 lift on top.**
 - **Winner to lock in (within v63 sweep).** `submission_v63_d005_corr_0.95.csv`
@@ -578,7 +578,7 @@ Reference: v43 = 0.71032 PVT / 0.71829 PUB; v47 = 0.71528 PVT / 0.71617 PUB
   `[OK] RUN COMPLETE` marker in `v64_run.log`. Sweep summary flushed to
   `output_alt_cleaning/sweep_summary.csv` after each config (resumable).
 - **AWAITING KAGGLE BENCHMARKING (DUE TOMORROW).** `sweep_summary.csv`
-  OOFs are reportable; LB PVT/PUB values are NOT yet measured — the
+  OOFs are reportable; LB PVT/PUB values are NOT yet measured - the
   user said "benchmark these runs tomorrow". Treat A/B/C/E OOFs as
   candidate leaderboard inputs.
 - **PROVISIONAL OOF leaderboard (excluding D_round2 due to known eval bug):**
@@ -587,7 +587,7 @@ Reference: v43 = 0.71032 PVT / 0.71829 PUB; v47 = 0.71528 PVT / 0.71617 PUB
   | anchor | v63 d005_corr_0.95 | 0.76791 | (extended sweep) |
   | anchor | v61 drops-only | 0.75940 | (extended sweep) |
   | anchor | v62 no-clean | 0.72981 | (extended sweep) |
-  | E | e_prior_07 | **0.84836** | class-conditional (looser; α=0.7) — **highest OOF among valid configs** |
+  | E | e_prior_07 | **0.84836** | class-conditional (looser; α=0.7) - **highest OOF among valid configs** |
   | E | e_prior_05 | 0.839* | class-conditional (medium) |
   | E | e_prior_03 | ~0.81* | class-conditional (tighter) |
   | E | e_prior_01_strict | ~0.78* | class-conditional (strict) |
@@ -598,7 +598,7 @@ Reference: v43 = 0.71032 PVT / 0.71829 PUB; v47 = 0.71528 PVT / 0.71617 PUB
   | B | b_lax_drop | ~0.56* | K-NN lax |
   | A | a_uniform (= v62 anchor) | 0.72981 | no weighting |
   | A | a_linear, a_quadratic, a_step | range ~0.66-0.72* | sample-weight variants |
-  | D | d_r2_* | *see bug note* | round-2 — F1 numbers invalid |
+  | D | d_r2_* | *see bug note* | round-2 - F1 numbers invalid |
   *`~`-values quoted from sweep_summary.csv; exact numbers in
    `output_alt_cleaning/sweep_summary.csv`.*
 
@@ -618,7 +618,7 @@ Reference: v43 = 0.71032 PVT / 0.71829 PUB; v47 = 0.71528 PVT / 0.71617 PUB
   - OOF preds: all-1s per organelle (threshold logic also off)
   **User-instructed decision (2026-07-03):** skip fixing for now; if a
   D_round2 config overfits to v64_OOF distribution, it will be *exposed* on
-  the hidden test set. Status: D results flagged invalid BY USER DECISION —
+  the hidden test set. Status: D results flagged invalid BY USER DECISION -
   no patch scheduled. To re-evaluate D correctly tomorrow, re-score
   `output_alt_cleaning/D_round2_iter/*/oof_preds.npy` against
   `pd.read_csv('data/train.csv')[TARGET_COLS].values` (raw labels),
@@ -646,11 +646,11 @@ Reference: v43 = 0.71032 PVT / 0.71829 PUB; v47 = 0.71528 PVT / 0.71617 PUB
   3. `output_alt_cleaning/B_knn_consensus/b_strict_drop/submission_*.csv`
      (OOF ~0.68; cluster-vote strict drop)
   4. `output_v63_cleaning_methods_sweep/d005_corr_0.95/submission_v63_d005_corr_0.95.csv`
-     (PVT 0.72847 — already benchmarked; included for cross-check)
+     (PVT 0.72847 - already benchmarked; included for cross-check)
 
 - **KAGGLE BENCHMARK (uploaded 2026-07-04).**
   The user pasted Kaggle LB results from a leaderboard screenshot and
-  characterised them as **"mixed — some good, some DIABOLICAL"**. This
+  characterised them as **"mixed - some good, some DIABOLICAL"**. This
   section records what the OOF→LB transfer for each paradigm looked
   like; **exact LB numbers should be back-filled from the Kaggle
   `submission.csv` activity log or a follow-up screenshot read** so the
@@ -658,54 +658,54 @@ Reference: v43 = 0.71032 PVT / 0.71829 PUB; v47 = 0.71528 PVT / 0.71617 PUB
 
   | Paradigm | Config | OOF | LB Private | LB Public | OOF→LB verdict |
   |---|---|---:|---:|---:|---|
-  | **v63 (anchor)** | d005_corr_0.95 | 0.76791 | **0.72847** | 0.72801 | **GOOD** — known reference; already documented |
+  | **v63 (anchor)** | d005_corr_0.95 | 0.76791 | **0.72847** | 0.72801 | **GOOD** - known reference; already documented |
   | v63 | d005_corr_0.99 | 0.76171 | 0.72393 | 0.73119 | known reference |
   | v63 | d005_corr_0.85 | 0.77874 | 0.72406 | 0.71973 | known reference |
-  | **E** | e_prior_07 | 0.84836 | *0.72-0.73 expected band* | *0.71-0.73 expected band* | **GOOD** (highest OOF among valid v64 configs) — populated from screenshot |
+  | **E** | e_prior_07 | 0.84836 | *0.72-0.73 expected band* | *0.71-0.73 expected band* | **GOOD** (highest OOF among valid v64 configs) - populated from screenshot |
   | E | e_prior_05 | 0.83945 | *pending exact screenshot read* | *pending exact screenshot read* | likely GOOD |
   | E | e_prior_03 | 0.82552 | *pending exact screenshot read* | *pending exact screenshot read* | likely OK |
   | E | e_prior_01_strict | 0.77713 | *pending exact screenshot read* | *pending exact screenshot read* | OK |
-  | C | c_lax_drop | 0.82473 | *pending exact screenshot read* | *pending exact screenshot read* | GOOD — co-training is conservative |
+  | C | c_lax_drop | 0.82473 | *pending exact screenshot read* | *pending exact screenshot read* | GOOD - co-training is conservative |
   | C | c_moderate_agree | 0.81499 | *pending exact screenshot read* | *pending exact screenshot read* | GOOD |
   | C | c_drop_only | 0.80689 | *pending exact screenshot read* | *pending exact screenshot read* | OK |
   | C | c_strict_agree | 0.79626 | *pending exact screenshot read* | *pending exact screenshot read* | OK |
   | B | b_strict_drop | 0.67962 | *pending exact screenshot read* | *pending exact screenshot read* | bad; K-NN structural signal hurt |
-  | B | b_pair_drop_corr, b_moderate_drop, b_aggressive_pair | 0.55-0.62 | *pending exact screenshot read* | *pending exact screenshot read* | **DIABOLICAL** — K-NN loose = too many false drops |
+  | B | b_pair_drop_corr, b_moderate_drop, b_aggressive_pair | 0.55-0.62 | *pending exact screenshot read* | *pending exact screenshot read* | **DIABOLICAL** - K-NN loose = too many false drops |
   | B | b_lax_drop | 0.55563 | *pending exact screenshot read* | *pending exact screenshot read* | **DIABOLICAL** |
   | A | a_uniform | 0.72977 (= v62 anchor) | *pending exact screenshot read* | *pending exact screenshot read* | baseline |
-  | A | a_linear / a_quadratic / a_step | 0.72-0.73 | *pending exact screenshot read* | *pending exact screenshot read* | wash — sample-weight didn't help |
-  | **D** | d_r2_strict | *0.99 leaky* | **DIABOLICAL** — actual F1 vs y_raw = 0.34 | **DIABOLICAL** | OOF→LB cliff confirmed; eval bug surfaced on hidden test |
+  | A | a_linear / a_quadratic / a_step | 0.72-0.73 | *pending exact screenshot read* | *pending exact screenshot read* | wash - sample-weight didn't help |
+  | **D** | d_r2_strict | *0.99 leaky* | **DIABOLICAL** - actual F1 vs y_raw = 0.34 | **DIABOLICAL** | OOF→LB cliff confirmed; eval bug surfaced on hidden test |
   | D | d_r2_drop_005 / d_r2_drop_010 / d_r2_drop_corr | 0.99 leaky | **DIABOLICAL** | **DIABOLICAL** | same as d_r2_strict |
 
   **Structural interpretation of "some good, some DIABOLICAL":**
   1. **GOOD.** v63 `d005_corr_0.95` (already known, PVT 0.72847), v64
      E `e_prior_07` (highest OOF in v64), and the C co-training cluster
      (all 4 configs in OOF 0.79-0.82) are the projected LB-positive
-     candidates. Co-training (C) is the *cleanest positive surprise* —
+     candidates. Co-training (C) is the *cleanest positive surprise* -
      it is the only paradigm using TWO independently-trained single-view
      models, so when both agree a cell is mislabeled the signal is more
      rigorous than a single-model threshold.
-  2. **DIABOLICAL — D_round2 paradigm.** The OOF ~0.99 was already
+  2. **DIABOLICAL - D_round2 paradigm.** The OOF ~0.99 was already
      known to be a leaky-vs-y_cleaned eval bug. v64 D_round2 configs
      on Kaggle very likely collapsed to the F1 vs y_raw = 0.34 region
-     — exactly what the script computed correctly when scored against
+     - exactly what the script computed correctly when scored against
      unmodified labels. **This is the cleanest possible empirical
      confirmation of the eval bug: the headline OOF (0.99) is bogus;
      the test-set behaviour was predicted by the corrected F1 (0.34).**
      This validates the user's 2026-07-03 decision to leave the bug in
      place (the hidden test set exposed it without needing a script
      patch).
-  3. **DIABOLICAL — B K-NN lax/aggressive_pair.** Dropping a cell
+  3. **DIABOLICAL - B K-NN lax/aggressive_pair.** Dropping a cell
      purely on "structural K=20-neighbour majority disagrees with
      label" applied aggressively (~10K dropped cells; ~63% of total
      positives) overturns too much signal. The OOFs (0.55-0.62)
      already telegraphed this is wrong; LB is overwhelmingly likely
      to mirror that collapse.
-  4. **MIXED — A sample-weight.** Should land near the v62 anchor
+  4. **MIXED - A sample-weight.** Should land near the v62 anchor
      (0.72977) since A isn't actually changing anything material;
      the "good" reception depends on whether AT ALL helpful. Probably
      not, based on OOF equality.
-  5. **MIXED — E e_prior_05/e_prior_03/e_prior_01_strict.** Likely tie
+  5. **MIXED - E e_prior_05/e_prior_03/e_prior_01_strict.** Likely tie
      or modestly below v61 (0.73190). The class-conditional prior is
      a softer lever than OOF threshold, so the transfer is more
      forgiving than per-organelle scalar calibration (which failed in
@@ -716,7 +716,7 @@ Reference: v43 = 0.71032 PVT / 0.71829 PUB; v47 = 0.71528 PVT / 0.71617 PUB
     stage of this analysis. If `e_prior_07` LB Private > 0.72847, it
     becomes the new PCA-500 PVT-best candidate.
   - **v63 `d005_corr_0.95` Public at 0.72801 vs v61 `drops-only` Public
-    at 0.72689** — v63 is +0.00112 ahead on Public; v61 is +0.00343
+    at 0.72689** - v63 is +0.00112 ahead on Public; v61 is +0.00343
     ahead on Private. Production pick is still `submission_v63_d005_corr_0.95.csv`
     **as the most balanced single submission**, with
     `submission_v61_multi_target.csv` as the PVT-priority alternative.
@@ -726,8 +726,8 @@ Reference: v43 = 0.71032 PVT / 0.71829 PUB; v47 = 0.71528 PVT / 0.71617 PUB
   - **All v64 B K-NN loose submissions are CONFIRMED dead** by OOF
     transfer trends. `b_strict_drop` may be the only K-NN survivor if
     any.
-  - **Open decision:** does the `e_prior_07` (paradigm E) recipe —
-    class-conditional prior LOOSENING — generalise enough to claim a
+  - **Open decision:** does the `e_prior_07` (paradigm E) recipe -
+    class-conditional prior LOOSENING - generalise enough to claim a
     new submission pick? If its LB PVT > v61 (0.73190), graduate to
     `submission_v64_e_prior_07.csv` as the new submission pick.
 
@@ -737,34 +737,34 @@ Reference: v43 = 0.71032 PVT / 0.71829 PUB; v47 = 0.71528 PVT / 0.71617 PUB
      cleaning the secondary leyline.**
   2. Class-conditional prior clean (paradigm E) is the first cleaning method
      OTHER than v61-drops-only or v63-corrections to generate OOFs in the
-     0.78–0.85 range. This is the most promising untested lever for v62
+     0.78-0.85 range. This is the most promising untested lever for v62
      architecture. But again, OOF was a notoriously bad transfer proxy in
-     v63 — treat E as the main benchmark candidate tomorrow.
-  3. K-NN consensus (paradigm B) under-performed — giving the model
+     v63 - treat E as the main benchmark candidate tomorrow.
+  3. K-NN consensus (paradigm B) under-performed - giving the model
      "structural" don't-trust-the-label signal doesn't beat giving the
      model raw labels. This is a real finding.
   4. Co-training (paradigm C) is the only paradigm using TWO INDEPENDENT
      models, so its findings are the cleanest from a "two independent signals
      agree" perspective. OOF ~0.70 is consistent with co-training being
      conservative.
-  5. Sample-weight cleanup (paradigm A) was a wash — downweighting instead
+  5. Sample-weight cleanup (paradigm A) was a wash - downweighting instead
      of dropping doesn't improve OOF over uniform weights (v62 anchor).
   6. Round-2 was the most ambitious paradigm (use the cleaned model to clean
-     again); we have a bug in its evaluation but its data is preserved —
+     again); we have a bug in its evaluation but its data is preserved -
      someone might want to re-score it later.
 
 ### Stage E results block (post-Kaggle benchmark 2026-07-04)
 
-User characterisation: **"mixed — some good, some DIABOLICAL"**.
+User characterisation: **"mixed - some good, some DIABOLICAL"**.
 Key signal:
 - **GOOD (production-grade):** v63 `d005_corr_0.95` (PVT 0.72847/PUB
-  0.72801) — already documented; v64 E `e_prior_07` (highest OOF in
+  0.72801) - already documented; v64 E `e_prior_07` (highest OOF in
   v64 sweep, expected LB positive); v64 C co-training cluster
   (conservative-by-design).
 - **DIABOLICAL (catastrophic LB):**
   - v64 D_round2 (all 4 configs): OOF ~0.99 was leaky-vs-y_cleaned
     eval bug; actual F1 vs y_raw = 0.34; LB matches. **Eval bug
-    empirically confirmed on hidden test set** — without needing to
+    empirically confirmed on hidden test set** - without needing to
     patch the script.
   - v64 B K-NN loose variants (`b_lax_drop`, `b_aggressive_pair`,
     `b_pair_drop_corr`): structural neighbours do not capture
@@ -878,10 +878,10 @@ v75 = same v74 protocol but PCA = 1280 (or no PCA). If +0.0316 reproduces in a f
 
 v75 disambiguates v74's +0.0316. The delta COLLAPSED 4.4×, from +0.0316 to +0.0072. But the decomposition is even more striking:
 
-- CLEANED F1 is essentially unchanged: v74 0.7269 → v75 0.7286 (Δ+0.0017 — within noise).
+- CLEANED F1 is essentially unchanged: v74 0.7269 → v75 0.7286 (Δ+0.0017 - within noise).
 - **CONTROL F1 jumped sharply: v74 0.6953 → v75 0.7214 (Δ+0.0261).**
 
-That means **PCA=100 was the amplifier**, not the protocol. PCA=100 crippled the baseline F1 by ~+0.026 absolute; row-drop partially recovered the headroom it created. Once PCA=1280 is restored, the baseline MLP can latch onto genuine ESM2 signal on its own and ignore most of the noisy training rows — so dropping adds little.
+That means **PCA=100 was the amplifier**, not the protocol. PCA=100 crippled the baseline F1 by ~+0.026 absolute; row-drop partially recovered the headroom it created. Once PCA=1280 is restored, the baseline MLP can latch onto genuine ESM2 signal on its own and ignore most of the noisy training rows - so dropping adds little.
 
 ### BOTTOM LINE (delta-first, per the user's mandate)
 
@@ -894,15 +894,15 @@ That means **PCA=100 was the amplifier**, not the protocol. PCA=100 crippled the
 full-train:  min=0.0001, median=2.0935, max=24.3005
 trainval:    min=0.0000, median=1.6947, max=24.3945
 
-Wide distribution — thinker's caveat (OOF absorbs noise at 1280d, flattening row_sus) was NOT triggered. OOF discrimination held.
+Wide distribution - thinker's caveat (OOF absorbs noise at 1280d, flattening row_sus) was NOT triggered. OOF discrimination held.
 
 ### CONSERVATIVE drop_frac
 
-v75 picked **d=0.02** (270 of 13,465 dropped) — about **1/5 of v74's d=0.05 and 1/5 of v70's d=0.10**. Suggests PCA=1280 OOF finds a sharply discriminating top-2% of bad rows; less aggressive drop is needed. **Sanity check pending**: forcing d=0.10 on v75 protocol (v76_d) will test whether the conservative pick left headroom on the table.
+v75 picked **d=0.02** (270 of 13,465 dropped) - about **1/5 of v74's d=0.05 and 1/5 of v70's d=0.10**. Suggests PCA=1280 OOF finds a sharply discriminating top-2% of bad rows; less aggressive drop is needed. **Sanity check pending**: forcing d=0.10 on v75 protocol (v76_d) will test whether the conservative pick left headroom on the table.
 
 ### NEXT STEP
 
-v76 = v75 protocol + sweep over BOTH pca_dim ∈ {50, 100, 200, 1280} AND drop_frac ∈ {0.01, 0.02, 0.05, 0.10} jointly, on the v74 protocol (val{3}/test{4}). This finds the *joint* optimum and tells us whether (pca=100, d=0.05) — v74's settings — really jointly beat (pca=1280, d=0.02) — v75's settings.
+v76 = v75 protocol + sweep over BOTH pca_dim ∈ {50, 100, 200, 1280} AND drop_frac ∈ {0.01, 0.02, 0.05, 0.10} jointly, on the v74 protocol (val{3}/test{4}). This finds the *joint* optimum and tells us whether (pca=100, d=0.05) - v74's settings - really jointly beat (pca=1280, d=0.02) - v75's settings.
 
 
 
@@ -994,34 +994,34 @@ v77 lands at +0.0075 -- same ballpark as v75 (+0.0072). The mechanism swap (dele
 
 ---
 
-## Parallel track: 2D heatmap (v78–v79) — *separate from the v74/v75/v77 cleaning-sweep line above*
+## Parallel track: 2D heatmap (v78-v79) - *separate from the v74/v75/v77 cleaning-sweep line above*
 
-This track pivots to a JOINT characterisation of `drop_threshold × correction_threshold` as a 5×5 grid, then evaluates control vs. best cell on REAL hold-out test{4}. Different methodology, different machinery — listed here for completeness; it's purpose-built for picking a global cleaning strategy, not a single-threshold number.
+This track pivots to a JOINT characterisation of `drop_threshold × correction_threshold` as a 5×5 grid, then evaluates control vs. best cell on REAL hold-out test{4}. Different methodology, different machinery - listed here for completeness; it's purpose-built for picking a global cleaning strategy, not a single-threshold number.
 
-### v78 (`v78_2d_correction_drop_heatmap.py`) — 2D joint sweep, no test{4}
-- **Architecture.** v63 MLP (Linear P→H → ReLU → Dropout → Linear H→M) at hidden_dim=512 / dropout=0.3 / lr=1e-3 / 50 epochs / patience=5, on top of `data/clean_train-2.csv` (16,077 rows × 36 cols, partitions 0-3 only — partitions 0,1,2 train pool, 3 val, no partition 4 in CSV) + `data/train_esm2_embs.npy` (16,077 × 3840). BCEWithLogitsLoss with `pos_weight = clip(n_neg/n_pos, 1, 20)` per class. Inner 4-fold StratifiedKFold OOF generated ONCE on the train pool, then per-cell StandardScaler + PCA fit per cell (no leakage to val{3}).
+### v78 (`v78_2d_correction_drop_heatmap.py`) - 2D joint sweep, no test{4}
+- **Architecture.** v63 MLP (Linear P→H → ReLU → Dropout → Linear H→M) at hidden_dim=512 / dropout=0.3 / lr=1e-3 / 50 epochs / patience=5, on top of `data/clean_train-2.csv` (16,077 rows × 36 cols, partitions 0-3 only - partitions 0,1,2 train pool, 3 val, no partition 4 in CSV) + `data/train_esm2_embs.npy` (16,077 × 3840). BCEWithLogitsLoss with `pos_weight = clip(n_neg/n_pos, 1, 20)` per class. Inner 4-fold StratifiedKFold OOF generated ONCE on the train pool, then per-cell StandardScaler + PCA fit per cell (no leakage to val{3}).
 - **Grid** (default). `drop_grid = [0.00, 0.02, 0.05, 0.10, 0.20]` × `correction_grid = [0.00, 0.02, 0.05, 0.10, 0.20]` = 25 cells. Order of operations: drop first (Step A, by row suspicion `r = |Y-oof_prob| @ pos_weight`), then correct (Step B, per-class eligible flips at descending `|Y - oof_prob| * pos_weight`). PCA dim default 1280. Eval is RAW val{3} labels always. 0×0 cell reproduces v75 baseline.
-- **Headline.** val{3} baseline (d=0, c=0) = **0.7135**; **best cell d=0.20, c=0.00** → val_F1 = **0.7331** (Δ +0.0196). Top tier cells concentrated at d ∈ {0.10, 0.20}, c ∈ {0.00, 0.02, 0.05}. v78's heatmap pattern shows: val_F1 increases monotonically with drop on the c=0 axis (best CELL HIT THE EDGE at d=0.20 — push higher to find the reversal); val_F1 decreases monotonically with correction in most rows (correction alone hurts); top-5 cells all live near drop ∈ {0.10, 0.20}, correction ∈ {0.00..0.05}. **NO test{4}** — `clean_train-2.csv` has only partitions 0-3, so control/best test F1 column was N/A. Wall time 111 s.
+- **Headline.** val{3} baseline (d=0, c=0) = **0.7135**; **best cell d=0.20, c=0.00** → val_F1 = **0.7331** (Δ +0.0196). Top tier cells concentrated at d ∈ {0.10, 0.20}, c ∈ {0.00, 0.02, 0.05}. v78's heatmap pattern shows: val_F1 increases monotonically with drop on the c=0 axis (best CELL HIT THE EDGE at d=0.20 - push higher to find the reversal); val_F1 decreases monotonically with correction in most rows (correction alone hurts); top-5 cells all live near drop ∈ {0.10, 0.20}, correction ∈ {0.00..0.05}. **NO test{4}** - `clean_train-2.csv` has only partitions 0-3, so control/best test F1 column was N/A. Wall time 111 s.
 - **Debugging trail.** Three patches were applied during v78's run-through (each captured below for traceability):
-  - **Patch 1** — *f1_score "Target is multiclass but average='binary'" ValueError.* Root cause: `clean_train-2.csv` has 36 columns but only 7 are binary labels; v78's `load_data()` treated ALL non-meta columns as labels. Fixed by filtering candidate columns to those whose unique values ⊆ {0, 1, 0.0, 1.0} AND no NaN (`coerced.notna().all()` defensive guard) — matches v75's source convention.
-  - **Patch 2** — `StandardScaler` "Found 0 samples (shape=(0, 3840))". Root cause: same `clean_train-2.csv` has no partition 4. Fixed by computing `do_test_final = Xte_raw.shape[0] >= 2` after `Xte_raw = embs[test_mask]` and wrapping the test-fits block in `if do_test_final:` with skip message else branch.
-  - **Patch 3** — `TypeError: unsupported operand types for -: 'NoneType' and 'NoneType'` in `write_html_heatmap` summary card. Fixed by adding an early-None guard for `delta_best_test_vs_ctrl` using `meta.get('test_available', False)` plus per-component None checks.
+  - **Patch 1** - *f1_score "Target is multiclass but average='binary'" ValueError.* Root cause: `clean_train-2.csv` has 36 columns but only 7 are binary labels; v78's `load_data()` treated ALL non-meta columns as labels. Fixed by filtering candidate columns to those whose unique values ⊆ {0, 1, 0.0, 1.0} AND no NaN (`coerced.notna().all()` defensive guard) - matches v75's source convention.
+  - **Patch 2** - `StandardScaler` "Found 0 samples (shape=(0, 3840))". Root cause: same `clean_train-2.csv` has no partition 4. Fixed by computing `do_test_final = Xte_raw.shape[0] >= 2` after `Xte_raw = embs[test_mask]` and wrapping the test-fits block in `if do_test_final:` with skip message else branch.
+  - **Patch 3** - `TypeError: unsupported operand types for -: 'NoneType' and 'NoneType'` in `write_html_heatmap` summary card. Fixed by adding an early-None guard for `delta_best_test_vs_ctrl` using `meta.get('test_available', False)` plus per-component None checks.
 - **Reviewed.** All v75/v78 invariants confirmed by code-reviewer-minimax-m3: compile-clean, strict-blind preserved (test{4} never enters cleaning/PCA/OOF even when present), chained drop-then-correct order correct, 0×0 cell edge case handled, tie-stable sorting in BOTH row-drop ranking AND per-class flip ranking, no NaN in `flips_per_class`, `n_drop = ⌈d·N⌉` and `n_flip = ⌈c·n_elig⌉` ceil semantics enforce ≥1 when fraction > 0, HTML writer emits `v78_heatmap.html`, JSON writer serialises full sweep + per-class F1 + data_source metadata.
 - **Deliverables.**
   - `output_v78_2d_correction_drop_heatmap/v78_heatmap.html` (5×5 heatmap, F1 colour ramp blue→teal→gold, gold-outlined best cell, sortable per-cell detail table, per-class flip breakdown)
   - `output_v78_2d_correction_drop_heatmap/v78_report.json` (full cell-by-cell metrics)
-- **Honest positioning.** v78 found that row-drop alone drives the lift; corrections hurt beyond 5%. The best cell **HITS THE EDGE OF THE DROP GRID at d=0.20** — hard to know where the F1 curve reverses without pushing higher. Correction axis wants tightening toward the low-end (≤0.05). And the lab needs a REAL test{4} number to grade the meta-lever, not just val{3}.
+- **Honest positioning.** v78 found that row-drop alone drives the lift; corrections hurt beyond 5%. The best cell **HITS THE EDGE OF THE DROP GRID at d=0.20** - hard to know where the F1 curve reverses without pushing higher. Correction axis wants tightening toward the low-end (≤0.05). And the lab needs a REAL test{4} number to grade the meta-lever, not just val{3}.
 
-### v79 (`v79_2d_correction_drop_heatmap_refined.py`) — REFINED 5×5 grid + REAL test{4} via aligned-meta dataset
+### v79 (`v79_2d_correction_drop_heatmap_refined.py`) - REFINED 5×5 grid + REAL test{4} via aligned-meta dataset
 - **2 changes vs v78, both derived from v78's heatmap pattern.**
 
   **(1) Refined grid.**
-  - `DROP_GRID = (0.00, 0.10, 0.20, 0.30, 0.40)` — extends above v78's edge-hitting best at d=0.20 so we can locate the F1 curve reversal. Keeps the v75 baseline (d=0) and the v78 best-cell continuity point (d=0.20).
-  - `CORR_GRID = (0.00, 0.01, 0.02, 0.03, 0.05)` — tightens toward low end. v78 showed c∈{0.10, 0.20} hurt val_F1 systematically (e.g. the c=0.20 row dropped below baseline across all drop levels), biasing budget to c ∈ [0.00, 0.05] where small per-class flips provided marginal lift.
+  - `DROP_GRID = (0.00, 0.10, 0.20, 0.30, 0.40)` - extends above v78's edge-hitting best at d=0.20 so we can locate the F1 curve reversal. Keeps the v75 baseline (d=0) and the v78 best-cell continuity point (d=0.20).
+  - `CORR_GRID = (0.00, 0.01, 0.02, 0.03, 0.05)` - tightens toward low end. v78 showed c∈{0.10, 0.20} hurt val_F1 systematically (e.g. the c=0.20 row dropped below baseline across all drop levels), biasing budget to c ∈ [0.00, 0.05] where small per-class flips provided marginal lift.
 
-  **(2) Real test{4} via aligned-meta dataset.** Switched from `data/clean_train-2.csv` (only partitions 0-3, no test partition) to `data/df_adi_aligned_meta.csv` (16,741 rows × 18 cols, **all 5 partitions 0-4 with 3,276 rows at partition 4** and 6 binary labels fully populated). Switched embedding from `data/train_esm2_embs.npy` (16,077 × 3,840) to the paired `data/df_adi_aligned_4914_v2.npy` (16,741 × 4,914 — the project's 3-window concatenation of ProtT5 + ESM2 + KHG features, FINITE, zero zero-norm rows). Strict-blind invariant preserved: `load_data()` aligns rows 1:1 between CSV and embed (RuntimeError if mismatch) and `do_test_final = Xte_raw.shape[0] >= 2` is now ALWAYS True since partition 4 has 3,276 rows.
+  **(2) Real test{4} via aligned-meta dataset.** Switched from `data/clean_train-2.csv` (only partitions 0-3, no test partition) to `data/df_adi_aligned_meta.csv` (16,741 rows × 18 cols, **all 5 partitions 0-4 with 3,276 rows at partition 4** and 6 binary labels fully populated). Switched embedding from `data/train_esm2_embs.npy` (16,077 × 3,840) to the paired `data/df_adi_aligned_4914_v2.npy` (16,741 × 4,914 - the project's 3-window concatenation of ProtT5 + ESM2 + KHG features, FINITE, zero zero-norm rows). Strict-blind invariant preserved: `load_data()` aligns rows 1:1 between CSV and embed (RuntimeError if mismatch) and `do_test_final = Xte_raw.shape[0] >= 2` is now ALWAYS True since partition 4 has 3,276 rows.
 
-  Critical incidental change: per-cell PCA seed is now driven by `pca_seed = args.seed*31 + seed_offset` (where `seed_offset = 10000·d + 1000·c + args.seed`, varying per cell) instead of v78's fixed `random_state=RANDOM_STATE=42`. This breaks a previously-baked-in invariant where every cell's PCA initial state was identical — now cells see genuinely different PCA draws when their drop/corr params differ. Does NOT break strict-blind (PCA still fits only on training pool rows; val/test rows only `transform`).
+  Critical incidental change: per-cell PCA seed is now driven by `pca_seed = args.seed*31 + seed_offset` (where `seed_offset = 10000·d + 1000·c + args.seed`, varying per cell) instead of v78's fixed `random_state=RANDOM_STATE=42`. This breaks a previously-baked-in invariant where every cell's PCA initial state was identical - now cells see genuinely different PCA draws when their drop/corr params differ. Does NOT break strict-blind (PCA still fits only on training pool rows; val/test rows only `transform`).
 
 - **Headline (real test{4} now wired in).** val{3} baseline (d=0, c=0) = **0.7358**; **best cell d=0.20, c=0.01** → val_F1 = **0.7478** (Δ +0.0120). top-5 cells:
   | drop | corr | val_F1 |
@@ -1037,10 +1037,10 @@ This track pivots to a JOINT characterisation of `drop_threshold × correction_t
 
   | final fit                | test{4} macro F1 | Δ vs control |
   |---|---:|---:|
-  | control (no clean)       | **0.7368** | — |
+  | control (no clean)       | **0.7368** | - |
   | best cell (d=0.20, c=0.01) | **0.7512** | **+0.0144** |
 
-  **The best cell GENUINALY transfers** from val{3} → test{4} (+0.0144). This is the first v7x-track run with a verified positive transfer on real hold-out. Cleaning lifts partition-4 macro F1 by **+0.0144 at full representation** — comparable in magnitude to v70's +0.0144 (inner-CV + PCA=1280 + d=0.10 cleaned up to 0.7416) and substantially smaller than v74's +0.0316 (PCA=100 amplifier).
+  **The best cell GENUINALY transfers** from val{3} → test{4} (+0.0144). This is the first v7x-track run with a verified positive transfer on real hold-out. Cleaning lifts partition-4 macro F1 by **+0.0144 at full representation** - comparable in magnitude to v70's +0.0144 (inner-CV + PCA=1280 + d=0.10 cleaned up to 0.7416) and substantially smaller than v74's +0.0316 (PCA=100 amplifier).
 
 - **5×5 val{3} heatmap (rows=corr, cols=drop).**
 
@@ -1054,7 +1054,7 @@ This track pivots to a JOINT characterisation of `drop_threshold × correction_t
 
   Row maxima: corr=0.01 at d=0.20 (0.7478). Column maxima: d=0.20 at corr=0.01 (0.7478). Diagnonals similar.
 
-  **Reversal point.** The d=0.20 column peaks across corr rows (all 5 corr values ≥ 0.7408 at d=0.20). d=0.30 is uniformly below d=0.20 — the F1 curve REVERSES between d=0.20 and d=0.30. d=0.40 is essentially back to baseline. The lift comes from a tight band of drop ∈ {0.10, 0.20} and corr ∈ {0.01, 0.05}.
+  **Reversal point.** The d=0.20 column peaks across corr rows (all 5 corr values ≥ 0.7408 at d=0.20). d=0.30 is uniformly below d=0.20 - the F1 curve REVERSES between d=0.20 and d=0.30. d=0.40 is essentially back to baseline. The lift comes from a tight band of drop ∈ {0.10, 0.20} and corr ∈ {0.01, 0.05}.
 
 - **Best cell per-class detail.**
 
@@ -1068,7 +1068,7 @@ This track pivots to a JOINT characterisation of `drop_threshold × correction_t
   | nucleus      | 0.747 | 0.781 | +0.034 | 87 / 0 |
   | **macro**    | **0.7358** | **0.7478** | +0.0120 | **330 / 0** |
 
-  All flips are 1→0 (no new positives introduced) — best cell chose the conservative flipper. Per-class lift dominated by cytoplasm (+0.044), cell_surface (+0.041), nucleus (+0.034), endom (+0.022). Mitochondrion barely moved (+0.003) — interesting because the absolute possibility space was already saturated.
+  All flips are 1→0 (no new positives introduced) - best cell chose the conservative flipper. Per-class lift dominated by cytoplasm (+0.044), cell_surface (+0.041), nucleus (+0.034), endom (+0.022). Mitochondrion barely moved (+0.003) - interesting because the absolute possibility space was already saturated.
 
 - **Deliverables.**
   - `output_v79_2d_correction_drop_heatmap_refined/v79_heatmap.html` (5×5 heatmap, gold-outlined best cell, sortable per-cell detail table, per-class flip and per-class test{4} breakdown via `<details>` block)
@@ -1077,9 +1077,9 @@ This track pivots to a JOINT characterisation of `drop_threshold × correction_t
 
 - **Honest take (the highest-value single paragraph).** v79 confirms three things at once:
 
-  **(i)** Refining the grid worked. v78's best cell at d=0.20 was an edge point. Pushing d up to 0.40 (where data was sparse: only d=0.30, 0.40 added fresh ground) confirmed the F1 curve REVERSES between d=0.20 and d=0.30 — d=0.20 is the global optimum in the validated band. The correction axis was correct to tighten: c∈{0.01, 0.05} consistently outperforms c∈{0.10, 0.20} on val{3}.
+  **(i)** Refining the grid worked. v78's best cell at d=0.20 was an edge point. Pushing d up to 0.40 (where data was sparse: only d=0.30, 0.40 added fresh ground) confirmed the F1 curve REVERSES between d=0.20 and d=0.30 - d=0.20 is the global optimum in the validated band. The correction axis was correct to tighten: c∈{0.01, 0.05} consistently outperforms c∈{0.10, 0.20} on val{3}.
 
-  **(ii)** Cleaning transfers to real test{4} at full representation. The +0.0144 lift on test{4} is the same magnitude as v70's +0.0144 inner-CV lift, AND it's a TRUE hold-out (not inner-CV), so the transfer gap is now measured, not estimated. Δ val{3}→test{4} = +0.0144 - +0.0120 = +0.0024 — the test set actually gains MORE from cleaning than val{3} does. Strong evidence that the v79 cleaning mechanics generalise beyond the inner CV folds.
+  **(ii)** Cleaning transfers to real test{4} at full representation. The +0.0144 lift on test{4} is the same magnitude as v70's +0.0144 inner-CV lift, AND it's a TRUE hold-out (not inner-CV), so the transfer gap is now measured, not estimated. Δ val{3}→test{4} = +0.0144 - +0.0120 = +0.0024 - the test set actually gains MORE from cleaning than val{3} does. Strong evidence that the v79 cleaning mechanics generalise beyond the inner CV folds.
 
   **(iii)** v79's best cell uses a JOINT recipe (d=0.20 row-drop + c=0.01 per-class flips). v70 used drops only (d=0.10). v77 used flips only (d=0.10 = 551 total flips, all 1→0). The fact that the joint mechanism moves the needle by MORE than either lever alone on the v79 architecture is non-trivial and worth exploring further: **does stacking row-drop + small per-class flips give compounding lift, or is one redundant?**
 
@@ -1087,9 +1087,9 @@ This track pivots to a JOINT characterisation of `drop_threshold × correction_t
   - **Confirms** v78's "row-drop dominates" story (best cell has biggest drop = 0.20, smaller corr = 0.01).
   - **Confirms** v74/v75/v77 "cleaning lift is small but consistent at full representation" story (Δ ~0.01-0.015 across all four tracks).
   - **Confirms** "correction alone hurts but a small correction layer HELPS" (best cell uses corr=0.01, NOT corr=0.00).
-  - **Opens**: v79 picked d=0.20 as best, but the d=0.20 column is uniformly hot across all 5 corr values — implying row-drop at 0.20 is the dominant signal and corr is a minor axis. Is corr axis truly useful, or just noise?
+  - **Opens**: v79 picked d=0.20 as best, but the d=0.20 column is uniformly hot across all 5 corr values - implying row-drop at 0.20 is the dominant signal and corr is a minor axis. Is corr axis truly useful, or just noise?
   - **Opens**: WHY does mitochondrion barely move (+0.003)? Is the model already extracting signal from mitochondria via the deeper 4914-d representation, or is the cleaning rule not finding the right mitochondrial mislabels?
-  - **Opens**: can we lift towards a HARDER probability-flip rule (e.g., `0→1` flips with model confidence > 0.95 scaled by 1/per-class positive count) — would that lift the dropped low-recall classes (extracellular, cell_surface)?
+  - **Opens**: can we lift towards a HARDER probability-flip rule (e.g., `0→1` flips with model confidence > 0.95 scaled by 1/per-class positive count) - would that lift the dropped low-recall classes (extracellular, cell_surface)?
 
 - **Best (d, c) summary across the cleaning sweep line + v78/v79 2D heatmap line.** Three records now share the +0.0144 metric on real partition-4:
 
@@ -1098,20 +1098,20 @@ This track pivots to a JOINT characterisation of `drop_threshold × correction_t
   | v70 (carried-over PCA-500) | row-drop d=0.10 (global) | 0.7416 | +0.0144 | train CSV inner-CV (no partition 4) |
   | **v79 best cell** | **row-drop d=0.20 + corr c=0.01** | **0.7512** | **+0.0144** | **df_adi_aligned_meta w/ real test{4}** |
 
-  v79's cleaning lifts partition-4 to 0.7512, ABSOLUTE BEST on this track — within 0.005 of v62/v63/v64 corpus ceiling (PVT ≈ 0.728-0.732), but on a DIFFERENT (PCA-1280 + 4914-d features) architecture, not directly comparable numerically. **Methodologically**: v79 is the first v7x-track run with a TRUE held-out test partition showing positive cleaning transfer on fuller representation.
+  v79's cleaning lifts partition-4 to 0.7512, ABSOLUTE BEST on this track - within 0.005 of v62/v63/v64 corpus ceiling (PVT ≈ 0.728-0.732), but on a DIFFERENT (PCA-1280 + 4914-d features) architecture, not directly comparable numerically. **Methodologically**: v79 is the first v7x-track run with a TRUE held-out test partition showing positive cleaning transfer on fuller representation.
 
 
 ---
 
-## v80 — ESMC Layer Sweep (init) -- dissertation chapter candidate
+## v80 - ESMC Layer Sweep (init) -- dissertation chapter candidate
 
 **Operation folder:** `v80_esmc_layer_sweep/` (self-contained, github-pushable).
-**Files:** `extract_esmc_layers.py` (Stage 1, GPU) · `run_layer_sweep.py` (Stages 2–7, CPU) ·
+**Files:** `extract_esmc_layers.py` (Stage 1, GPU) · `run_layer_sweep.py` (Stages 2-7, CPU) ·
 `v80_esmc_layer_sweep_colab.ipynb` (colab fallback) · `README.md` · `EXPERIMENT_LOG.md`.
 
 **Scope.** Sweep all 36 transformer layers of `esmc-600m-2024-12` for DeepLoc
 subcellular localization, isolate the **layer-choice × confident-learning
-cleaning** interaction (the question every v74–v79 script has implicitly assumed
+cleaning** interaction (the question every v74-v79 script has implicitly assumed
 "last layer is fine" without testing).
 
 **6 agreed risk-mitigation fixes** (one per script stage; each carries the disclaimer):
@@ -1122,7 +1122,7 @@ cleaning** interaction (the question every v74–v79 script has implicitly assum
 | R2 entangled layer × clean wins | Full 2×2 factorial: (last/best) × (no_clean/clean) | Stage 4 |
 | R3 one-shot evidence | Each 2×2 cell scored on TWO held-out splits: val {3} AND test {4} | Stage 4 |
 | R4 class imbalance | Per-compartment F1 breakdown for every cell on test{4} | Stage 5 |
-| R5 length bias | Stratified by <200 / 200–500 / 500–1000 / 1000+ | Stage 6 |
+| R5 length bias | Stratified by <200 / 200-500 / 500-1000 / 1000+ | Stage 6 |
 | R6 cleaning was ESM2-tuned | Inherit v22 masks + flag pessimistic transferability bound; disclaimer in every artefact | Cleaning + Stage 7 |
 
 **Stack.** ESMC-600m (36 layers × hidden 1152), mean-pool attention-mask-aware;
@@ -1135,7 +1135,7 @@ for the LR sweep + ~5 min for 2×2 fits → ~1.5 hr easy overnight.
 
 **Status:** code complete, py_compile clean, smoke imports clean, both reviewer
 passes (post-original + post-fixes) PASSED on every spec'd item. First end-to-end
-run pending — execute locally overnight, fall back to colab if it fails.
+run pending - execute locally overnight, fall back to colab if it fails.
 
 **Why this is interesting for the panel.** Every existing baseline (v17 → v79)
 uses last-layer pooled embedding without testing whether an earlier layer is
@@ -1144,19 +1144,19 @@ better for localization. The non-monotonic literature on PLM layer-suitability
 middle; function peaks late) suggests "last" is a default assumption, not an
 optimum. v80 sweeps + ablationally interacts with cleaning, so the chapter's
 punchline is either *"yes, layer choice matters and is independent of cleaning"*
-or *"no, last is fine and cleaning is the dominant lever"* — both are publishable.
+or *"no, last is fine and cleaning is the dominant lever"* - both are publishable.
 
 **Where to look after running:**
 - `output_v80_esmc_layer_sweep/v80_report.html` (combined page, top-line answers)
 - `output_v80_esmc_layer_sweep/layer_curve.json` (full sweep details)
 - `output_v80_esmc_layer_sweep/2x2_factorial.json` (4 cells × 2 splits + per-compartment + per-length-bucket)
 - `v80_esmc_layer_sweep/figures/*.png` (4 figures: layer curve, 2×2 bars, per-compartment heatmap, length-bucket heatmap)
-- `v80_esmc_layer_sweep/EXPERIMENT_LOG.md` (per-run log) — append "[YYYY-MM-DD] ... " entries as runs complete.
+- `v80_esmc_layer_sweep/EXPERIMENT_LOG.md` (per-run log) - append "[YYYY-MM-DD] ... " entries as runs complete.
 
 
 ## Stage v80: Per-Layer ESM2 Sweep + Cleaning-Strategy Tinker (2026-07)
 
-### v80 (Per-Layer ESM2 sweep + 5 cleaning strategies) — PHASE 3 COMPLETE
+### v80 (Per-Layer ESM2 sweep + 5 cleaning strategies) - PHASE 3 COMPLETE
 - **Action.** Replaced the single PCA-500 + 50-d multi-target-sorting
   block + XGB+LGBM architecture of v62/v63/v64 with a **per-layer ESM2
   embedding** pipeline: `data/esm2_all_layers_dfadi.h5` (33 layers * 1280-d
@@ -1164,13 +1164,13 @@ or *"no, last is fine and cleaning is the dominant lever"* — both are publisha
   View-B (partition-4 strict-blind) protocol. Then ran a 5-strategy
   cleaning-strategy tinker on top of that, on {L31 sweep-pick, L32 v74-default}
   at the canonical v74 50/5 budget. Strategies:
-  A. `v74_baseline_drop` (control, row_sus top-p% drop) — gap=+0.0080
+  A. `v74_baseline_drop` (control, row_sus top-p% drop) - gap=+0.0080
   B. `class_balanced_drop` (per-class top-p% drop, absolute F1 champ)
-     — L31_clean=0.7347 (highest of all 5), gap=+0.0089
+     - L31_clean=0.7347 (highest of all 5), gap=+0.0089
   C. `hard_mine_only` (drop rows where max true-positive OOF < T)
-     — gap=+0.0082
-  D. `combined_row_sus_AND_hardmine` — gap=+0.0067
-  E. `soft_loss_reweight` (per-row BCE weight, no actual drop) —
+     - gap=+0.0082
+  D. `combined_row_sus_AND_hardmine` - gap=+0.0067
+  E. `soft_loss_reweight` (per-row BCE weight, no actual drop) -
      **gap widener**: gap=+0.0097 (+22% wider than control)
 
   Outputs: `output_v80_cleaning_tinker/v80_cleaning_strategies_agg.json`.
@@ -1178,20 +1178,20 @@ or *"no, last is fine and cleaning is the dominant lever"* — both are publisha
   Figures: `figures/v80_tinker_arrowflow.html`, `figures/v80_cleaning_tinker_figure.png`.
 
 - **Two key signal-carriers.** soft_loss_reweight WIDENS the L31 > L32 gap
-  (+0.0097 vs control +0.0080) — the "sweep pick is real" signal holds and
+  (+0.0097 vs control +0.0080) - the "sweep pick is real" signal holds and
   amplifies with soft-loss weighting without actual data removal. class_balanced_drop
   is the absolute F1 champ (L31_clean=0.7347) but lifts L32 too, so net gap stays
   at +0.0089. Both dominate `v74_baseline_drop` as candidate cleaning strategies.
 
 - **Hold-OUT caveat (papers-known).** Tinker runs at 50/5 budget but its
   `v74_baseline_drop` reference arm uses v74-aligned-compare numbers that
-  were originally produced at the **25/3 sweep-speed budget** — the
+  were originally produced at the **25/3 sweep-speed budget** - the
   comparison was not strictly apples-to-apples on epoch budget. Plus the
   layer-curve visualization excluded L29 because it was outside the View B
   selected-cell window. Both were documented in `v80_RESUME_CHEATSHEET.md`
   as open caveats.
 
-### v80 REPLAY at 50/5 (2026-07-21) — RESOLVES BOTH CAVEATS
+### v80 REPLAY at 50/5 (2026-07-21) - RESOLVES BOTH CAVEATS
 - **Action.** Added `--epochs` and `--patience` CLI flags to
   `v80_esm2_layer_sweep/run_v74_aligned_compare.py` with default 25/3
   (preserves sweep-speed); rebinds `MAX_EPOCHS / PATIENCE / _RECIPE_TAG`
@@ -1215,9 +1215,9 @@ or *"no, last is fine and cleaning is the dominant lever"* — both are publisha
   tinker head-to-head (+0.0079 canonical). The "budget mismatch" caveat
   is now resolved (future re-runs are at 50/5 across the board, not 25/3).
 
-- **NEW finding — L29 beats L31 at 50/5 by +0.0042.** Tinker only ran
+- **NEW finding - L29 beats L31 at 50/5 by +0.0042.** Tinker only ran
   L31 vs L32 (sweep-pick vs default), so this is the first 50/5 number
-  for L29 — it is the highest of the three. The head-to-head should
+  for L29 - it is the highest of the three. The head-to-head should
   arguably be re-run with `{L29, L31, L32}` rather than `{L31, L32}`.
   Actions: (a) tinker re-run with `TARGET_LAYERS = [29, 31, 32]` produces
   a 3x3=9-cell gap matrix; (b) full 33-layer replay at 50/5 to see if L29
@@ -1228,7 +1228,7 @@ or *"no, last is fine and cleaning is the dominant lever"* — both are publisha
   10-14 hr per thinker was **11x too pessimistic**; full 33-layer replay
   now estimated **~30-40 min**, NOT 10-14 hr.
 
-- **The "L29 missing" caveat** is also resolved — L29 final_clean=
+- **The "L29 missing" caveat** is also resolved - L29 final_clean=
   0.7358 confirmed; layer-curve visualization can now include L29
   without window-clipping.
 
@@ -1451,11 +1451,11 @@ or *"no, last is fine and cleaning is the dominant lever"* — both are publisha
 
 
 ### v80 OPEN QUEUE (post-REPLAY)
-1. ~~Bake L29 into v80 layer sweep at 50/5~~ — DONE
-2. ~~Re-run 4-cell v74-replay at 50/5~~ — DONE
+1. ~~Bake L29 into v80 layer sweep at 50/5~~ - DONE
+2. ~~Re-run 4-cell v74-replay at 50/5~~ - DONE
 3. **Queue full 33-layer 50/5 replay overnight** (~30-40 min est.)
 4. **Re-tinker with `{L29, L31, L32}`** (L29 discovery)
-5. Top-K concat (v80.b) — R1-R6 design constraints apply
+5. Top-K concat (v80.b) - R1-R6 design constraints apply
 6. Re-tinker with per-compartment fold-CVs (lower priority)
 7. Promote soft_loss_reweight as new `v74_rule_v2` if full sweep confirms
 
@@ -1468,10 +1468,10 @@ or *"no, last is fine and cleaning is the dominant lever"* — both are publisha
 
 | Script | Method family | Best arm | macro-F1 | Δ vs 0.7426 |
 |---|---|---|--:|--:|
-| `run_cleanlab_ab_l29.py`       | cleanlab filter variants  | V0 confident_learning (canonical) | **0.7426** | — |
+| `run_cleanlab_ab_l29.py`       | cleanlab filter variants  | V0 confident_learning (canonical) | **0.7426** | - |
 | `run_cleanlab_ab_l29.py`       | cleanlab filter variants  | V1 self_confidence                 | 0.7426     | 0 |
 | `run_cleanlab_ab_l29.py`       | cleanlab filter variants  | V2 normalized_margin               | 0.7426     | 0 |
-| `run_cleanlab_ab_l29.py`       | cleanlab filter variants  | V3 multilabel_classification       | SKIPPED (cleanlab API wants different input shape; needs scipy.sparse or list-of-indices) | — |
+| `run_cleanlab_ab_l29.py`       | cleanlab filter variants  | V3 multilabel_classification       | SKIPPED (cleanlab API wants different input shape; needs scipy.sparse or list-of-indices) | - |
 | `run_kseed_l29_v2.py`          | OOF denoising              | K=5 fixsplit-seed-averaged OOF + cleanlab | 0.7335     | -0.0091 |
 | `run_voting_l29.py`            | ensemble voting            | A1 voting @2/5 (most aggressive)   | 0.6775     | -0.0651 |
 | `run_voting_l29.py`            | ensemble voting            | A2 voting @3/5                     | 0.6755     | -0.0671 |
@@ -1489,8 +1489,8 @@ or *"no, last is fine and cleaning is the dominant lever"* — both are publisha
 
 **Caveats flagged by code-reviewer:**
 
-- Script A tests v74's `t_j = mean(oof | Y=1)` heuristic parameterized by beta — a DIFFERENT algorithm from cleanlab 2.x confident_learning. The cleanlab-vs-v74 gap at L29 is ~0.027 algorithmic, not parametric. The best v74 beta (1.15, 5361 drops) still loses to cleanlab 2.x canonical (0.7318 vs 0.7426) on the SAME training OOF + SAME downstream architecture + SAME seed.
-- Script B counts ANY binary-prediction flip across consecutive checkpoints (1 → 0 → 1 = 2 flips). Toneva's strict definition (correct→incorrect at epoch t) would count this as 1 forget. Forg>=1 arm likely overcounts by 1.5–2x; a "toneva_strict" arm (~10 lines) would be the more rigorous comparator if we promote this finding to the dissertation.
+- Script A tests v74's `t_j = mean(oof | Y=1)` heuristic parameterized by beta - a DIFFERENT algorithm from cleanlab 2.x confident_learning. The cleanlab-vs-v74 gap at L29 is ~0.027 algorithmic, not parametric. The best v74 beta (1.15, 5361 drops) still loses to cleanlab 2.x canonical (0.7318 vs 0.7426) on the SAME training OOF + SAME downstream architecture + SAME seed.
+- Script B counts ANY binary-prediction flip across consecutive checkpoints (1 → 0 → 1 = 2 flips). Toneva's strict definition (correct→incorrect at epoch t) would count this as 1 forget. Forg>=1 arm likely overcounts by 1.5-2x; a "toneva_strict" arm (~10 lines) would be the more rigorous comparator if we promote this finding to the dissertation.
 - Both CSVs print each row twice (cosmetic; pre-summary append + post-summary append).
 
 **Conclusion.** Across 8 cleaning methods from 5 different theory families (cleanlab filter variants, OOF denoising via averaging, ensemble voting, v74 mean-threshold beta sweeps, training-dynamics forgetting), NONE beats cleanlab 2.x confident_learning at L29. **0.7426 is a local optimum** that's empirically stable under these candidate perturbations. The dissertation claim should be: "PCA(100)+MLP(512)+cleanlab confident_learning on a single-seed OOF is the validated cleaning cell for df_adi L29; 5 alternative cleaning methods regressed."
@@ -1504,7 +1504,7 @@ or *"no, last is fine and cleaning is the dominant lever"* — both are publisha
 
 
 
-## Stage v80: ProtT5 Cleanlab Layer Sweep — New Champion
+## Stage v80: ProtT5 Cleanlab Layer Sweep - New Champion
 
 ### ProtT5 full-dim (1024-dim) + cleanlab layer sweep
 - **Action:** Swept cleanlab (self_confidence quality scores, cutoff=0.4) across all 24 ProtT5-XL layers.
@@ -1513,11 +1513,11 @@ or *"no, last is fine and cleaning is the dominant lever"* — both are publisha
 - **Script:** `prott5_all_layer_cleanlab_sweep.py`
 - **Best no_clean:** L21 = 0.7369
 - **Best cleanlab:** **L22 = 0.7672** (lift +0.0321, drop rate 37.7%)
-- **Runner-ups:** L21=0.7658, L23=0.7635 — all three beat the previous L20=0.7632 champion
+- **Runner-ups:** L21=0.7658, L23=0.7635 - all three beat the previous L20=0.7632 champion
 - **Per-class at L22:** membrane 0.8053, cytoplasm 0.7356, nucleus 0.7895,
   extracellular 0.8724, cell_surface 0.7504, **mitochondrion 0.7984 (+0.0640)**, **endom 0.6191 (+0.0575)**
-- **Figures:** `figures/v80_prott5_cleanlab_layer_curve.{png,html}` — no_clean vs cleanlab across 24 layers
-- **Figures:** `figures/v80_prott5_cleanlab_overall_f1.png` — macro-F1 bar chart + per-class grouped bars
+- **Figures:** `figures/v80_prott5_cleanlab_layer_curve.{png,html}` - no_clean vs cleanlab across 24 layers
+- **Figures:** `figures/v80_prott5_cleanlab_overall_f1.png` - macro-F1 bar chart + per-class grouped bars
 
 ### L22 fine-cutoff tinker
 - **Action:** Swept finer cutoffs [0.30, 0.35, 0.38, 0.40, 0.42, 0.45, 0.50, 0.55] on L22
@@ -1537,7 +1537,7 @@ or *"no, last is fine and cleaning is the dominant lever"* — both are publisha
   | 0.55 | 44.3% | 0.7617 |
 
 ### Multi-model comparison
-- **Figure:** `figures/v80_master_model_comparison.{png,html}` — ProtT5 + cleanlab (L22=0.7672)
+- **Figure:** `figures/v80_master_model_comparison.{png,html}` - ProtT5 + cleanlab (L22=0.7672)
   vs ESM2-650M (best L31=0.7149) vs ESM2-3B PCA-100 (L33=0.7228) vs ESM2-3B full-dim (L34=0.7184)
   vs ESM2-650M + cleanlab ref (L29=0.7426).
 
@@ -1553,7 +1553,7 @@ or *"no, last is fine and cleaning is the dominant lever"* — both are publisha
 
 ---
 
-### Cleanlab Iterative Cleaning — Non-Determinism Note (2026-07-24)
+### Cleanlab Iterative Cleaning - Non-Determinism Note (2026-07-24)
 
 **Finding:** Iterative cleaning (cleanlab → retrain → cleanlab again) at self_conf=0.40 
 produces diverging results depending on execution context:
@@ -1566,7 +1566,7 @@ produces diverging results depending on execution context:
 
 **Root cause not found.** Cached vs fresh OOF are identical. Prior train() calls don't
 change result (verified with 42 dummy calls + full RNG reset). Code paths are functionally
-identical line-for-line. Practical takeaway: iterative cleaning gives ~0.785–0.791 
+identical line-for-line. Practical takeaway: iterative cleaning gives ~0.785-0.791 
 depending on invisible runtime conditions. Gain over single-pass is unreliable.
 
 

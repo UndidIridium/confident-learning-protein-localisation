@@ -5,15 +5,15 @@ pre-cleaning utilities. They have been retired. This file is the record of what
 each script did, the dependencies it needed, and how to recreate it if ever
 needed again.
 
-The architecture decision isn't recorded here — that's in
+The architecture decision isn't recorded here - that's in
 `PRELIMINARY_RESULTS.md` and `FINDINGS_REPORT.md`. This file is a script-level
 inventory only.
 
 ## Conventions used in each entry
 
-* **Inputs** — CSVs / `.npy` / `.h5` files the script expects.
-* **Output** — files the script writes (predictions, logs, summaries).
-* **Recreate** — the minimum command(s) and dependencies.
+* **Inputs** - CSVs / `.npy` / `.h5` files the script expects.
+* **Output** - files the script writes (predictions, logs, summaries).
+* **Recreate** - the minimum command(s) and dependencies.
 
 Most early scripts assume the working directory is the project root (`./`)
 and that embeddings are loaded from `train_*.npy` / `test_*.npy` next to the
@@ -37,7 +37,7 @@ followed by per-label Cleanlab multilabel API cleaning (v3 logic).
 
 ### `archive/baselines/baseline_v6_ensemble.py`  *(2026-07-04, 8.1 KB)*
 
-Diversity ensemble — multiple XGBoost models with different hyperparameters
+Diversity ensemble - multiple XGBoost models with different hyperparameters
 and seeds, averaged. Per-label Cleanlab cleaning at the end.
 
 * Inputs: `train.csv`, `test.csv`, `train_prot5_embs.npy`, `test_prot5_embs.npy`
@@ -95,8 +95,8 @@ Logistic Regression meta-classifier on the OOF probability matrix.
 
 Feature-rich XGBoost with hand-engineered features computed in-script:
 
-* `get_aac()` — Amino Acid Composition, 20 features (normalised counts).
-* `get_dpc()` — Dipeptide Composition, 400 features (normalised pair counts).
+* `get_aac()` - Amino Acid Composition, 20 features (normalised counts).
+* `get_dpc()` - Dipeptide Composition, 400 features (normalised pair counts).
 * Plus 1024-dim mean-pooled ProtT5 embedding.
 
 * Inputs: protein sequences, ProtT5 embeddings.
@@ -108,7 +108,7 @@ Feature-rich XGBoost with hand-engineered features computed in-script:
 Pre-existing unmatched `}` at line 274. Untouched in cleanup. Recreate by
 copying a working Stage A baseline (e.g. v10) and adjusting the XGBoost
 hyperparameters it sets in `main()`. The file is functionally superseded by
-v16 — recreate from there if needed.
+v16 - recreate from there if needed.
 
 ### `archive/baselines/baseline_v16_esm2_protocol.py`  *(2026-07-04, 9.7 KB)*
 
@@ -125,7 +125,7 @@ high-dim stability.
 
 ### `archive/baselines/baseline_v17_esm2_ensemble.py`  *(2026-07-04, 6.1 KB)*
 
-"Heavyweight Champion" — XGB + LightGBM blended soft-vote on 3840-dim ESM2,
+"Heavyweight Champion" - XGB + LightGBM blended soft-vote on 3840-dim ESM2,
 per-label threshold tuned on the blended OOF. Partition-aware validation.
 
 * Inputs: ESM2 embeddings.
@@ -211,7 +211,7 @@ OOF probs. Outputs submissions per-threshold into `threshold_sweep/`.
 
 ### `archive/baselines/threshold_sweep_98.py`  *(2026-07-04, 7.0 KB)*
 
-Single-threshold variant — 98% confidence only, head-to-head against the 96%
+Single-threshold variant - 98% confidence only, head-to-head against the 96%
 winner from the wider sweep.
 
 ### `archive/baselines/threshold_sweep_colab.py`  *(2026-07-04, 7.9 KB, SYNTAX ERROR)*
@@ -248,57 +248,57 @@ cleaned training CSV. Comparison purpose.
 
 ### `archive/baselines/final_cleaned_baseline_v22_fusion_compressed.py`  *(2026-07-04, 4.8 KB)*
 
-Same setup as the previous cleaned variant — slightly different re-run; both
+Same setup as the previous cleaned variant - slightly different re-run; both
 feed into the early Stage B lift tables.
 
 * Recreate, all five: `pip install xgboost lightgbm scikit-learn tqdm joblib`.
-  Most pipeline logic is duplicated near-identically across these — the
+  Most pipeline logic is duplicated near-identically across these - the
   differences are limited to (a) output dir name, (b) PCA on/off, (c) whether
   Cleanlab cleaning was applied upstream.
 
 ---
 
-## 5. v23–v36 archive baselines (local reruns)
+## 5. v23-v36 archive baselines (local reruns)
 
 These are local reruns of the Stage B cleaning iteration series. Each runs
 the same v22 compressed setup but with a different cleaning rule applied.
-The **canonical** v23–v36 series lives at the repo root (see
+The **canonical** v23-v36 series lives at the repo root (see
 `baseline_v46_uniprot_validated_drop.py`, `baseline_v47_drops_only.py`, etc.).
 Recreate any archived version by copying the canonical equivalent near the
 top-level and changing the cleaning rule.
 
-* **v23_cleaned_fusion_full.py** — full 4864-dim, cleaned via Stage B
+* **v23_cleaned_fusion_full.py** - full 4864-dim, cleaned via Stage B
   (top 500 noise removed).
-* **v23_cleaned_fusion_local.py** — same data, adds an optional PCA
+* **v23_cleaned_fusion_local.py** - same data, adds an optional PCA
   "TURBO" mode for 8x local speedup.
-* **v24_corrected_fusion.py** — full 16077 proteins, surgically corrected
+* **v24_corrected_fusion.py** - full 16077 proteins, surgically corrected
   labels via Cleanlab. PCA on.
-* **v25_dropped_labels_fusion.py** — per-organelle label-drop.
-* **v26_evidence_fusion.py** — `train_v26_evidence_cleaned.csv`.
-* **v27_enriched_fusion.py** — `train_v27_enriched.csv` (mito-enriched).
-* **v28_final_champion_local.py** — full-dim fusion with v25 surgical drops.
-* **v28_parallel_champion.py** — same as v28 local, parallel via `joblib`
+* **v25_dropped_labels_fusion.py** - per-organelle label-drop.
+* **v26_evidence_fusion.py** - `train_v26_evidence_cleaned.csv`.
+* **v27_enriched_fusion.py** - `train_v27_enriched.csv` (mito-enriched).
+* **v28_final_champion_local.py** - full-dim fusion with v25 surgical drops.
+* **v28_parallel_champion.py** - same as v28 local, parallel via `joblib`
   (6 workers × 2 threads).
-* **v30_weighted_compressed.py** — sample-weighting strategy using a
+* **v30_weighted_compressed.py** - sample-weighting strategy using a
   "discordance score" from v29-caliber OOF probs (w = 1 − discordance).
-* **v31_surgical_correction_compressed.py** — conflict-resolution strategy;
+* **v31_surgical_correction_compressed.py** - conflict-resolution strategy;
   combines v29 mito enrichment with v26 evidence-based label dropping.
-* **v32_full_enriched_global.py** — global "missing-1s" rescue: flips
+* **v32_full_enriched_global.py** - global "missing-1s" rescue: flips
   label=0 to label=1 if UniProt evidence matches. Full-dim parallel via
   `joblib`.
-* **v33_surgical_rescue.py** — high-precision surgical rescue (ECO:0000269
+* **v33_surgical_rescue.py** - high-precision surgical rescue (ECO:0000269
   + v22 OOF > 0.5). Full-dim.
-* **v33_surgical_rescue_compressed.py** — same logic, PCA-1024, mirror of
+* **v33_surgical_rescue_compressed.py** - same logic, PCA-1024, mirror of
   v22 compressed pipeline.
-* **v34_surgical_rescue_compressed_strict.py** — ECO:0000269 + v22 OOF > 0.7.
-* **v35_surgical_rescue_targeted.py** — organelle-aware threshold
+* **v34_surgical_rescue_compressed_strict.py** - ECO:0000269 + v22 OOF > 0.7.
+* **v35_surgical_rescue_targeted.py** - organelle-aware threshold
   (cytoplasm gets > 0.9, others use > 0.5).
-* **v36_precision_rescue_compressed.py** — global rescue, ECO:0000269,
+* **v36_precision_rescue_compressed.py** - global rescue, ECO:0000269,
   per-organelle OOF threshold > 0.8 (> 0.9 for cytoplasm).
-* **v36_precision_rescue_fusion.py** — same logic as v36 compressed but in
+* **v36_precision_rescue_fusion.py** - same logic as v36 compressed but in
   full-dim parallel (joblib).
 
-* Recreate, all v23–v36: `pip install xgboost lightgbm scikit-learn joblib`.
+* Recreate, all v23-v36: `pip install xgboost lightgbm scikit-learn joblib`.
   These are the local-cleanup iterations leading up to the top-level
   `baseline_v37_pca_500.py` and onward.
 
@@ -326,7 +326,7 @@ embeddings.
 ### `archive/generate_figures.py`  *(2026-06-09, 3.2 KB)*
 
 Early figure generator. Creates `figures/` folder and ships F1 progression
-charts across v1–v4, plus a few single-cell mitochondrion plots
+charts across v1-v4, plus a few single-cell mitochondrion plots
 (`mito_location_diversity.png`, `mito_stress_triggers.png`,
 `threshold_sweep_trend.png`).
 
@@ -387,9 +387,9 @@ label accession files for UniProt batch lookup.
 
 ## 8. Post-v22 active submission: v65
 
-This section is **not part of the pre-v22 archive**. It is appended so that the active shipped submission `baseline_v65_multi_target_17mito.py` has a record of its Kaggle benchmark delta and its structural mechanism alongside the archived predecessors in sections 1–7.
+This section is **not part of the pre-v22 archive**. It is appended so that the active shipped submission `baseline_v65_multi_target_17mito.py` has a record of its Kaggle benchmark delta and its structural mechanism alongside the archived predecessors in sections 1-7.
 
-### `baseline_v65_multi_target_17mito.py`  *(2026-07-06, ACTIVE — at repo root)*
+### `baseline_v65_multi_target_17mito.py`  *(2026-07-06, ACTIVE - at repo root)*
 
 Clone of `baseline_v61_multi_target.py` (the prior PVT-PRIORITY ship slot) with two surgical modifications layered on top of the existing drops-only cleaning rule.
 
@@ -418,8 +418,8 @@ From project root: `python3 -u baseline_v65_multi_target_17mito.py 2>&1 | tee v6
 | Submission | OOF Macro F1 | Private | Public | ΔPVT vs v61 | ΔPUB vs v61 |
 |---|---:|---:|---:|---:|---:|
 | **v65** (this script) | 0.75958 | **0.73284** | 0.72517 | **+0.00094** | **−0.00172** |
-| v61 (prior PVT-PRIORITY) | 0.75940 | 0.73190 | 0.72689 | — | — |
-| v63 `d005_corr_0.95` (PRODUCTION balanced) | 0.76791 | 0.72847 | 0.72801 | (v63 PVT −0.00437 vs v65; v63 PUB +0.00284 vs v65) | — |
+| v61 (prior PVT-PRIORITY) | 0.75940 | 0.73190 | 0.72689 | - | - |
+| v63 `d005_corr_0.95` (PRODUCTION balanced) | 0.76791 | 0.72847 | 0.72801 | (v63 PVT −0.00437 vs v65; v63 PUB +0.00284 vs v65) | - |
 
 ### Structural takeaway
 
@@ -431,7 +431,7 @@ v65 establishes a new **project-wide PVT-best** (PVT 0.73284, +0.00094 over the 
 
 * **Local-OOF prediction** modeled the private lift accurately (+0.00018 OOF macro delta → +0.00094 Kaggle PVT; +0.00107 mito F1 OOF delta → +0.00107 mt PVT).
 * **PUB regression predictability**: not detectable from OOF alone.
-* **Biological correctness**: independent of leaderboard — the 17 accessions are UniProt-verified mitochondrial hits that the cleaning oracle missed in raw. The PVT lift is honest.
+* **Biological correctness**: independent of leaderboard - the 17 accessions are UniProt-verified mitochondrial hits that the cleaning oracle missed in raw. The PVT lift is honest.
 
 ### Ship-slot decision (per `PRELIMINARY_RESULTS.md §6`)
 
@@ -445,7 +445,7 @@ v65 establishes a new **project-wide PVT-best** (PVT 0.73284, +0.00094 over the 
 
 ## Status
 
-Sections 1–7 cover pre-v22 scripts that **were in `archive/`** before it was deleted from the filesystem; the entries above are everything needed to recreate them. **Section 8 is the active shipped submission** `baseline_v65_multi_target_17mito.py` (still on disk at the project root), which produces the new Kaggle PVT-PRIORITY submission as of 2026-07-06.
+Sections 1-7 cover pre-v22 scripts that **were in `archive/`** before it was deleted from the filesystem; the entries above are everything needed to recreate them. **Section 8 is the active shipped submission** `baseline_v65_multi_target_17mito.py` (still on disk at the project root), which produces the new Kaggle PVT-PRIORITY submission as of 2026-07-06.
 
 If you want to actually
 re-create one, copy the closest top-level equivalent (`baseline_vNN_*.py`)
@@ -457,11 +457,11 @@ and adjust:
 * the model hyperparameters (XGB + LightGBM ensemble are the default).
 
 For the confident-learning prototypes specifically, the modern equivalent is
-`scripts/stage_b_apply_cleaning.py` plus a top-level baseline; the v1–v4
+`scripts/stage_b_apply_cleaning.py` plus a top-level baseline; the v1-v4
 series is logically superseded.
 
 For the Stage A prototype series in particular, the closest top-level
 equivalents are around `baseline_v22_fusion_colab.ipynb` and
 `baseline_v44_manual_and_dropped.py`. Verify against `EXPERIMENT_LOG.md`
-before recreating — exact equivalence was not asserted when this entry was
+before recreating - exact equivalence was not asserted when this entry was
 written.

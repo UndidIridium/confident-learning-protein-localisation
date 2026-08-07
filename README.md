@@ -8,7 +8,7 @@ and the fix is data-centric.** Public training sets carry thousands of mislabell
 (we estimate **37.6% of the labels in our training set are noisy**), and models trained on those
 labels learn the noise. The contribution here is **confident learning**: two rounds of
 cleanlab-based cleaning that find and remove mislabelled training proteins *before* training.
-That single idea — no architectural complexity, no ensembling, no extra data — lets a
+That single idea - no architectural complexity, no ensembling, no extra data - lets a
 **1-layer MLP** (~0.8 M trainable parameters) on frozen **ProtT5-XL** + **SPACE** embeddings beat
 **DeepLoc 2.1**'s branched multi-head architecture on a shared 3,276-protein holdout.
 
@@ -20,13 +20,13 @@ That single idea — no architectural complexity, no ensembling, no extra data �
 |---|---:|
 | **This pipeline** (ProtT5 L22 + SPACE + aux, CL_CUTOFF=0.50) | **0.8002** |
 | 5-fold cross-validation mean (CL_CUTOFF=0.40) | 0.7838 ± 0.0156 |
-| Baseline — same features, no cleaning | 0.7815 |
+| Baseline - same features, no cleaning | 0.7815 |
 | DeepLoc 2.1 Accurate (ProtT5-XL) | 0.7674 |
 | DeepLoc 2.1 Fast (ESM-1b) | 0.7491 |
 
 *The 5-fold CV row was run at CL_CUTOFF=0.40, before the cutoff sweep; the single-holdout headline is at the tuned 0.50. See Reproduction step 4.*
 
-*P4 is a single held-out partition — the same one DeepLoc 2.1 is scored on, so the comparison is apples-to-apples. The 5-fold mean above is the better estimate of expected performance on unseen partitions.*
+*P4 is a single held-out partition - the same one DeepLoc 2.1 is scored on, so the comparison is apples-to-apples. The 5-fold mean above is the better estimate of expected performance on unseen partitions.*
 
 ## The core idea: confident learning
 
@@ -42,7 +42,7 @@ training set (13,465 → 7,111 proteins). The measured estimate of true label no
 11.3% of its labels), extracellular the cleanest (1.0%).
 
 **Where the gains come from.** The biggest wins are in the rarest, most sensitivity-damaging
-classes — not the noisiest. Cytoplasm, the noisiest compartment (est. 11.3% of its labels),
+classes - not the noisiest. Cytoplasm, the noisiest compartment (est. 11.3% of its labels),
 gains the least (+0.013); mitochondrion, the rarest, gains the most:
 
 | Compartment | Baseline F1 | Champion F1 | Gain |
@@ -51,12 +51,12 @@ gains the least (+0.013); mitochondrion, the rarest, gains the most:
 | Endomembrane | 0.635 | 0.688 | **+0.054** |
 | Cytoplasm | 0.747 | 0.760 | +0.013 |
 
-Mito loses half its positives to cleaning and *still* gains the most — the dropped proteins were
+Mito loses half its positives to cleaning and *still* gains the most - the dropped proteins were
 simply wrong. This is the opposite of what you would expect if cleaning were harming rare classes.
 
 **The cutoff is tuned, not assumed.** Sweeping the cleanlab cutoff gives a shallow inverted U
 ({0.40: 0.7994, 0.45: 0.7985, 0.50: 0.8002, 0.55: 0.7968}): 0.50 is the best point, but the
-0.40–0.50 plateau is flat — 0.50 edges out 0.40 by +0.0008, within run-to-run noise.
+0.40-0.50 plateau is flat - 0.50 edges out 0.40 by +0.0008, within run-to-run noise.
 
 **Cleaning and features compound.** Building the feature set one step at a time (same protocol: P4, prediction threshold 0.5; cleanlab rows at CL_CUTOFF=0.40):
 
@@ -74,8 +74,8 @@ proteins cleanlab flags, and an ablation on an earlier protocol measured the com
 exceeding the sum of the parts by +0.020 (`docs/CHAMPION_PIPELINE_REPORT.md`).
 
 **The model is not data-limited; the labels are.** Adding 11,562 more proteins (+86% data)
-changed nothing (0.8005 vs 0.8002). Every architectural upgrade we tried — deeper MLP,
-ensembles, XGBoost, sparse autoencoders, label propagation — failed to beat cleaning. The
+changed nothing (0.8005 vs 0.8002). Every architectural upgrade we tried - deeper MLP,
+ensembles, XGBoost, sparse autoencoders, label propagation - failed to beat cleaning. The
 bottleneck is label quality, and confident learning is the lever that moves it.
 
 ## Repository layout
@@ -85,7 +85,7 @@ protein-subcellular-localization/
 ├── README.md                 # this file
 ├── requirements.txt          # pinned, verified environment
 ├── .gitignore
-├── data/                     # df_adi.csv only (~10 MB) — embeddings, see Reproduction
+├── data/                     # df_adi.csv only (~10 MB) - embeddings, see Reproduction
 ├── scripts/
 │   ├── embeddings/           # Colab builders: attention-pooled ProtT5 + SPACE extraction
 │   ├── cleaning/             # the confident-learning core (p4_cutoff_sweep.py, champion_pipeline.py)
@@ -108,13 +108,13 @@ python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-Verified on Python 3.14.4 / torch 2.12.1 / numpy 2.4.4. **Pin the stack** — a numpy/torch
+Verified on Python 3.14.4 / torch 2.12.1 / numpy 2.4.4. **Pin the stack** - a numpy/torch
 upgrade in late July 2026 shifted scores (the original 0.8011 is no longer reproducible on the
 current env; 0.8002 is the current-env canonical number).
 
 ### 2. Data (df_adi.csv included; ~62 GB of embeddings is not)
 
-**Where the data comes from.** `df_adi.csv` is the project's core dataset: 16,741 proteins with 7 binary compartment labels, split into 5 fixed partitions. Partition 4 (3,276 proteins) is the held-out test set DeepLoc 2.1 is also scored on; the embeddings and aux features are derived from it by the scripts below. **The CSV ships in this repo** at `data/df_adi.csv` (~10 MB) — no download needed.
+**Where the data comes from.** `df_adi.csv` is the project's core dataset: 16,741 proteins with 7 binary compartment labels, split into 5 fixed partitions. Partition 4 (3,276 proteins) is the held-out test set DeepLoc 2.1 is also scored on; the embeddings and aux features are derived from it by the scripts below. **The CSV ships in this repo** at `data/df_adi.csv` (~10 MB) - no download needed.
 
 Scripts resolve `data/` **relative to their own folder** (`Path(__file__).parent / "data"`),
 so from the repo root link one data dir into every scripts subfolder:
@@ -136,10 +136,10 @@ for d in scripts/*/; do ln -s "$(pwd)/data" "$d/data"; done
    task, extracts mean- and attention-pooled per-layer embeddings, and writes
    `prott5_attn_all_layers.h5`.
 3. SPACE embeddings come from `extract_deeploc_space.py`; aux features from
-   `build_df_adi_aux_features.py` (note: that script has a stale hardcoded output path —
+   `build_df_adi_aux_features.py` (note: that script has a stale hardcoded output path -
    `data/df_adi_aux_features.npy` is what the pipeline reads).
 
-### 3. Headline run — P4 holdout, cutoff sweep
+### 3. Headline run - P4 holdout, cutoff sweep
 
 ```bash
 python3 scripts/cleaning/p4_cutoff_sweep.py
@@ -172,7 +172,7 @@ python3 scripts/ablations/champion_labelprop.py
 python3 scripts/evaluation/compare_deeploc_p4.py   # vs DeepLoc 2.1 on the same holdout
 ```
 
-All ablations are **negative results** — kept deliberately as evidence that the champion
+All ablations are **negative results** - kept deliberately as evidence that the champion
 configuration is tested, not lucky.
 
 ## Development workflow
@@ -191,16 +191,16 @@ original working directory, where every idea gets its own script; anything that 
 ## References
 
 1. Northcutt, C. G., Jiang, L., & Chuang, I. L. (2021). Confident Learning: Estimating
-   Uncertainty in Dataset Labels. *Journal of Artificial Intelligence Research*, 70, 1373–1411.
+   Uncertainty in Dataset Labels. *Journal of Artificial Intelligence Research*, 70, 1373-1411.
    https://doi.org/10.1613/jair.1.12125
    The confident-learning method used throughout this work, implemented by the `cleanlab`
    package (v2.9.0, pinned in `requirements.txt`).
 2. Elnaggar, A., et al. (2022). ProtTrans: Toward Understanding the Language of Life Through
    Self-Supervised Learning. *IEEE Transactions on Pattern Analysis and Machine Intelligence*,
-   44(10), 7112–7127. https://doi.org/10.1109/TPAMI.2021.3095381
+   44(10), 7112-7127. https://doi.org/10.1109/TPAMI.2021.3095381
    Source of the frozen ProtT5-XL backbone used for sequence embeddings.
 3. Ødum, M. T., et al. (2024). DeepLoc 2.1: multi-label membrane protein type prediction using
-   protein language models. *Nucleic Acids Research*, 52(W1), W215–W220.
+   protein language models. *Nucleic Acids Research*, 52(W1), W215-W220.
    https://doi.org/10.1093/nar/gkae237
    The published benchmark we compare against on the same held-out partition.
 4. Hu, D., Szklarczyk, D., von Mering, C., & Jensen, L. J. (2025). SPACE: STRING proteins as
@@ -209,6 +209,6 @@ original working directory, where every idea gets its own script; anything that 
    Source of the 512-d STRING v12.0 protein-interaction-network embeddings used as
    ProtT5-complementary features.
 5. Szklarczyk, D., et al. (2025). The STRING database in 2025: protein networks with
-   directionality of regulation. *Nucleic Acids Research*, 53(D1), D730–D737.
+   directionality of regulation. *Nucleic Acids Research*, 53(D1), D730-D737.
    https://doi.org/10.1093/nar/gkae1113
    The PPI network underlying the SPACE embeddings.

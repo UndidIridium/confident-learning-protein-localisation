@@ -1,4 +1,4 @@
-# Champion Pipeline Report — Subcellular Localisation via Confident Learning
+# Champion Pipeline Report - Subcellular Localisation via Confident Learning
 
 **Project:** ProtT5-XL + SPACE + Confident Learning for 7-compartment subcellular localisation  
 **Date:** July 2026  
@@ -16,7 +16,7 @@ Early PCA-500 era:
   ├── v22  ProtT5 + ESM2 fusion (4864d deep-feat ensemble)  → 0.733 Pub / 0.735 Pvt
   ├── v25  Label dropping (surgical cleaning)                → 0.706
   ├── v28  Full-dim label dropping                           → 0.732 Pub / 0.724 Pvt
-  ├── v29  Mitochondrial enrichment (full-dim champion)      → 0.733 Pub / 0.737 Pvt 🏆
+  ├── v29  Mitochondrial enrichment (full-dim champion)      → 0.733 Pub / 0.737 Pvt 
   ├── v33  Surgical label rescue                             → 0.732 Pub / 0.735 Pvt
   ├── v37  PCA-500 raw baseline                              → 0.700 Pub / 0.698 Pvt
   ├── v41  PCA-500 + automated correction 98%                → 0.705 Pub / 0.705 Pvt
@@ -33,7 +33,7 @@ Early PCA-500 era:
 N-terminal architecture era:
   ├── v57  PCA-500 + N-terminal engineered features          → 0.709 Pub / 0.703 Pvt
   ├── v58  v57 + drop rule on v57-OOF                       → 0.713 Pub / 0.707 Pvt
-  ├── v58_t008  Threshold sweep → DROP_THRESHOLD=0.008      → 0.717 Pub / 0.716 Pvt 🏆
+  ├── v58_t008  Threshold sweep → DROP_THRESHOLD=0.008      → 0.717 Pub / 0.716 Pvt 
   └── v59  Late-fusion ensemble (DEAD)                      → 0.685 Pub / 0.691 Pvt
 
 ProtT5 + SPACE era:
@@ -50,13 +50,13 @@ Attention pooling era:
   ├── Colab: attention-pooled embedding extraction (24 layers)
   ├── Layer sweep: attn vs mean-pooled (L22 optimal for both)
   ├── Cleanlab cutoff sweep (0.50 optimal)
-  ├── champion_5fold_cv.py        → 0.8011 on P4 🏆
+  ├── champion_5fold_cv.py        → 0.8011 on P4 
   └── champion_5fold_cv_multilayer.py  Multi-layer attn L20-23 → 0.8005
 
 DeepLoc comparison (same 3,276-protein P4 holdout):
-  ├── DeepLoc Fast (ESM-1b)     → 0.7491   vs Ours 0.8011  → +0.0520 🏆
-  ├── DeepLoc Accurate (ProtT5-XL) → 0.7674 vs Ours 0.7904 → +0.0230 🏆
-  └── ESM2-650M substitution     → 0.7688   vs DL Fast 0.7491 → +0.0197 🏆
+  ├── DeepLoc Fast (ESM-1b)     → 0.7491   vs Ours 0.8011  → +0.0520 
+  ├── DeepLoc Accurate (ProtT5-XL) → 0.7674 vs Ours 0.7904 → +0.0230 
+  └── ESM2-650M substitution     → 0.7688   vs DL Fast 0.7491 → +0.0197 
 
 Late experiments (no gains over 0.8011):
   ├── Combined 28K dataset (+11,562 DeepLoc proteins)  → 0.8005 (−0.0006)
@@ -74,11 +74,11 @@ Late experiments (no gains over 0.8011):
 
 | Model | F1-macro | Precision | Recall | Accuracy | Train size |
 |---|---:|---:|---:|---:|---:|
-| **🏆 Our champion (ProtT5 L22 + SPACE + cleanlab)** | **0.8011** | **0.7813** | **0.8168** | **0.9091** | 7,947 |
-| **🏆 Hybrid CL champion (5-fold mean)** | **0.7838 ± 0.0144** | — | — | — | 8,190 |
+| ** Our champion (ProtT5 L22 + SPACE + cleanlab)** | **0.8011** | **0.7813** | **0.8168** | **0.9091** | 7,947 |
+| ** Hybrid CL champion (5-fold mean)** | **0.7838 ± 0.0144** | - | - | - | 8,190 |
 | DeepLoc 2.1 Accurate (ProtT5-XL) | 0.7674 | 0.7362 | 0.8076 | 0.8926 | ~22,841 |
 | DeepLoc 2.1 Fast (ESM-1b) | 0.7491 | 0.6741 | 0.8083 | 0.8715 | ~22,841 |
-| Our baseline (ProtT5 L22 + SPACE, no cleaning) | 0.7671 | — | — | — | 13,465 |
+| Our baseline (ProtT5 L22 + SPACE, no cleaning) | 0.7671 | - | - | - | 13,465 |
 
 **Our champion beats DeepLoc Accurate by +0.0337 F1-macro and DeepLoc Fast by +0.0520 F1-macro** on the same 3,276-protein holdout, using the same frozen ProtT5-XL backbone, < 1M trainable parameters (vs DeepLoc's multi-head branched architecture), on a single GPU laptop.
 
@@ -88,16 +88,16 @@ Late experiments (no gains over 0.8011):
 
 ### 1.1 ProtT5-XL-UniRef50 (3B-parameter frozen backbone)
 
-- **Model:** Rostlab/prot_t5_xl_uniref50 — T5 encoder architecture, 3B parameters, frozen throughout
-- **Layer selection:** Layer 22 (second-to-last) — empirically optimal via layer sweep
+- **Model:** Rostlab/prot_t5_xl_uniref50 - T5 encoder architecture, 3B parameters, frozen throughout
+- **Layer selection:** Layer 22 (second-to-last) - empirically optimal via layer sweep
 - **Pooling:** Mean pooling across sequence length → 1,024-d per protein
 
 ### 1.2 SPACE Network Embeddings (PPI graph)
 
-- **Source:** SPACE (STRING Proteins as Complementary Embeddings) — graph autoencoder embeddings from STRING v12.0 PPI network
+- **Source:** SPACE (STRING Proteins as Complementary Embeddings) - graph autoencoder embeddings from STRING v12.0 PPI network
 - **Dimension:** 512-d per protein
 - **Coverage:** ~87% of df_adi proteins have non-zero SPACE embeddings (14,538/16,741)
-- **Missing-handling:** Zero-padding rather than imputation — the MLP learns to rely solely on ProtT5 for proteins without PPI network coverage
+- **Missing-handling:** Zero-padding rather than imputation - the MLP learns to rely solely on ProtT5 for proteins without PPI network coverage
 - **Prevalence of SPACE-graph proteins across compartments:**
 
 | Compartment | Positive count | With SPACE edges |
@@ -108,7 +108,7 @@ Late experiments (no gains over 0.8011):
 | Endom | 2,639 | 86% |
 | Extracellular | 2,372 | 87% |
 | Mitochondrion | 1,249 | 83% |
-| Membrane | — | 86% |
+| Membrane | - | 86% |
 
 ### 1.3 Feature Concatenation
 
@@ -141,13 +141,13 @@ Input (1,536) → Linear(1,536 → 512) → ReLU → Dropout(0.5) → Linear(512
 | Optimiser | Adam (lr=1e-4, weight_decay=0) | Fixed |
 | Binary threshold | 0.5 | **0.5** |
 
-**Why 1-layer MLP and not deeper?** A 2-layer MLP (1538→800→256→7) and wider MLP (1538→1024→7) both failed to improve over the 1-layer champion. The 1-layer MLP with cleanlab already extracts all available signal from the features — deeper architectures overfit the smaller (7,947) cleaned training set.
+**Why 1-layer MLP and not deeper?** A 2-layer MLP (1538→800→256→7) and wider MLP (1538→1024→7) both failed to improve over the 1-layer champion. The 1-layer MLP with cleanlab already extracts all available signal from the features - deeper architectures overfit the smaller (7,947) cleaned training set.
 
 **Why not XGBoost/LightGBM?** Tree-based models (XGBoost champion: 0.7542, −0.0469 vs MLP) performed worse on this multi-label task. MLPs handle overlapping label distributions and multi-label interactions better than gradient-boosted trees for subcellular localisation.
 
 ---
 
-## 3. Confident Learning (Cleanlab) — The Key Innovation
+## 3. Confident Learning (Cleanlab) - The Key Innovation
 
 ### 3.1 Two-Round Iterative Cleaning
 
@@ -157,9 +157,9 @@ Input (1,536) → Linear(1,536 → 512) → ReLU → Dropout(0.5) → Linear(512
 3. Drop proteins with self_confidence < 0.40
 4. **Result:** 13,465 → 8,341 kept (5,124 dropped, 38%)
 
-**Round 1.5 — Fresh OOF on cleaned set:**
+**Round 1.5 - Fresh OOF on cleaned set:**
 - Crucially, train a fresh 4-fold OOF MLP on the 8,341 R1-kept proteins
-- Original OOF was trained on the noisy full dataset — retraining on cleaner data reveals subtler mislabels
+- Original OOF was trained on the noisy full dataset - retraining on cleaner data reveals subtler mislabels
 
 **Round 2 (R2):**
 1. Apply cleanlab self_confidence again on the fresh OOF
@@ -173,13 +173,13 @@ Input (1,536) → Linear(1,536 → 512) → ReLU → Dropout(0.5) → Linear(512
 
 | Compartment | Baseline | Champion (R2) | Gain | Impact |
 |---|---:|---:|---:|---|
-| **Mitochondrion** | 0.7579 | **0.8224** | **+0.0645** 🏆 | Noisiest — mito annotation is hardest |
-| **Endomembrane** | 0.6345 | **0.6880** | **+0.0535** 🏆 | ER vs Golgi boundary is intrinsically fuzzy |
-| Cytoplasm | 0.7471 | 0.7603 | +0.0132 | Moderate noise — default compartment |
+| **Mitochondrion** | 0.7579 | **0.8224** | **+0.0645** | Noisiest - mito annotation is hardest |
+| **Endomembrane** | 0.6345 | **0.6880** | **+0.0535** | ER vs Golgi boundary is intrinsically fuzzy |
+| Cytoplasm | 0.7471 | 0.7603 | +0.0132 | Moderate noise - default compartment |
 | Cell_surface | 0.7255 | 0.7308 | +0.0053 | Low noise |
-| Nucleus | 0.8246 | 0.8213 | −0.0033 | Cleanest — nucleus is visually unambiguous |
-| Extracellular | 0.8815 | 0.8769 | −0.0046 | Cleanest — secretion signal is clear |
-| Membrane | — | 0.8344 | — | Derived label |
+| Nucleus | 0.8246 | 0.8213 | −0.0033 | Cleanest - nucleus is visually unambiguous |
+| Extracellular | 0.8815 | 0.8769 | −0.0046 | Cleanest - secretion signal is clear |
+| Membrane | - | 0.8344 | - | Derived label |
 
 **Mito and Endom are where label noise hurts most** and also where DeepLoc struggles most (Endom +0.1223 win, Mito +0.0092 win).
 
@@ -189,33 +189,33 @@ The cutoff was swept at {0.40, 0.45, 0.50, 0.55} on attn-pooled L22 + SPACE + au
 
 | Cutoff | Kept | Drop% | F1 | Δ vs 0.40 |
 |---:|---:|---:|---:|---:|
-| 0.40 | 8,151 | 39.5% | 0.7994 | — |
+| 0.40 | 8,151 | 39.5% | 0.7994 | - |
 | 0.45 | 7,534 | 44.0% | 0.7985 | −0.0009 |
-| **0.50** | **7,111** | **47.2%** | **0.8002** | **+0.0008** 🏆 |
+| **0.50** | **7,111** | **47.2%** | **0.8002** | **+0.0008** |
 | 0.55 | 6,598 | 51.0% | 0.7968 | −0.0026 |
 
 The curve is an inverted U: 0.45 is too weak to beat 0.40, 0.50 finds the sweet spot (dropping 47% for maximum cleanliness), and 0.55 drops below half the data where signal loss outweighs cleanliness gain. The original tinker9 cutoff of 0.50 (which produced the 0.8011 reference score) was indeed optimal.
 
 For ESM2-based models, cleanlab had negligible effect (0.40 cutoff dropped only 13 proteins, champion F1 had zero gain), confirming that ProtT5 features encode richer subcellular signal and benefit most from label cleaning.
 
-### 3.4 Impact on Rare Classes — Does Dropping 41% Hurt?
+### 3.4 Impact on Rare Classes - Does Dropping 41% Hurt?
 
-A natural concern is that removing 41% of training data disproportionately affects rare classes. However, the drop rate is not uniform — cleanlab drops more from noisier compartments, not rarer ones:
+A natural concern is that removing 41% of training data disproportionately affects rare classes. However, the drop rate is not uniform - cleanlab drops more from noisier compartments, not rarer ones:
 
 | Compartment | Positives (before) | After R2 | Retained | F1 gain |
 |---|---:|---:|---:|---:|
-| **Mitochondrion** (rarest) | 1,249 | **629** | **50%** | **+0.0645** 🏆 |
-| Endomembrane | 2,639 | 1,532 | 58% | +0.0535 🏆 |
+| **Mitochondrion** (rarest) | 1,249 | **629** | **50%** | **+0.0645** |
+| Endomembrane | 2,639 | 1,532 | 58% | +0.0535 |
 | Cell_surface | 3,292 | 2,040 | 62% | +0.0053 |
 | Extracellular | 2,372 | 1,504 | 63% | −0.0046 |
 | Cytoplasm | 5,911 | 3,819 | 65% | +0.0132 |
 | Nucleus | 5,121 | 3,378 | 66% | −0.0033 |
 
-**Mito loses half its positives yet gains the most F1 (+0.0645).** This is the opposite of what you'd expect if cleanlab were indiscriminately harming rare class learning. The dropped mito proteins had wrong labels — the model learns more from 629 clean examples than from 1,249 where nearly half are mislabelled.
+**Mito loses half its positives yet gains the most F1 (+0.0645).** This is the opposite of what you'd expect if cleanlab were indiscriminately harming rare class learning. The dropped mito proteins had wrong labels - the model learns more from 629 clean examples than from 1,249 where nearly half are mislabelled.
 
-**Further evidence — the 28K dataset experiment (Sec. 8) demonstrates that the model is not data-limited.** Adding 11,562 new proteins (86% more data) produced no gain (0.8005 vs 0.8002). The limiting factor is label quality, not quantity — 7,111 clean proteins (with cutoff=0.50) are sufficient for the MLP's 0.8M parameters. More low-quality labels would only add noise.
+**Further evidence - the 28K dataset experiment (Sec. 8) demonstrates that the model is not data-limited.** Adding 11,562 new proteins (86% more data) produced no gain (0.8005 vs 0.8002). The limiting factor is label quality, not quantity - 7,111 clean proteins (with cutoff=0.50) are sufficient for the MLP's 0.8M parameters. More low-quality labels would only add noise.
 
-**The MLP has only 3,591 output-layer weights** (512 hidden units × 7 compartments + 7 biases). It does not need thousands of examples per class — DeepLoc's own training set includes compartments with fewer than 100 positives and they train successfully without cleanlab.
+**The MLP has only 3,591 output-layer weights** (512 hidden units × 7 compartments + 7 biases). It does not need thousands of examples per class - DeepLoc's own training set includes compartments with fewer than 100 positives and they train successfully without cleanlab.
 
 ---
 
@@ -235,12 +235,12 @@ The heads are trained jointly with the downstream MLP on the localisation task (
 
 | Method | P4 F1 | Versus DeepLoc Accurate |
 |---|---:|---:|
-| Mean-pooled L22 + SPACE + cleanlab | 0.8011 | +0.0337 🏆 |
-| Attention-pooled L22 + SPACE + cleanlab | 0.8011 | +0.0337 🏆 |
+| Mean-pooled L22 + SPACE + cleanlab | 0.8011 | +0.0337 |
+| Attention-pooled L22 + SPACE + cleanlab | 0.8011 | +0.0337 |
 | Multi-layer attn L20-23 (4096d) + SPACE + cleanlab | ~0.8005 | ≈ tie |
-| Mean-pooled L22 + SPACE (no cleanlab) | 0.7671 | — |
+| Mean-pooled L22 + SPACE (no cleanlab) | 0.7671 | - |
 
-Attention pooling matched mean pooling — both achieve 0.8011 on P4. The multi-layer attention concatenation (L20-23, 4096d) also produced near-identical results (0.8005), suggesting that **all useful signal is already concentrated in a single layer's mean-pooled representation**.
+Attention pooling matched mean pooling - both achieve 0.8011 on P4. The multi-layer attention concatenation (L20-23, 4096d) also produced near-identical results (0.8005), suggesting that **all useful signal is already concentrated in a single layer's mean-pooled representation**.
 
 ### 4.3 All-Layer Attention Average
 
@@ -252,7 +252,7 @@ Averaging attention-pooled features across all 24 layers also failed to improve 
 
 We tested SPACE-based label propagation as an additional feature: for each protein, compute the mean label of its 50 nearest SPACE neighbours (cosine similarity, train-only neighbours). This adds 7-dimensional "network propensity" features.
 
-**Result:** 0.7887 (−0.0124 vs 0.8011 champion). The neighbour propensities are redundant with SPACE embeddings — both come from the same PPI network.
+**Result:** 0.7887 (−0.0124 vs 0.8011 champion). The neighbour propensities are redundant with SPACE embeddings - both come from the same PPI network.
 
 ---
 
@@ -268,7 +268,7 @@ Inspired by mechanistic interpretability (Anthropic / OpenAI), we trained a TopK
 
 Average of 5 MLPs trained with different random seeds on the same cleaned data.
 
-**Result:** 0.7879 (−0.0132 vs single MLP). Ensembling doesn't help because the cleaned training set is too small — all 5 models converge to similar solutions.
+**Result:** 0.7879 (−0.0132 vs single MLP). Ensembling doesn't help because the cleaned training set is too small - all 5 models converge to similar solutions.
 
 ---
 
@@ -276,7 +276,7 @@ Average of 5 MLPs trained with different random seeds on the same cleaned data.
 
 We added 11,562 new proteins from DeepLoc's SwissProt split (attention-pooled L20-23) to the existing 16,741 df_adi proteins. Labels were mapped from DeepLoc's 10-compartment space to our 7-compartment space.
 
-**Result:** 0.8005 (−0.0006 vs 16K champion). The extra 86% training data produced no gain. **The df_adi training set is already sufficient** — the model is not data-limited, the label-noise ceiling has been reached.
+**Result:** 0.8005 (−0.0006 vs 16K champion). The extra 86% training data produced no gain. **The df_adi training set is already sufficient** - the model is not data-limited, the label-noise ceiling has been reached.
 
 ---
 
@@ -291,11 +291,11 @@ Since cleanlab removed 41% of the training data, the optimal prediction threshol
 | Extracellular | 0.5 | 0.195 | Captures more true positives |
 | Mitochondrion | 0.5 | 0.045 | Very low threshold needed for rare class |
 | Cell_surface | 0.5 | 0.065 | Low threshold |
-| Endom | 0.5 | 0.040 | Lowest threshold — hardest compartment |
+| Endom | 0.5 | 0.040 | Lowest threshold - hardest compartment |
 | Cytoplasm | 0.5 | 0.300 | Moderate |
 | Nucleus | 0.5 | 0.335 | Moderate |
 
-The extremely low optimal thresholds for Mito (0.045) and Endom (0.04) indicate that these compartments have **high label noise** — the model correctly assigns low but discriminative probabilities, and any reasonable threshold above noise level works.
+The extremely low optimal thresholds for Mito (0.045) and Endom (0.04) indicate that these compartments have **high label noise** - the model correctly assigns low but discriminative probabilities, and any reasonable threshold above noise level works.
 
 ---
 
@@ -308,7 +308,7 @@ DeepLoc 2.1 uses a **3-stage branching architecture:**
 2. **Transmembrane-domain classifier** (4 types: Peripheral, Transmembrane, Lipid-anchored, Soluble)
 3. **10-compartment subcellular head** (branched by SP + TMD type)
 
-Each branch routes to a specialised classifier — if SP=Sec/SPI, route to secretory-pathway head; if TMD=Transmembrane, route to membrane-specific head. (Trainable head parameter count not reported in the original paper.)
+Each branch routes to a specialised classifier - if SP=Sec/SPI, route to secretory-pathway head; if TMD=Transmembrane, route to membrane-specific head. (Trainable head parameter count not reported in the original paper.)
 
 **Our vs DeepLoc architecture comparison:**
 
@@ -327,18 +327,18 @@ Each branch routes to a specialised classifier — if SP=Sec/SPI, route to secre
 
 | Metric | Ours | DeepLoc Fast | Δ |
 |---|---:|---:|---:|
-| **F1-macro** | **0.8011** | 0.7491 | **+0.0520** 🏆 |
+| **F1-macro** | **0.8011** | 0.7491 | **+0.0520** |
 | Accuracy | **0.9091** | 0.8715 | +0.0376 |
 | Precision | **0.7813** | 0.6741 | +0.1072 |
 | Recall | **0.8168** | 0.8083 | +0.0085 |
 | F1-micro | **0.9091** | 0.8715 | +0.0376 |
 
-**We win on all 5 metrics.** The biggest win is precision (+0.1072) — we catch essentially the same true positives but with far fewer false positives.
+**We win on all 5 metrics.** The biggest win is precision (+0.1072) - we catch essentially the same true positives but with far fewer false positives.
 
 | Compartment | Ours (F1) | DeepLoc Fast (F1) | Δ | Winner |
 |---|---:|---:|---:|---:|
-| **Membrane** (derived) | **0.8344** | 0.6228 | **+0.2116** | ⭐ **Us** |
-| **Endom** (direct) | **0.6926** | 0.5630 | **+0.1296** | ⭐ **Us** |
+| **Membrane** (derived) | **0.8344** | 0.6228 | **+0.2116** | **Us** |
+| **Endom** (direct) | **0.6926** | 0.5630 | **+0.1296** | **Us** |
 | Mito (direct) | **0.8432** | 0.8114 | +0.0318 | Us |
 | Cytoplasm (direct) | 0.7656 | 0.7592 | +0.0064 | Us |
 | Nucleus (direct) | 0.8260 | 0.8200 | +0.0060 | Us |
@@ -349,33 +349,33 @@ Each branch routes to a specialised classifier — if SP=Sec/SPI, route to secre
 
 | Metric | Ours | DeepLoc Accurate | Δ |
 |---|---:|---:|---:|
-| **F1-macro** | **0.7904** | 0.7674 | **+0.0230** 🏆 |
+| **F1-macro** | **0.7904** | 0.7674 | **+0.0230** |
 | Accuracy | **0.9043** | 0.8926 | +0.0117 |
 
 | Compartment | Ours (F1) | DeepLoc Acc (F1) | Δ | Winner |
 |---|---:|---:|---:|---:|
-| **Endom** | **0.6899** | 0.5676 | **+0.1223** | ⭐ **Us** |
-| **Membrane** (derived) | **0.8179** | 0.7198 | **+0.0981** | ⭐ **Us** |
+| **Endom** | **0.6899** | 0.5676 | **+0.1223** | **Us** |
+| **Membrane** (derived) | **0.8179** | 0.7198 | **+0.0981** | **Us** |
 | Mito | 0.8245 | 0.8337 | −0.0092 | DeepLoc |
 | Extracellular | 0.8833 | 0.8930 | −0.0097 | DeepLoc |
 | Cell_surf | 0.7292 | 0.7640 | −0.0349 | DeepLoc |
 | Cytoplasm | 0.7620 | 0.7667 | −0.0047 | DeepLoc |
 | Nucleus | 0.8262 | 0.8269 | −0.0007 | DeepLoc |
 
-**Interesting pattern:** DeepLoc's ESM-1b (Fast) and ProtT5-XL (Accurate) both lose to us on Endom and Membrane. But on the 5 directly-mapped compartments, DeepLoc Accurate wins on 3/5 (Cytoplasm, Extracellular, Cell_surf, Mito, Nucleus) — though only by small margins. Our total advantage comes from Endom (+0.1223) and Membrane (+0.0981).
+**Interesting pattern:** DeepLoc's ESM-1b (Fast) and ProtT5-XL (Accurate) both lose to us on Endom and Membrane. But on the 5 directly-mapped compartments, DeepLoc Accurate wins on 3/5 (Cytoplasm, Extracellular, Cell_surf, Mito, Nucleus) - though only by small margins. Our total advantage comes from Endom (+0.1223) and Membrane (+0.0981).
 
 ### 10.4 Why Our Method Wins Despite Simpler Architecture
 
-1. **Cleanlab removes 41% of training noise** — we effectively train on cleaner data than DeepLoc, which never cleans its SwissProt labels
-2. **SPACE features provide orthogonal PPI-network signal** that the flat MLP can use directly — DeepLoc's branching architecture has no equivalent
-3. **Flat MLP uses all 512 hidden units for every compartment** — no parameters wasted on routing gating
+1. **Cleanlab removes 41% of training noise** - we effectively train on cleaner data than DeepLoc, which never cleans its SwissProt labels
+2. **SPACE features provide orthogonal PPI-network signal** that the flat MLP can use directly - DeepLoc's branching architecture has no equivalent
+3. **Flat MLP uses all 512 hidden units for every compartment** - no parameters wasted on routing gating
 4. **Per-class pos_weight handles imbalance** without needing a separate balancing strategy
 
 ---
 
 ## 11. ESM2 Substitution (Fair ESM-vs-ESM Comparison)
 
-We ran our champion pipeline with ESM2-650M (33 layers, 1,280-d at L32) instead of ProtT5-XL — same SPACE + aux features, same MLP, same cleanlab.
+We ran our champion pipeline with ESM2-650M (33 layers, 1,280-d at L32) instead of ProtT5-XL - same SPACE + aux features, same MLP, same cleanlab.
 
 ### 11.1 ESM2 P4 Results
 
@@ -383,24 +383,24 @@ We ran our champion pipeline with ESM2-650M (33 layers, 1,280-d at L32) instead 
 |---|---:|---:|---:|
 | **ProtT5-XL + SPACE + cleanlab** | **0.7671** | **0.8011** | **+0.0340** |
 | ESM2-650M + SPACE + cleanlab | 0.7688 | **0.7689** | +0.0001 (no gain) |
-| DeepLoc Fast (ESM-1b) | — | 0.7491 | — |
+| DeepLoc Fast (ESM-1b) | - | 0.7491 | - |
 
-**Key finding: Cleanlab provides zero gain for ESM2 features.** The ESM2 baseline (0.7688) barely changed after cleanlab (0.7689, +0.0001). Cleanlab dropped only 13/13,465 proteins — essentially none.
+**Key finding: Cleanlab provides zero gain for ESM2 features.** The ESM2 baseline (0.7688) barely changed after cleanlab (0.7689, +0.0001). Cleanlab dropped only 13/13,465 proteins - essentially none.
 
 This is because:
 - ESM2 embeddings are **less informative** for subcellular localisation than ProtT5
 - The OOF model's predictions are less confident → cleanlab self_confidence scores are higher → no proteins get flagged
-- ESM2 was pretrained on masked language modelling, ProtT5 on denoising — the denoising objective learns more about sequence-to-function relationships
+- ESM2 was pretrained on masked language modelling, ProtT5 on denoising - the denoising objective learns more about sequence-to-function relationships
 
 ### 11.2 ESM2 vs DeepLoc Fast (Both ESM)
 
 | Model | F1-macro |
 |---|---:|
-| **Ours (ESM2-650M + SPACE, no cleanlab)** | **0.7688** 🏆 |
+| **Ours (ESM2-650M + SPACE, no cleanlab)** | **0.7688** |
 | DeepLoc Fast (ESM-1b) | 0.7491 |
 | **Our lead (ESM vs ESM, fair)** | **+0.0197** |
 
-Even without cleanlab, our ESM2 baseline beats DeepLoc Fast by +0.0197 F1-macro — same embedding type, same frozen backbone approach, but our MLP + SPACE architecture is more efficient than their 3-stage branching.
+Even without cleanlab, our ESM2 baseline beats DeepLoc Fast by +0.0197 F1-macro - same embedding type, same frozen backbone approach, but our MLP + SPACE architecture is more efficient than their 3-stage branching.
 
 ---
 
@@ -411,9 +411,9 @@ We generated submissions for the independent Kaggle test set (4,377 proteins, 6-
 | Submission | Private | Public |
 |---|---:|---:|
 | Our champion (ProtT5 attn L22 + SPACE + cleanlab) | **0.6866** | **0.7038** |
-| DeepLoc Accurate (ProtT5-XL) | — | ~0.68 |
+| DeepLoc Accurate (ProtT5-XL) | - | ~0.68 |
 
-Note: The Kaggle test set comes from a different distribution than df_adi (Human Protein Atlas), and only 6 compartments overlap (no equivalent to our "Membrane" class). Our model's lower absolute score on Kaggle vs P4 (0.6866 vs 0.8011) reflects distribution shift, not methodology failure — we still beat DeepLoc on the same Kaggle benchmark.
+Note: The Kaggle test set comes from a different distribution than df_adi (Human Protein Atlas), and only 6 compartments overlap (no equivalent to our "Membrane" class). Our model's lower absolute score on Kaggle vs P4 (0.6866 vs 0.8011) reflects distribution shift, not methodology failure - we still beat DeepLoc on the same Kaggle benchmark.
 
 ---
 
@@ -436,14 +436,14 @@ For context, our earlier Kaggle-track submissions using different architectures 
 
 | Variant | P4 F1 | Gain over baseline |
 |---|---:|---:|
-| ProtT5 L22 only (no SPACE, no cleanlab) | 0.7351 | — |
+| ProtT5 L22 only (no SPACE, no cleanlab) | 0.7351 | - |
 | + SPACE (no cleanlab) | 0.7522 | **+0.0171** |
 | + cleanlab (no SPACE) | 0.7637 | **+0.0286** |
 | **+ SPACE + cleanlab (full champion)** | **0.8011** | **+0.0660** |
-| — Cleanlab alone (+0.0286) > SPACE alone (+0.0171) | | |
-| — Combined gain (+0.0660) > Sum of parts (+0.0457) → **Synergy of +0.0203** | | |
+| - Cleanlab alone (+0.0286) > SPACE alone (+0.0171) | | |
+| - Combined gain (+0.0660) > Sum of parts (+0.0457) → **Synergy of +0.0203** | | |
 
-The synergy between SPACE and cleanlab is significant — SPACE provides structural network features that help the MLP make confident predictions even on noisy labels, making cleanlab more effective at identifying truly mislabelled proteins.
+The synergy between SPACE and cleanlab is significant - SPACE provides structural network features that help the MLP make confident predictions even on noisy labels, making cleanlab more effective at identifying truly mislabelled proteins.
 
 ---
 
@@ -458,7 +458,7 @@ The synergy between SPACE and cleanlab is significant — SPACE provides structu
 | P0 | 0.7417 | 0.7519 | **0.7584** | +0.0102 | **+0.0167** | 13,126 → 8,203 |
 | **Mean** | **0.7591** | **0.7696** | **0.7838** | **+0.0105** | **+0.0247** | 13,393 → 8,190 |
 
-**Hybrid CL beats manual on all 5 folds.** Mean gain over baseline more than doubles (+0.0105 → +0.0247). The hybrid pipeline retains ~215 more proteins on average (8,190 vs 7,975) while achieving higher F1 — CleanLearning's consensus filter is more precise about which proteins to drop.
+**Hybrid CL beats manual on all 5 folds.** Mean gain over baseline more than doubles (+0.0105 → +0.0247). The hybrid pipeline retains ~215 more proteins on average (8,190 vs 7,975) while achieving higher F1 - CleanLearning's consensus filter is more precise about which proteins to drop.
 
 ---
 
@@ -476,7 +476,7 @@ For completeness, every architectural variant we tested that failed to improve o
 | SPACE label propagation (kNN) | 0.7887 | −0.0124 | Redundant with SPACE embeddings |
 | Per-compartment threshold tuning | 0.8011 | 0.0000 | No gain on held-out |
 | Combined 28K dataset | 0.8005 | −0.0006 | Not data-limited |
-| ESM2 + cleanlab | 0.7689 | — | Cleanlab ineffective on ESM2 |
+| ESM2 + cleanlab | 0.7689 | - | Cleanlab ineffective on ESM2 |
 | Multi-layer attn L20-23 (4096d) | 0.8005 | −0.0006 | Signal concentrated in single layer |
 
 ---
@@ -527,7 +527,7 @@ For completeness, every architectural variant we tested that failed to improve o
 
 ### 19.1 Motivation
 
-Our manual pipeline uses `self_confidence` scoring for label noise detection — a simple metric that compares OOF probability to training labels. CleanLearning (`cleanlab.classification.CleanLearning`) uses the **confident joint** — a calibrated estimate of the joint distribution of true vs predicted labels. The confident joint is more principled but CleanLearning is single-label by design, requiring per-compartment binary classifiers.
+Our manual pipeline uses `self_confidence` scoring for label noise detection - a simple metric that compares OOF probability to training labels. CleanLearning (`cleanlab.classification.CleanLearning`) uses the **confident joint** - a calibrated estimate of the joint distribution of true vs predicted labels. The confident joint is more principled but CleanLearning is single-label by design, requiring per-compartment binary classifiers.
 
 **The hybrid pipeline bridges both worlds:** Use CleanLearning's confident joint for **noise detection** (Phase 1), then use our manual 2-round self-confidence pipeline for **noise removal and retraining** (Phase 2).
 
@@ -571,19 +571,19 @@ Phase 2: MANUAL CLEANING (self-confidence × 2 rounds)
           └───────────────────────┘
 ```
 
-**The consensus mechanism:** Each of the 7 per-compartment CleanLearning binary classifiers independently flags proteins with suspicious labels. A protein is dropped only if **3 or more compartments** flag it. This prevents over-aggressive dropping — a single uncertain classifier doesn't trigger removal, but genuine multi-compartment label errors do.
+**The consensus mechanism:** Each of the 7 per-compartment CleanLearning binary classifiers independently flags proteins with suspicious labels. A protein is dropped only if **3 or more compartments** flag it. This prevents over-aggressive dropping - a single uncertain classifier doesn't trigger removal, but genuine multi-compartment label errors do.
 
 ### 19.3 P4 Results (Single Partition)
 
 | Config | Manual (tuned) | Hybrid CL | Δ |
 |---|---:|---:|---:|
-| T5 only | 0.7826 | — (baseline) | — |
+| T5 only | 0.7826 | - (baseline) | - |
 | T5 + CL | 0.7809 | 0.7768 | −0.0041 |
-| SPACE only | 0.7292 | — (baseline) | — |
+| SPACE only | 0.7292 | - (baseline) | - |
 | SPACE + CL | 0.7054 | 0.6999 | −0.0055 |
-| **T5 + SPACE + CL 🏆** | **0.7994** | **0.7996** | **+0.0002** |
+| **T5 + SPACE + CL ** | **0.7994** | **0.7996** | **+0.0002** |
 
-**Finding:** The hybrid CL consensus only helps the champion config (T5+SPACE+CL). For single-feature configs, adding CleanLearning consensus BEFORE manual cleanlab actually hurts — the 7 per-compartment classifiers see the same feature space and provide redundant flags, making consensus meaningless. T5+SPACE provides two genuinely different feature views (sequence + network), so 3 classifiers agreeing carries real signal.
+**Finding:** The hybrid CL consensus only helps the champion config (T5+SPACE+CL). For single-feature configs, adding CleanLearning consensus BEFORE manual cleanlab actually hurts - the 7 per-compartment classifiers see the same feature space and provide redundant flags, making consensus meaningless. T5+SPACE provides two genuinely different feature views (sequence + network), so 3 classifiers agreeing carries real signal.
 
 ### 19.4 5-Fold Cross-Validation
 
@@ -596,7 +596,7 @@ Phase 2: MANUAL CLEANING (self-confidence × 2 rounds)
 | P4 | 0.7889 | **0.7986** | **+0.0097** |
 | **Mean** | **0.7696** | **0.7838 ± 0.0144** | **+0.0142** |
 
-**Hybrid CL beats manual on every single fold.** The gain is consistent (minimum +0.0065, maximum +0.0212) and statistically significant. The hybrid pipeline retains ~215 more proteins per fold (8,190 vs 7,975) while scoring higher — CleanLearning's consensus is more precise about which proteins to drop.
+**Hybrid CL beats manual on every single fold.** The gain is consistent (minimum +0.0065, maximum +0.0212) and statistically significant. The hybrid pipeline retains ~215 more proteins per fold (8,190 vs 7,975) while scoring higher - CleanLearning's consensus is more precise about which proteins to drop.
 
 ### 19.5 Per-Compartment 5-Fold vs DeepLoc
 
@@ -604,8 +604,8 @@ Phase 2: MANUAL CLEANING (self-confidence × 2 rounds)
 |---|---:|---:|---:|:---|
 | **Endomembrane** | 0.6760 ± 0.0151 | 0.5410 | **+0.1350** | Stable win |
 | **Membrane** | 0.8189 ± 0.0062 | 0.7438 | **+0.0751** | Widened (+0.0611 → +0.0751) |
-| **Mitochondrion** | 0.7835 ± 0.0387 | 0.7745 | **+0.0090** | 🔄 **Flipped to Us** (was −0.0205 DL) |
-| Nucleus | 0.8029 ± 0.0182 | 0.8029 | 0.0000 | 🔄 Now tied (was −0.0015 DL) |
+| **Mitochondrion** | 0.7835 ± 0.0387 | 0.7745 | **+0.0090** | **Flipped to Us** (was −0.0205 DL) |
+| Nucleus | 0.8029 ± 0.0182 | 0.8029 | 0.0000 | Now tied (was −0.0015 DL) |
 | Cytoplasm | 0.7709 ± 0.0110 | 0.7801 | −0.0092 | Gap shrunk (−0.0146 → −0.0092) |
 | Extracellular | 0.8885 ± 0.0361 | 0.8936 | −0.0051 | Gap shrunk (−0.0186 → −0.0051) |
 | Cell Surface | 0.7461 ± 0.0171 | 0.7699 | −0.0238 | Gap shrunk (−0.0428 → −0.0238) |
@@ -622,7 +622,7 @@ Phase 2: MANUAL CLEANING (self-confidence × 2 rounds)
 | Proteins with 1 label | 51.9% |
 | Proteins with 2 labels | 37.6% |
 | SPACE PPI coverage | 86.8% (14,538/16,741) |
-| Extracellular SPACE coverage | 48.0% (lowest — secreted proteins not in PPI) |
+| Extracellular SPACE coverage | 48.0% (lowest - secreted proteins not in PPI) |
 
 **Estimated label noise (confident joint, champion model):**
 
@@ -637,7 +637,7 @@ Phase 2: MANUAL CLEANING (self-confidence × 2 rounds)
 | Extracellular | 0.0105 | 141 |
 | **Total** | **0.3761** | **5,064** |
 
-37.6% of training labels are estimated noisy — aligning with our ~40% drop rates across both manual and hybrid pipelines. Cytoplasm is the noisiest class (11.3%); extracellular is near-perfect (1.0%).
+37.6% of training labels are estimated noisy - aligning with our ~40% drop rates across both manual and hybrid pipelines. Cytoplasm is the noisiest class (11.3%); extracellular is near-perfect (1.0%).
 
 ### 19.7 Why Hybrid CL Works
 
@@ -649,19 +649,19 @@ The hybrid pipeline's advantage comes from the **complementary strengths** of Cl
 | **Strength** | Smarter noise detection | Better retraining (multi-output MLP, posw, tuned thresholds) |
 | **Weakness** | Single-label only, sklearn wrapper | Less precise about which labels are noisy |
 
-By giving CleanLearning the noise detection job and our manual pipeline the retraining job, each does what it's best at. The consensus filter (min_flags=3) adds a further precision mechanism — only proteins flagged by multiple independent classifiers are dropped.
+By giving CleanLearning the noise detection job and our manual pipeline the retraining job, each does what it's best at. The consensus filter (min_flags=3) adds a further precision mechanism - only proteins flagged by multiple independent classifiers are dropped.
 
-**The consensus gain is only realised with diverse features.** T5-only configs see no benefit because all 7 per-compartment classifiers work from the same 1024-d input — their flags are redundant, so consensus adds no new information. SPACE-only configs actually lose because the weak features make classifiers uncertain, increasing false flags. Only T5+SPACE benefits because the two feature types provide genuinely different views of each protein.
+**The consensus gain is only realised with diverse features.** T5-only configs see no benefit because all 7 per-compartment classifiers work from the same 1024-d input - their flags are redundant, so consensus adds no new information. SPACE-only configs actually lose because the weak features make classifiers uncertain, increasing false flags. Only T5+SPACE benefits because the two feature types provide genuinely different views of each protein.
 
 ---
 
 ## Summary
 
-Our champion pipeline achieves **0.8011 F1-macro** (manual) / **0.7838 ± 0.0144 5-fold mean** (hybrid CL) on the same held-out partition where DeepLoc 2.1 achieves **0.7674 (Accurate) / 0.7491 (Fast)** — a **+0.0337 / +0.0520 advantage (manual)** and **+0.0258 5-fold advantage (hybrid CL)** — using:
+Our champion pipeline achieves **0.8011 F1-macro** (manual) / **0.7838 ± 0.0144 5-fold mean** (hybrid CL) on the same held-out partition where DeepLoc 2.1 achieves **0.7674 (Accurate) / 0.7491 (Fast)** - a **+0.0337 / +0.0520 advantage (manual)** and **+0.0258 5-fold advantage (hybrid CL)** - using:
 
 - **0.8M trainable parameters** (vs DeepLoc's multi-head branched architecture)
 - **Same frozen ProtT5-XL backbone** (no fine-tuning)
 - **7,947 twice-cleaned training proteins** (vs ~22,841 uncleaned SwissProt)
 - **A single 1-layer MLP** (vs 3-stage branching with auxiliary signal-peptide and TMD heads)
 
-The core innovation is **data-centric**: two-round confident learning removes 41% of training label noise, and SPACE network features provide orthogonal PPI signal. No architectural complexity, no ensembling, no large-scale data — just clean training labels and a simple model.
+The core innovation is **data-centric**: two-round confident learning removes 41% of training label noise, and SPACE network features provide orthogonal PPI signal. No architectural complexity, no ensembling, no large-scale data - just clean training labels and a simple model.
