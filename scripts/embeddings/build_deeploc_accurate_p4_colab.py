@@ -16,12 +16,21 @@ Or use the notebook's built-in FASTA generator from df_adi.csv.
 """
 
 import json, textwrap
+from pathlib import Path
 
-PROJ = "/Volumes/BOMBOCLAT/project_JL"
+PROJ = Path(__file__).resolve().parents[2]
 
 
 def cell(source, cell_type="code"):
-    """Build a notebook cell handling mixed indentation robustly."""
+    """Build a notebook cell handling mixed indentation robustly.
+
+    Cell sources here use a 0-indent header comment on the first line followed
+    by body lines indented 8 spaces (the pattern of a header line directly
+    after the opening triple-quote, then indented body). textwrap.dedent()
+    alone finds common prefix = 0 (due to the header) and strips nothing, so
+    we dedent the BODY by its own common indent and leave the header at
+    column 0.
+    """
     lines = source.split("\n")
     while lines and not lines[0].strip():
         lines.pop(0)
@@ -32,24 +41,13 @@ def cell(source, cell_type="code"):
                 "outputs": [] if cell_type == "code" else None,
                 "execution_count": None if cell_type == "code" else None}
 
-    nonempty = [l for l in lines if l.strip()]
-    max_indent = max(len(l) - len(l.lstrip()) for l in nonempty)
-    padded = []
-    for l in lines:
-        if not l.strip():
-            padded.append("")
-            continue
-        cur_indent = len(l) - len(l.lstrip())
-        if cur_indent < max_indent:
-            padded.append(" " * max_indent + l)
-        else:
-            padded.append(l)
-
-    joined = "\n".join(padded)
-    dedented = textwrap.dedent(joined)
-    final = dedented.split("\n")
-    while final and not final[-1].strip():
-        final.pop()
+    header = lines[0]
+    body = lines[1:]
+    body_indents = [len(l) - len(l.lstrip()) for l in body if l.strip()]
+    if body_indents:
+        common = min(body_indents)
+        body = [l[common:] if l.strip() else "" for l in body]
+    final = [header] + body
     src_lines = [l + "\n" for l in final]
     return {
         "cell_type": cell_type,
@@ -146,7 +144,7 @@ def build():
         with open(fasta_path, 'w') as f:
             for _, r in p4.iterrows():
                 seq = str(r['sequence']).replace(' ', '').replace('\\n', '')
-                f.write(f'>{r["acc"]}\\\n{seq}\\\n')
+                f.write(f'>{r["acc"]}\\n{seq}\\n')
 
         n_prots = sum(1 for l in open(fasta_path) if l.startswith('>'))
         size = os.path.getsize(fasta_path) / 1024
@@ -241,10 +239,10 @@ def build():
         dt = time.time() - t0
 
         if proc.returncode != 0:
-            print(f"\n Inference FAILED with code {proc.returncode}.")
+            print(f"\\n Inference FAILED with code {proc.returncode}.")
             raise RuntimeError(f"deeploc2 exited with code {proc.returncode}")
 
-        print(f"\n{'='*60}")
+        print(f"\\n{'='*60}")
         print(f" INFERENCE COMPLETED in {dt:.0f}s ({dt/60:.1f}m)")
         print(f"{'='*60}")
         print()
@@ -285,7 +283,7 @@ def build():
         # === THEN LOCALLY ===
         # Run the evaluation:
         #
-        #   python3 /Volumes/BOMBOCLAT/project_JL/eval_against_deeploc_2_1.py \\
+        #   python3 scripts/evaluation/eval_against_deeploc_2_1.py \\
         #       ~/Downloads/results_*.csv
         #
         # This will produce a head-to-head table showing per-compartment F1
@@ -302,18 +300,18 @@ def build():
             df = pd.read_csv(os.path.join("/content/deeploc_p4_results", csv_files[0]))
             print(f"Shape: {df.shape}")
             print(f"Columns: {list(df.columns)}")
-            print(f"\nHead (first 5):")
+            print(f"\\nHead (first 5):")
             print(df.head().to_string())
-            print(f"\nTail (last 5):")
+            print(f"\\nTail (last 5):")
             print(df.tail().to_string())
-            print(f"\nPrediction stats:")
+            print(f"\\nPrediction stats:")
             # Show probability distribution per compartment
             prob_cols = [c for c in df.columns if c != 'ID']
             for c in prob_cols:
                 if df[c].dtype in ['float64', 'float32']:
                     print(f"  {c:>20s}: mean={df[c].mean():.3f}, "
                           f">=0.5={(df[c] >= 0.5).sum()}")
-            print(f"\n Ready for download.")
+            print(f"\\n Ready for download.")
         else:
             print("No CSV found yet - inference may still be running.")
         """ ))
@@ -329,15 +327,16 @@ def build():
         "cells": cells,
     }
 
-    out_path = f"{PROJ}/inputs/deeploc_accurate_p4_colab.ipynb"
+    out_path = PROJ / "notebooks" / "deeploc_accurate_p4_colab.ipynb"
+    out_path.parent.mkdir(parents=True, exist_ok=True)
     with open(out_path, "w") as f:
         json.dump(notebook, f, indent=1)
     print(f"Wrote {out_path}")
     print(f"  {len(cells)} cells ({sum(1 for c in cells if c['cell_type']=='code')} code, "
           f"{sum(1 for c in cells if c['cell_type']=='markdown')} markdown)")
     print(f"\nUpload to Colab:")
-    print(f"  1. {PROJ}/inputs/deeploc-2.1.All.tar  (~50 MB)")
-    print(f"  2. data/df_adi.csv                    (~10 MB)")
+    print("  1. deeploc-2.1.All.tar  (~50 MB, from the DeepLoc 2.1 release)")
+    print("  2. data/df_adi.csv       (~10 MB)")
     print(f"\nThen run all cells in order. Takes ~10-15 min on A100.")
 
 

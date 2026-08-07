@@ -22,7 +22,7 @@ Usage:
 import json
 from pathlib import Path
 
-OUT = Path(__file__).parent / "esm2_3B_extract_colab.ipynb"
+OUT = Path(__file__).resolve().parents[2] / "notebooks" / "esm2_3B_extract_colab.ipynb"
 
 NB = {
     "nbformat": 4,
@@ -467,7 +467,7 @@ import time
 print('Starting download of esm2_3B_all_layers.h5...')
 h5_gb = H5_PATH.stat().st_size / 1e9
 print(f'File size: {h5_gb:.2f} GB')
-print('Save to: /Users/aditya/Downloads/esm2_3B_all_layers.h5')
+print('Save to: ~/Downloads/esm2_3B_all_layers.h5')
 time.sleep(1)
 files.download(str(H5_PATH))
 """)

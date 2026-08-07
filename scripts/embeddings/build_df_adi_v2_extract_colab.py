@@ -11,7 +11,7 @@ main benchmark:
         L_total = L_localization + 0.3 * L_sp + 0.3 * L_tmd
 
 Output H5:
-  /Users/aditya/Downloads/df_adi_attn_pool_v2.h5
+  ~/Downloads/df_adi_attn_pool_v2.h5
     - attn_layer_22 : (16741, 1024) float32  - attention-pooled L22
     - sp_score      : (16741,)     float32  - model-predicted P(signal peptide)
     - tmd_count     : (16741,)     float32  - model-predicted # TMDs
@@ -39,7 +39,7 @@ Run on Kaggle/Colab:
   4. Download df_adi_attn_pool_v2.h5 (~370 MB compressed)
 
 After download:
-  Place at /Users/aditya/Downloads/df_adi_attn_pool_v2.h5
+  Place at ~/Downloads/df_adi_attn_pool_v2.h5
   Then I patch champion_5fold_cv.py to load v2 H5 (attn + sp + tmd) and
   re-run the 5-fold CV.
 """
@@ -47,7 +47,7 @@ After download:
 import json
 from pathlib import Path
 
-OUT = Path("/Volumes/BOMBOCLAT/project_JL/inputs/df_adi_v2_extract_colab.ipynb")
+OUT = Path(__file__).resolve().parents[2] / "notebooks" / "df_adi_v2_extract_colab.ipynb"
 OUT.parent.mkdir(parents=True, exist_ok=True)
 
 # df_adi-specific labels (7 binary, in canonical order)
@@ -84,7 +84,7 @@ CELLS.append({
         "\n",
         "## Output\n",
         "\n",
-        "- `df_adi_attn_pool_v2.h5` (saved to /Users/aditya/Downloads/)\n",
+        "- `df_adi_attn_pool_v2.h5` (downloaded to your local Downloads folder)\n",
         "  - `attn_layer_22` : (16741, 1024) float32\n",
         "  - `sp_score`      : (16741,) float32 in [0,1]\n",
         "  - `tmd_count`     : (16741,) float32 ≥ 0\n",
@@ -120,7 +120,7 @@ CELLS.append({
 CELLS.append({
     "cell_type": "code",
     "source": [
-        "OUT_H5 = Path('/Users/aditya/Downloads/df_adi_attn_pool_v2.h5')\n",
+        "OUT_H5 = TMP_H5  # downloaded to your local Downloads folder after the run\n",
         "TMP_H5 = Path('/content/df_adi_attn_pool_v2.h5')\n",
         "TMP_H5.parent.mkdir(parents=True, exist_ok=True)\n",
         "EMB_DIM = 1024; LAYER = 22; N_LAYERS = 24\n",

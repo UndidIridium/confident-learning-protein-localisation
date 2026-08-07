@@ -5,7 +5,7 @@ Compute Kyte-Doolittle signal-peptide + TMD-count heuristic features for every
 df_adi protein and save to a NumPy array compatible with champion_5fold_cv.py.
 
 Output:
-  /Volumes/BOMBOCLAT/project_JL/data/df_adi_aux_features.npy   shape (16741, 2)
+  data/df_adi_aux_features.npy   shape (16741, 2)
       col 0 = sp_score    (binary proxy: 1 if avg hydrophobicity of first 30 AA >= 0.5)
       col 1 = tmd_count   (continuous: # of 19-residue windows with avg KD >= 1.6)
 
@@ -31,9 +31,9 @@ import h5py
 import numpy as np
 import pandas as pd
 
-PROJ = Path("/Volumes/BOMBOCLAT/project_JL")
+PROJ = Path(__file__).resolve().parents[2]
 SRC_CSV = PROJ / "data" / "df_adi.csv"
-H5_PATH = PROJ / "data" / "prott5_all_layers_dfadi-3.h5"
+H5_PATH = PROJ / "data" / "prott5_attn_all_layers.h5"
 OUT_NPY = PROJ / "data" / "df_adi_aux_features.npy"
 
 # Kyte-Doolittle hydrophobicity scale (positive = hydrophobic)
@@ -111,7 +111,7 @@ def main():
     print(f"\n   Saved: {OUT_NPY}  ({OUT_NPY.stat().st_size / 1024:.1f} KB)")
     print(f"  Wall time: {time.time() - t0:.2f}s")
     print()
-    print("  Next step: patch /Volumes/BOMBOCLAT/project_JL/champion_5fold_cv.py")
+    print("  Next step: patch scripts/training/champion_5fold_cv_attn.py")
     print("              to load this NPY and concat 2 columns at the end of X_all.")
 
 

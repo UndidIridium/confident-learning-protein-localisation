@@ -139,6 +139,14 @@ for d in scripts/*/; do ln -s "$(pwd)/data" "$d/data"; done
    `build_df_adi_aux_features.py` (note: that script has a stale hardcoded output path -
    `data/df_adi_aux_features.npy` is what the pipeline reads).
 
+**The SPACE source is a download, not a regeneration.** `extract_deeploc_space.py` reads
+STRING's official `protein.network.embeddings.v12.0.h5` (17.9 GB, cross-species eukaryotic
+network embeddings) from `data/`. Download it from the STRING download portal, Accessory Data
+section: <https://string-db.org/cgi/download>, or direct from the STRING CDN:
+<https://stringdb-downloads.org/download/protein.network.embeddings.v12.0.h5>. The script maps
+df_adi proteins to STRING IDs and produces `space_network_embeddings.npy` and
+`space_network_mask.npy` from it.
+
 ### 3. Headline run - P4 holdout, cutoff sweep
 
 ```bash

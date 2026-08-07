@@ -9,35 +9,24 @@ Generates a Colab notebook (.ipynb) that:
 
 Usage:
   python3 build_deeploc_prott5_colab.py
-  → outputs inputs/deeploc_prott5_colab.ipynb
+  → outputs notebooks/deeploc_prott5_colab.ipynb
 
 Upload this notebook + deeploc-2.1.All.tar + df_adi.csv to Colab with A100 GPU.
 Wall time: ~8-12 min per partition = ~50 min total.
 """
 
 import json, textwrap
+from pathlib import Path
 
 def cell(source, cell_type="code"):
     """Build a notebook cell with robust indentation handling.
 
-    Different build scripts use different indentation patterns. The most
-    common is:
-
-        cells.append(cell(
-            \"\"\"# Some comment
-            import os
-            def foo():
-                if cond:
-                    y()
-            \"\"\"))
-
-    ...where line 1 has 0 leading ws (a header comment) and body lines
-    have 4+ leading ws. textwrap.dedent finds common prefix = 0 and
-    strips nothing, producing a notebook cell with INVALID indentation.
-
-    This function handles the mixed-indent pattern by left-padding
-    under-indented lines up to the maximum existing non-blank indent,
-    THEN applying textwrap.dedent to strip the common prefix.
+    Cell sources here use a 0-indent header comment on the first line
+    followed by body lines indented 8+ spaces (a header line directly after
+    the opening triple-quote, then indented body). textwrap.dedent() alone
+    finds common prefix = 0 (due to the header) and strips nothing, so we
+    dedent the BODY by its own common indent and leave the header at
+    column 0.
 
     Result: header comments at column 0, top-level code at column 0,
     function bodies at column 4, nested blocks deeper. Always valid Python.
@@ -52,24 +41,13 @@ def cell(source, cell_type="code"):
                 "outputs": [] if cell_type == "code" else None,
                 "execution_count": None if cell_type == "code" else None}
 
-    nonempty = [l for l in lines if l.strip()]
-    max_indent = max(len(l) - len(l.lstrip()) for l in nonempty)
-    padded = []
-    for l in lines:
-        if not l.strip():
-            padded.append("")
-            continue
-        cur_indent = len(l) - len(l.lstrip())
-        if cur_indent < max_indent:
-            padded.append(" " * max_indent + l)
-        else:
-            padded.append(l)
-
-    joined = "\n".join(padded)
-    dedented = textwrap.dedent(joined)
-    final = dedented.split("\n")
-    while final and not final[-1].strip():
-        final.pop()
+    header = lines[0]
+    body = lines[1:]
+    body_indents = [len(l) - len(l.lstrip()) for l in body if l.strip()]
+    if body_indents:
+        common = min(body_indents)
+        body = [l[common:] if l.strip() else "" for l in body]
+    final = [header] + body
     src_lines = [l + "\n" for l in final]
     return {
         "cell_type": cell_type,
@@ -336,7 +314,7 @@ def build():
         # Move CSVs to ~/Downloads, then:
         #
         # for part in 0 1 2 3 4; do
-        #     python3 /Volumes/BOMBOCLAT/project_JL/eval_against_deeploc_2_1.py \\
+        #     python3 scripts/evaluation/eval_against_deeploc_2_1.py \\
         #         ~/Downloads/results_partition${part}.csv
         # done
         #
@@ -355,7 +333,8 @@ def build():
         "cells": cells,
     }
 
-    out_path = "/Volumes/BOMBOCLAT/project_JL/inputs/deeploc_prott5_colab.ipynb"
+    out_path = Path(__file__).resolve().parents[2] / "notebooks" / "deeploc_prott5_colab.ipynb"
+    out_path.parent.mkdir(parents=True, exist_ok=True)
     with open(out_path, "w") as f:
         json.dump(notebook, f, indent=1)
     print(f"Wrote {out_path}")

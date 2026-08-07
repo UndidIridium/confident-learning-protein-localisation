@@ -17,7 +17,7 @@ Reuses patterns from v80_prott5_layer_extract.py and esm2_3B_extract_colab.ipynb
 import json
 from pathlib import Path
 
-OUT = Path("/Users/aditya/Desktop/project_JL/prott5_attn_extract_colab.ipynb")
+OUT = Path(__file__).resolve().parents[2] / "notebooks" / "prott5_attn_extract_colab.ipynb"
 
 NB = {
     "nbformat": 4,
@@ -63,8 +63,9 @@ The trained attention head is the same paradigm as DeepLoc 2.1 (Ødum et al. 202
 ## Outputs
 
 - `prott5_attn_all_layers.h5` containing:
-  - `mean_layer_00` … `mean_layer_23`: mean-pooled 1024-d per layer (matches your existing pipeline)
+  - `df_adi_layer_00` … `df_adi_layer_23`: mean-pooled 1024-d per layer (matches your existing pipeline's key convention)
   - `attn_layer_00` … `attn_layer_23`: **attention-pooled** 1024-d per layer (NEW)
+  - `mean_avg`: averaged mean-pooled across layers (1024-d)
   - `attn_avg`: averaged attention-pooled across layers (1024-d)
 - Each dataset: `(16741, 1024)` float32, gzip compressed
 
@@ -73,7 +74,7 @@ The trained attention head is the same paradigm as DeepLoc 2.1 (Ødum et al. 202
 - T4 (15 GB): ~50 min
 - A100 (40 GB): ~25 min
 
-## Required: a 3-letter amino-acid FASTA-style CSV with `sequence` column
+## Required: df_adi.csv (shipped in this repo at data/df_adi.csv) with `sequence` and `partition` columns
 """)
 
 # ============================================================================
@@ -501,7 +502,7 @@ t_h5 = time.time()
 with h5py.File(str(H5_PATH), 'w') as h5:
     # Mean-pooled per layer, under EXISTING key convention
     # 'df_adi_layer_XX' (drop-in compatible with champion_pipeline.py,
-    # which loads f"df_adi_layer_{LAYER:02d}" from prott5_all_layers_dfadi-3.h5)
+    # which loads f"df_adi_layer_{LAYER:02d}" from prott5_attn_all_layers.h5)
     for layer_i in range(N_LAYERS):
         arr = mmap[:, layer_i, :].astype(np.float32)
         h5.create_dataset(f'df_adi_layer_{layer_i:02d}', data=arr,
@@ -546,7 +547,7 @@ code(r"""# ── 10. Download HDF5 ──────────────�
 from google.colab import files
 print(f'Downloading: {H5_PATH}')
 print(f'Size: {H5_PATH.stat().st_size / 1e9:.2f} GB')
-print('Save to: /Users/aditya/Downloads/prott5_attn_all_layers.h5')
+print('Save to: ~/Downloads/prott5_attn_all_layers.h5')
 files.download(str(H5_PATH))
 """)
 
